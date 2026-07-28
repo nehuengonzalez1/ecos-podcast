@@ -1,6 +1,8 @@
 import { currentUser } from '@clerk/nextjs/server'
+import { CLERK_ACTIVE } from '@/lib/env'
 
 export async function isAdmin(): Promise<boolean> {
+  if (!CLERK_ACTIVE) return false
   const user = await currentUser()
   if (!user) return false
   const primaryEmail = user.emailAddresses.find((e) => e.id === user.primaryEmailAddressId)?.emailAddress

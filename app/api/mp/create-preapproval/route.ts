@@ -2,10 +2,13 @@ import { NextResponse } from 'next/server'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { createPreapproval } from '@/lib/mp'
 import { setSubscription, getSubscription } from '@/lib/subscriptions'
+import { CLERK_ACTIVE } from '@/lib/env'
 
 export const runtime = 'nodejs'
 
 export async function POST() {
+  if (!CLERK_ACTIVE) return NextResponse.json({ error: 'not-configured' }, { status: 503 })
+
   const { userId } = await auth()
   if (!userId) return NextResponse.json({ error: 'unauthenticated' }, { status: 401 })
 

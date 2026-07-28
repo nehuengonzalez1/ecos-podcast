@@ -1,13 +1,7 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 import { clerkMiddleware, createRouteMatcher } from '@clerk/nextjs/server'
-
-// If Clerk isn't fully configured, act as a passthrough so the site keeps working
-// as a public site until env vars are added in Vercel.
-const CLERK_ACTIVE =
-  !!process.env.CLERK_SECRET_KEY &&
-  !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
-  !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.startsWith('pk_test_ZmFrZS')
+import { CLERK_ACTIVE } from '@/lib/env'
 
 const isProtectedRoute = createRouteMatcher(['/cuenta(.*)', '/admin(.*)'])
 

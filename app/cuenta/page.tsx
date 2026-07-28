@@ -3,6 +3,7 @@ import { redirect } from 'next/navigation'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { getSubscription } from '@/lib/subscriptions'
 import { brand } from '@/lib/config/brand'
+import { CLERK_ACTIVE } from '@/lib/env'
 import { CuentaClient } from './CuentaClient'
 
 export const metadata = { title: `Mi cuenta · ${brand.name}` }
@@ -13,6 +14,25 @@ export default async function CuentaPage({
 }: {
   searchParams: Promise<{ upgrade?: string; mp?: string }>
 }) {
+  if (!CLERK_ACTIVE) {
+    return (
+      <section className="spotlight-bg pt-32 pb-24 min-h-[80vh] flex items-center">
+        <div className="container-page">
+          <div className="mx-auto max-w-lg text-center">
+            <p className="eyebrow mb-4">Mi cuenta</p>
+            <h1 className="font-serif text-4xl italic text-cream-50">Próximamente</h1>
+            <p className="mt-4 text-sm text-cream-200/70">
+              Las cuentas de socios todavía no están activas en este entorno. Configurá las credenciales de Clerk y Mercado Pago para habilitarlas.
+            </p>
+            <div className="mt-8">
+              <Link href="/archivo" className="btn-ghost">Explorar el archivo</Link>
+            </div>
+          </div>
+        </div>
+      </section>
+    )
+  }
+
   const { userId } = await auth()
   if (!userId) redirect('/sign-in?redirect_url=/cuenta')
 
