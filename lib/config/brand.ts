@@ -1,7 +1,7 @@
 export const brand = {
-  name: 'ECOS',
+  name: 'LQLVE',
   tagline: 'Historias que quedan',
-  fullName: 'ECOS · Lo que la vida esconde',
+  fullName: 'Lo que la vida esconde',
   slogan: 'Historias reales. Conversaciones que quedan.',
   description:
     'Un espacio donde las historias se cuentan con respeto, profundidad y verdad.',

@@ -37,11 +37,14 @@ export function Nav() {
     >
       <div className="container-page flex h-16 items-center justify-between md:h-20">
         <Link href="/" className="group flex items-center gap-3">
-          <span className="font-serif text-2xl leading-none tracking-tight text-cream-50 md:text-3xl">
-            {brand.name}
-          </span>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-lqlve.png"
+            alt={brand.fullName}
+            className="h-5 w-auto md:h-6"
+          />
           <span className="hidden text-[10px] uppercase tracking-[0.35em] text-gold/70 md:block">
-            {brand.tagline}
+            {brand.fullName}
           </span>
         </Link>
 

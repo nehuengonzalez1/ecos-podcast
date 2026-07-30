@@ -1,8 +1,9 @@
 import { cn } from '@/lib/utils'
+import { brand } from '@/lib/config/brand'
 
 type Props = { label?: string; className?: string; sealText?: string }
 
-export function Envelope({ label, className, sealText = 'ECOS' }: Props) {
+export function Envelope({ label, className, sealText = brand.name }: Props) {
   return (
     <div className={cn('relative aspect-[4/3] w-full', className)}>
       <div className="kraft absolute inset-0 rounded-sm">

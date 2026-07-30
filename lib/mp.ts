@@ -1,4 +1,5 @@
 import { MercadoPagoConfig, PreApproval } from 'mercadopago'
+import { brand } from '@/lib/config/brand'
 
 // Strip BOM/whitespace defensively — Windows pipelines can inject U+FEFF into env values.
 const token = process.env.MP_ACCESS_TOKEN?.replace(/^﻿/, '').trim()
@@ -29,7 +30,7 @@ export async function createPreapproval(payerEmail: string, userId: string) {
   const amount = getPriceArs()
   const res = await preapproval.create({
     body: {
-      reason: 'ECOS · Archivo completo (mensual)',
+      reason: `${brand.name} · Archivo completo (mensual)`,
       external_reference: userId,
       payer_email: payerEmail,
       back_url: `${appUrl}/cuenta?mp=return`,

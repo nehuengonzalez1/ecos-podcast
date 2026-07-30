@@ -8,9 +8,14 @@ export function Footer() {
       <div className="container-page py-14">
         <div className="flex flex-col items-center gap-8 md:flex-row md:items-start md:justify-between">
           <div className="text-center md:text-left">
-            <div className="font-serif text-3xl text-cream-50">{brand.name}</div>
-            <div className="mt-1 text-[11px] uppercase tracking-[0.35em] text-gold/70">
-              {brand.tagline}
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-lqlve.png"
+              alt={brand.fullName}
+              className="mx-auto h-8 w-auto md:mx-0"
+            />
+            <div className="mt-3 text-[11px] uppercase tracking-[0.35em] text-gold/70">
+              {brand.fullName}
             </div>
             <p className="mt-4 max-w-sm text-sm text-cream-200/70">{brand.description}</p>
           </div>
