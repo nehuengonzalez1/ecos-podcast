@@ -23,9 +23,9 @@ export default {
           400: '#8f8168',
         },
         gold: {
-          DEFAULT: '#c9a961',
-          light: '#e3c885',
-          dark: '#8a7440',
+          DEFAULT: '#ff8000',
+          light: '#ffa040',
+          dark: '#b05800',
         },
         muted: '#3d2f1e',
       },
@@ -36,14 +36,14 @@ export default {
       },
       backgroundImage: {
         spotlight:
-          'radial-gradient(ellipse at 50% 20%, rgba(201,169,97,0.18) 0%, rgba(10,8,6,0) 55%)',
+          'radial-gradient(ellipse at 50% 20%, rgba(255,128,0,0.18) 0%, rgba(10,8,6,0) 55%)',
         'kraft':
           'linear-gradient(135deg, #8a6f45 0%, #6b5638 45%, #4b3d29 100%)',
       },
       boxShadow: {
         soft: '0 20px 60px -20px rgba(0,0,0,0.6)',
         polaroid: '0 22px 45px -18px rgba(0,0,0,0.7), 0 2px 4px rgba(0,0,0,0.4)',
-        stamp: 'inset 0 0 0 2px rgba(201,169,97,0.7)',
+        stamp: 'inset 0 0 0 2px rgba(255,128,0,0.7)',
       },
       keyframes: {
         floatSlow: {

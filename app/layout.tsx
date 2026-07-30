@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       localization={esES}
       appearance={{
         variables: {
-          colorPrimary: '#c9a961',
+          colorPrimary: '#ff8000',
           colorBackground: '#100d0a',
           colorInputBackground: '#0a0806',
           colorInputText: '#f5e9d3',
