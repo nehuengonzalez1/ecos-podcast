@@ -33,6 +33,11 @@ export default {
         serif: ['"Cormorant Garamond"', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
         hand: ['Caveat', 'cursive'],
+        // Títulos. 'Now' todavía no está instalada: hasta que se agregue el
+        // archivo, cae en Cormorant Garamond (el look actual).
+        display: ['Now', '"Cormorant Garamond"', 'serif'],
+        // Subtítulos.
+        signature: ['"Brother Signature"', 'cursive'],
       },
       backgroundImage: {
         spotlight:

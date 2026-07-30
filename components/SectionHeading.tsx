@@ -21,11 +21,11 @@ export function SectionHeading({ eyebrow, title, subtitle, align = 'center', cla
       className={cn(align === 'center' ? 'text-center' : 'text-left', 'max-w-3xl', align === 'center' && 'mx-auto', className)}
     >
       {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
-      <h2 className="font-serif text-3xl italic leading-tight text-cream-50 sm:text-4xl md:text-5xl">
+      <h2 className="title-display text-3xl leading-tight sm:text-4xl md:text-5xl">
         {title}
       </h2>
       {subtitle && (
-        <p className="mt-4 text-sm text-cream-200/80 sm:text-base">{subtitle}</p>
+        <p className="body-copy mt-4 text-base text-cream-200/80 sm:text-lg">{subtitle}</p>
       )}
       {align === 'center' && <div className="divider-line" />}
     </motion.header>

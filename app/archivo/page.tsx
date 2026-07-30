@@ -31,14 +31,14 @@ export default function ArchivePage() {
       <section className="spotlight-bg pt-32 pb-16">
         <div className="container-page text-center">
           <p className="eyebrow mb-4">Bienvenidx a</p>
-          <h1 className="font-serif text-5xl leading-none text-cream-50 md:text-7xl">
+          <h1 className="title-display text-5xl leading-none md:text-7xl">
             EL ARCHIVO<br />
-            <span className="italic text-gold-light">de {brand.name}</span>
+            de {brand.name}
           </h1>
-          <p className="mt-6 font-serif text-xl italic text-cream-200/80">
+          <p className="subtitle-signature mt-6 text-3xl md:text-4xl">
             {brand.slogan}
           </p>
-          <p className="mx-auto mt-4 max-w-xl text-sm text-cream-200/70">
+          <p className="body-copy mx-auto mt-4 max-w-xl text-base text-cream-200/70">
             Cada episodio deja una huella. Acá reunimos todas las historias que pasaron por {brand.name}.
           </p>
         </div>

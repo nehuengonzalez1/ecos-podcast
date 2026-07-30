@@ -2,7 +2,7 @@ export const brand = {
   name: 'LQLVE',
   tagline: 'Historias que quedan',
   fullName: 'Lo que la vida esconde',
-  slogan: 'Historias reales. Conversaciones que quedan.',
+  slogan: 'Historias que cambian vidas, algunas todavía no fueron contadas',
   description:
     'Un espacio donde las historias se cuentan con respeto, profundidad y verdad.',
   city: 'Buenos Aires, Argentina',

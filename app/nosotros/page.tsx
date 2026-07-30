@@ -12,11 +12,11 @@ export default function TeamPage() {
       <section className="spotlight-bg pt-32 pb-16">
         <div className="container-page text-center">
           <p className="eyebrow mb-4">05 · Nosotros</p>
-          <h1 className="font-serif text-5xl leading-none text-cream-50 md:text-7xl">
+          <h1 className="title-display text-5xl leading-none md:text-7xl">
             Detrás de cada historia,<br />
-            <span className="italic text-gold-light">un equipo.</span>
+            un equipo.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-sm text-cream-200/70">
+          <p className="body-copy mx-auto mt-6 max-w-2xl text-base text-cream-200/70">
             No buscamos respuestas. Buscamos verdad. {brand.name} nace de la idea de que las mejores charlas
             pasan cuando somos reales. Somos un equipo que ama contar historias con respeto y cuidado.
           </p>

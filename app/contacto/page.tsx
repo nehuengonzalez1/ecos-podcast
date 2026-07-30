@@ -34,11 +34,11 @@ export default function ContactPage() {
       <section className="spotlight-bg pt-32 pb-10">
         <div className="container-page text-center">
           <p className="eyebrow mb-4">Contá tu historia</p>
-          <h1 className="font-serif text-5xl leading-none text-cream-50 md:text-6xl">
+          <h1 className="title-display text-5xl leading-none md:text-6xl">
             La próxima historia<br />
-            <span className="italic text-gold-light">puede ser la tuya.</span>
+            puede ser la tuya.
           </h1>
-          <p className="mx-auto mt-6 max-w-xl text-sm text-cream-200/70">
+          <p className="body-copy mx-auto mt-6 max-w-xl text-base text-cream-200/70">
             No hace falta ser famosx. Ni tener un final feliz. Solo animarte a contar. Nosotros leemos todo, con respeto y confidencialidad.
           </p>
         </div>

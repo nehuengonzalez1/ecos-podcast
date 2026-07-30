@@ -37,9 +37,9 @@ export function EpisodeView({ ep, available, upcoming }: { ep: any; available: a
         <div className="grid gap-10 lg:grid-cols-[280px_1fr] xl:grid-cols-[300px_1fr]">
           <aside className="hidden lg:block">
             <div className="sticky top-24">
-              <h3 className="font-serif text-3xl text-cream-50">EL ARCHIVO</h3>
-              <p className="mt-1 font-serif italic text-gold-light">Historias que quedan.</p>
-              <p className="mt-4 text-xs text-cream-200/70">Cada historia deja una huella. Este es el lugar donde viven para siempre.</p>
+              <h3 className="title-display text-3xl">EL ARCHIVO</h3>
+              <p className="subtitle-signature mt-1 text-2xl">Historias que quedan.</p>
+              <p className="body-copy mt-4 text-sm text-cream-200/70">Cada historia deja una huella. Este es el lugar donde viven para siempre.</p>
 
               <div className="mt-6 flex gap-2">
                 <button className="rounded-sm border border-gold bg-gold/10 px-3 py-1 text-[10px] uppercase tracking-widest text-gold">Episodios</button>
@@ -96,7 +96,7 @@ export function EpisodeView({ ep, available, upcoming }: { ep: any; available: a
                   </div>
                 </div>
 
-                <h1 className="font-serif text-5xl leading-none text-cream-50 md:text-6xl">
+                <h1 className="title-display text-5xl leading-none md:text-6xl">
                   {ep.guest.toUpperCase()}
                 </h1>
 
@@ -138,7 +138,7 @@ export function EpisodeView({ ep, available, upcoming }: { ep: any; available: a
             <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
               <div className="card-panel lg:col-span-2">
                 <p className="eyebrow mb-3">Lo que pasó</p>
-                <p className="text-sm leading-relaxed text-cream-100/90">{ep.summary}</p>
+                <p className="body-copy text-base leading-relaxed text-cream-100/90">{ep.summary}</p>
                 <div className="mt-6 font-hand text-2xl text-gold/70">— {ep.guest.split(' ')[0]}</div>
               </div>
 

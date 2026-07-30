@@ -48,7 +48,7 @@ export default async function AdminPage() {
     <section className="spotlight-bg pt-32 pb-24 min-h-[80vh]">
       <div className="container-page">
         <p className="eyebrow mb-4">Admin</p>
-        <h1 className="font-serif text-5xl italic text-cream-50">Panel {brand.name}</h1>
+        <h1 className="title-display text-5xl">Panel {brand.name}</h1>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           <StatBox label="Total registrados con actividad" value={stats.total} />
@@ -57,7 +57,7 @@ export default async function AdminPage() {
         </div>
 
         <div className="mt-12">
-          <h2 className="font-serif text-2xl text-cream-50">Suscripciones</h2>
+          <h2 className="title-display text-2xl">Suscripciones</h2>
           <div className="mt-4 overflow-x-auto rounded-sm border border-cream-400/10 bg-ink-800/60">
             <table className="w-full text-left text-xs">
               <thead className="text-[10px] uppercase tracking-widest text-cream-400/70">
@@ -95,7 +95,7 @@ export default async function AdminPage() {
         </div>
 
         <div className="mt-12">
-          <h2 className="font-serif text-2xl text-cream-50">Últimos mensajes (Contá tu historia)</h2>
+          <h2 className="title-display text-2xl">Últimos mensajes (Contá tu historia)</h2>
           <div className="mt-4 space-y-4">
             {contact.length === 0 && (
               <p className="text-sm text-cream-400/70">Sin mensajes por ahora.</p>
