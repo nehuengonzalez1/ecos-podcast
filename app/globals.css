@@ -3,10 +3,9 @@
 @tailwind utilities;
 
 /* ── Tipografías de marca ─────────────────────────────────────────────
-   Brother Signature: subtítulos (script).
-   Now Bold: títulos. Falta el archivo — ver el @font-face comentado
-   abajo. Mientras tanto, .title-display cae en Cormorant Garamond, que
-   es lo que se venía usando, para no romper el diseño.
+   Se sirven desde /public/fonts para que rendericen en cualquier
+   dispositivo. Sin esto solo se verían bien en maquinas que tengan las
+   fuentes instaladas localmente.
    ------------------------------------------------------------------ */
 @font-face {
   font-family: 'Brother Signature';
@@ -16,16 +15,13 @@
   font-display: swap;
 }
 
-/* Descomentar cuando se agregue public/fonts/Now-Bold.otf (o .woff2):
 @font-face {
   font-family: 'Now';
-  src: url('/fonts/Now-Bold.woff2') format('woff2'),
-       url('/fonts/Now-Bold.otf') format('opentype');
+  src: url('/fonts/Now-Bold.otf') format('opentype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
 }
-*/
 
 @layer base {
   html {
