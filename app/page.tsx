@@ -28,16 +28,16 @@ export default function HomePage() {
             transition={{ delay: 0.3, duration: 1 }}
             className="eyebrow mb-6"
           >
-            {brand.slogan}
+            {brand.fullName}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-            className="title-display max-w-4xl text-5xl leading-[1.05] sm:text-6xl md:text-7xl"
+            className="title-display max-w-4xl text-5xl uppercase leading-[1.05] sm:text-6xl md:text-7xl"
           >
             Hay historias<br />
-            que cambian vidas.
+            que cambian vidas
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
@@ -53,10 +53,12 @@ export default function HomePage() {
             transition={{ delay: 1, duration: 0.8 }}
             className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
           >
-            <Link href="/archivo" className="btn-gold">
+            {/* Ambos con el mismo ancho, padding y tamaño de texto. Las
+                utilidades pisan a .btn-ghost, que por defecto es más chico. */}
+            <Link href="/archivo" className="btn-gold w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
               {brand.cta.exploreArchive} <ArrowRight size={16} />
             </Link>
-            <Link href="/contacto" className="btn-ghost">
+            <Link href="/contacto" className="btn-ghost w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
               {brand.cta.tellStory}
             </Link>
           </motion.div>
