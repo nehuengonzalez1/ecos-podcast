@@ -21,7 +21,7 @@ export function SectionHeading({ eyebrow, title, subtitle, align = 'center', cla
       className={cn(align === 'center' ? 'text-center' : 'text-left', 'max-w-3xl', align === 'center' && 'mx-auto', className)}
     >
       {eyebrow && <p className="eyebrow mb-3">{eyebrow}</p>}
-      <h2 className="title-display text-3xl leading-tight sm:text-4xl md:text-5xl">
+      <h2 className="title-display text-2xl leading-tight sm:text-3xl md:text-4xl">
         {title}
       </h2>
       {subtitle && (

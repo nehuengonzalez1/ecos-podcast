@@ -14,7 +14,7 @@ export default function CommunityPage() {
       <section className="spotlight-bg pt-32 pb-16">
         <div className="container-page text-center">
           <p className="eyebrow mb-4">La comunidad</p>
-          <h1 className="title-display text-5xl leading-none md:text-7xl">
+          <h1 className="title-display text-4xl leading-tight md:text-5xl">
             Ya somos miles creyendo que<br />
             las historias importan.
           </h1>

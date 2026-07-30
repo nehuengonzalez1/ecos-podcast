@@ -80,7 +80,7 @@ export default function HomePage() {
         <div className="container-page grid gap-10 md:grid-cols-2 md:items-center">
           <div className="text-center md:text-left">
             <p className="eyebrow mb-3">La comunidad</p>
-            <h2 className="title-display text-4xl leading-tight md:text-5xl">
+            <h2 className="title-display text-3xl leading-tight md:text-4xl">
               Más de<br />
               <span className="text-gold">1.000.000</span><br />
               <span>de personas ya escucharon una historia.</span>
@@ -222,7 +222,7 @@ export default function HomePage() {
               </div>
               <div>
                 <p className="eyebrow mb-4">Un lugar</p>
-                <h3 className="title-display text-4xl md:text-5xl">
+                <h3 className="title-display text-3xl leading-tight md:text-4xl">
                   Donde las historias<br />
                   <span className="hand-underline">se quedan.</span>
                 </h3>
