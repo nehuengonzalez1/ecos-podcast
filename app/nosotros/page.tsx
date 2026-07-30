@@ -12,11 +12,11 @@ export default function TeamPage() {
       <section className="spotlight-bg pt-32 pb-16">
         <div className="container-page text-center">
           <p className="eyebrow mb-4">05 · Nosotros</p>
-          <h1 className="title-display text-5xl leading-none md:text-7xl">
+          <h1 className="title-display text-5xl uppercase leading-none md:text-7xl">
             equipo de {brand.name}
           </h1>
           <p className="subtitle-signature mt-6 text-3xl md:text-4xl">
-            Detrás de cada historia, un equipo.
+            Detrás de cada historia, hay un equipo que la hace posible
           </p>
         </div>
       </section>
