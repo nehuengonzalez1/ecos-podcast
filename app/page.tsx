@@ -34,7 +34,7 @@ export default function HomePage() {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-            className="title-display max-w-4xl text-5xl uppercase leading-[1.05] sm:text-6xl md:text-7xl"
+            className="title-display max-w-4xl text-5xl leading-[1.05] sm:text-6xl md:text-7xl"
           >
             Hay historias<br />
             que cambian vidas

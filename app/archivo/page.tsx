@@ -31,7 +31,7 @@ export default function ArchivePage() {
       <section className="spotlight-bg pt-32 pb-16">
         <div className="container-page text-center">
           <p className="eyebrow mb-4">Bienvenidx a</p>
-          <h1 className="title-display text-5xl uppercase leading-none md:text-7xl">
+          <h1 className="title-display text-5xl leading-none md:text-7xl">
             EL ARCHIVO<br />
             de {brand.name}
           </h1>

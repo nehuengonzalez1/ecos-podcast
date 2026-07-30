@@ -59,7 +59,7 @@
   }
   /* Jerarquía tipográfica de marca — usar estas tres en todas las páginas */
   .title-display {
-    @apply font-display font-bold text-white;
+    @apply font-display font-bold uppercase text-white;
   }
   .subtitle-signature {
     @apply font-signature text-gold;
