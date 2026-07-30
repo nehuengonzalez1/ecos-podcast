@@ -18,16 +18,20 @@
 # automatizar esa parte por vos, es justamente lo que te protege.
 # ============================================================
 
-$ErrorActionPreference = "Stop"
+# NOTA TÉCNICA: a propósito NO usamos $ErrorActionPreference = "Stop" acá.
+# Git, npm, gh y vercel escriben mensajes normales (no errores) por stderr,
+# y con "Stop" activado PowerShell corta el script entero al verlos.
+# En vez de eso, chequeamos $LASTEXITCODE a mano después de cada paso crítico.
+$ErrorActionPreference = "Continue"
 
 function Section($msg) { Write-Host "`n$msg" -ForegroundColor Cyan }
 function Ok($msg)      { Write-Host "  OK - $msg" -ForegroundColor Green }
 function Warn($msg)    { Write-Host "  ! $msg" -ForegroundColor Yellow }
+function Fail($msg)    { Write-Host "  X $msg" -ForegroundColor Red; exit 1 }
 
 # --- Chequeo de carpeta correcta ---
 if (-not (Test-Path "package.json") -or -not (Select-String -Path "package.json" -Pattern '"name": "ecos-podcast"' -Quiet)) {
-    Write-Host "Este script tiene que correrse DESDE ADENTRO de la carpeta ecos-podcast (donde esta package.json)." -ForegroundColor Red
-    exit 1
+    Fail "Este script tiene que correrse DESDE ADENTRO de la carpeta ecos-podcast (donde esta package.json)."
 }
 
 # ------------------------------------------------------------
@@ -41,8 +45,7 @@ if (-not (Get-Command node -ErrorAction SilentlyContinue)) {
 $nodeVersion = (node -v) -replace 'v', ''
 $nodeMajor = [int]($nodeVersion.Split('.')[0])
 if ($nodeMajor -lt 20) {
-    Warn "Tenes Node $nodeVersion, este proyecto necesita 20+. Actualizalo con: winget install OpenJS.NodeJS.LTS"
-    exit 1
+    Fail "Tenes Node $nodeVersion, este proyecto necesita 20+. Actualizalo con: winget install OpenJS.NodeJS.LTS"
 }
 Ok "Node $(node -v)"
 
@@ -68,8 +71,9 @@ Ok "GitHub CLI instalado"
 
 # ------------------------------------------------------------
 Section "4/6 - Login en GitHub (te va a pedir abrir el navegador)"
-$ghStatus = gh auth status 2>&1
-if ($LASTEXITCODE -eq 0) {
+gh auth status *> $null
+$ghLoggedIn = ($LASTEXITCODE -eq 0)
+if ($ghLoggedIn) {
     Ok "Ya estas logueado en GitHub"
 } else {
     Write-Host "Se va a abrir un flujo de login. Elegi:"
@@ -78,6 +82,7 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host "  - Login with a web browser"
     Write-Host "Y confirma el codigo que te muestre en la pagina que se abre."
     gh auth login --hostname github.com --git-protocol https --web
+    if ($LASTEXITCODE -ne 0) { Fail "El login de GitHub no se completo. Volve a correr el script." }
 }
 
 # ------------------------------------------------------------
@@ -88,17 +93,19 @@ if (-not (Test-Path ".git")) {
 git add -A
 git commit -m "Setup automatico" --allow-empty -q
 
-$repoExists = gh repo view ecos-podcast 2>&1
-if ($LASTEXITCODE -eq 0) {
+gh repo view ecos-podcast *> $null
+$repoExists = ($LASTEXITCODE -eq 0)
+if ($repoExists) {
     Warn "Ya existe un repo 'ecos-podcast' en tu cuenta. Le voy a hacer push a ese."
     $username = gh api user --jq .login
-    git remote remove origin 2>$null
+    git remote remove origin *> $null
     git branch -M main
     git remote add origin "https://github.com/$username/ecos-podcast.git"
     git push -u origin main
 } else {
     gh repo create ecos-podcast --private --source=. --push
 }
+if ($LASTEXITCODE -ne 0) { Fail "No se pudo crear/subir el repo. Revisa el mensaje de arriba." }
 Ok "Repo listo en GitHub"
 
 # ------------------------------------------------------------
@@ -108,8 +115,9 @@ if (-not (Get-Command vercel -ErrorAction SilentlyContinue)) {
     npm install -g vercel
 }
 
-$vercelWhoami = vercel whoami 2>&1
-if ($LASTEXITCODE -ne 0) {
+vercel whoami *> $null
+$vercelLoggedIn = ($LASTEXITCODE -eq 0)
+if (-not $vercelLoggedIn) {
     Write-Host "Se va a abrir el login de Vercel. Elegi 'Continue with GitHub' para que quede todo conectado."
     vercel login
 }
