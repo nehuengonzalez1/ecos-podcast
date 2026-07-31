@@ -38,10 +38,13 @@ export default function TeamPage() {
             title={<>Contar historias es<br /><span className="italic">un acto de cuidado.</span></>}
           />
           <div className="mx-auto mt-14 grid max-w-4xl gap-10 md:grid-cols-[auto_1fr] md:items-center">
-            <Polaroid src="https://picsum.photos/seed/team-polaroid/800/1000" alt="Equipo" caption="Equipo" seed={11} size="md" />
+            {/* size="lg" quedaba mas alto que el manifiesto; el max-w lo
+                acota sin pelear con el `w-*` del componente. */}
+            <Polaroid src="https://picsum.photos/seed/team-polaroid/800/1000" alt="Equipo" caption="Equipo" seed={11} size="lg" className="max-w-[340px]" />
             <div className="body-copy space-y-4 text-lg text-cream-200/90">
               <p>Lo Que La Vida Esconde nace de una idea simple: todos tenemos una historia que el mundo no ve.</p>
-              <p>Vivimos rodeados de apariencias, conclusiones rápidas y conversaciones superficiales. Vemos resultados, pero pocas veces conocemos los procesos. Escuchamos lo que pasó, pero rara vez entendemos cómo se sintió.</p>
+              <p>Vivimos rodeados de apariencias, conclusiones rápidas y conversaciones superficiales.</p>
+              <p>Vemos resultados, pero pocas veces conocemos los procesos. Escuchamos lo que pasó, pero rara vez entendemos cómo se sintió.</p>
               <p>Creemos que detrás de cada persona hay emociones, luchas, aprendizajes, miedos y cicatrices que merecen ser escuchadas.</p>
               <p>Por eso creamos un espacio seguro para hablar sin máscaras, sin personajes y sin juicios.</p>
               <p>Un lugar donde las historias importan, pero las emociones que viven detrás de ellas importan todavía más.</p>
