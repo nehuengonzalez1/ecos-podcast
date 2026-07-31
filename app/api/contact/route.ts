@@ -8,12 +8,26 @@ export async function POST(req: Request) {
     const body = await req.json()
     const nombre = String(body?.nombre ?? '').slice(0, 200)
     const email = String(body?.email ?? '').slice(0, 200)
-    const asunto = String(body?.asunto ?? '').slice(0, 200)
+    const instagram = String(body?.instagram ?? '').slice(0, 200)
+    const ubicacion = String(body?.ubicacion ?? '').slice(0, 200)
     const historia = String(body?.historia ?? '').slice(0, 5000)
+    const motivo = String(body?.motivo ?? '').slice(0, 2000)
+    const notas = String(body?.notas ?? '').slice(0, 2000)
+    const origen = String(body?.origen ?? '').slice(0, 100)
     if (!nombre || !email || !historia) {
       return NextResponse.json({ error: 'missing-fields' }, { status: 400 })
     }
-    const entry = { nombre, email, asunto, historia, at: new Date().toISOString() }
+    const entry = {
+      nombre,
+      email,
+      instagram,
+      ubicacion,
+      historia,
+      motivo,
+      notas,
+      origen,
+      at: new Date().toISOString(),
+    }
     try {
       await kv.lpush('contact:inbox', JSON.stringify(entry))
     } catch (e) {
