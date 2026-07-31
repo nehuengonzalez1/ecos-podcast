@@ -178,7 +178,7 @@ export default function HomePage() {
             eyebrow="05 · Nosotros"
             title={<>Detrás de cada historia,<br /><span className="italic">hay un equipo que la hace posible.</span></>}
           />
-          <div className="mt-14 grid grid-cols-2 gap-8 md:grid-cols-5">
+          <div className="mt-14 grid grid-cols-2 gap-8 md:grid-cols-4">
             {team.members.map((m, i) => (
               <TeamCard key={m.name} member={m} index={i} />
             ))}

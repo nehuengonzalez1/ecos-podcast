@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 
-type Member = { name: string; role: string; quote: string; photo: string }
+type Member = { name: string; role: string; description: string; photo: string }
 
 export function TeamCard({ member, index = 0 }: { member: Member; index?: number }) {
   return (
@@ -24,7 +24,7 @@ export function TeamCard({ member, index = 0 }: { member: Member; index?: number
       <div className="mt-4 font-serif text-xl text-cream-50">{member.name}</div>
       <div className="mt-0.5 text-[10px] uppercase tracking-[0.3em] text-gold/80">{member.role}</div>
       <p className="mx-auto mt-3 max-w-xs font-serif text-sm italic text-cream-200/70">
-        &ldquo;{member.quote}&rdquo;
+        {member.description}
       </p>
     </motion.article>
   )

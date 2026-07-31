@@ -23,7 +23,7 @@ export default function TeamPage() {
 
       <section className="py-16">
         <div className="container-page">
-          <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
             {team.members.map((m, i) => (
               <TeamCard key={m.name} member={m} index={i} />
             ))}
