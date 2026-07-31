@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "ecos-dev",
-      "runtimeExecutable": "C:\\Program Files\\nodejs\\node.exe",
-      "runtimeArgs": ["node_modules/next/dist/bin/next", "dev", "-p", "3000"],
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev", "--", "-p", "3000"],
       "port": 3000
     }
   ]

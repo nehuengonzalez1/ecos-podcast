@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { kv } from '@vercel/kv'
+import { brand } from '@/lib/config/brand'
 
 export const runtime = 'nodejs'
 
@@ -31,11 +32,18 @@ export async function POST(req: Request) {
     try {
       await kv.lpush('contact:inbox', JSON.stringify(entry))
     } catch (e) {
-      // KV not configured yet — log to server, don't fail the user submission
-      console.warn('[contact] KV not configured, entry lost:', entry)
+      // Sin KV no hay dónde guardar la historia. Antes se respondía ok:true y el
+      // mensaje se perdía en silencio: la persona creía que había llegado.
+      // Mejor fallar visible y darle una vía alternativa real.
+      console.error('[contact] no se pudo persistir el mensaje (KV no disponible)', e)
+      return NextResponse.json(
+        { error: 'storage-unavailable', contactEmail: brand.emailContact },
+        { status: 503 },
+      )
     }
     return NextResponse.json({ ok: true })
   } catch (e: any) {
-    return NextResponse.json({ error: e?.message ?? 'error' }, { status: 500 })
+    console.error('[contact] error', e)
+    return NextResponse.json({ error: 'error' }, { status: 500 })
   }
 }
