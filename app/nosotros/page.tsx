@@ -12,20 +12,18 @@ export default function TeamPage() {
       <section className="spotlight-bg pt-32 pb-16">
         <div className="container-page text-center">
           <p className="eyebrow mb-4">05 · Nosotros</p>
-          <h1 className="font-serif text-5xl leading-none text-cream-50 md:text-7xl">
-            Detrás de cada historia,<br />
-            <span className="italic text-gold-light">un equipo.</span>
+          <h1 className="title-display text-5xl leading-none md:text-7xl">
+            equipo de {brand.name}
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-sm text-cream-200/70">
-            No buscamos respuestas. Buscamos verdad. {brand.name} nace de la idea de que las mejores charlas
-            pasan cuando somos reales. Somos un equipo que ama contar historias con respeto y cuidado.
+          <p className="subtitle-signature mt-6 text-3xl md:text-4xl">
+            Detrás de cada historia, hay un equipo que la hace posible
           </p>
         </div>
       </section>
 
       <section className="py-16">
         <div className="container-page">
-          <div className="grid grid-cols-2 gap-10 md:grid-cols-3 lg:grid-cols-5">
+          <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
             {team.members.map((m, i) => (
               <TeamCard key={m.name} member={m} index={i} />
             ))}
@@ -40,11 +38,18 @@ export default function TeamPage() {
             title={<>Contar historias es<br /><span className="italic">un acto de cuidado.</span></>}
           />
           <div className="mx-auto mt-14 grid max-w-4xl gap-10 md:grid-cols-[auto_1fr] md:items-center">
-            <Polaroid src="https://picsum.photos/seed/team-polaroid/800/1000" alt="Equipo" caption="Equipo" seed={11} size="md" />
-            <div className="space-y-4 text-cream-200/90">
-              <p>Creemos que las mejores conversaciones se dan cuando alguien se anima a bajar la guardia. Nuestro trabajo es sostener ese espacio.</p>
-              <p>No hay clickbait. No hay guiones cerrados. Hay preguntas, silencios, tiempo. Y una cámara que no busca captar el efecto, sino el momento.</p>
-              <p className="font-hand text-2xl text-gold/80">Historias reales. Conversaciones que quedan.</p>
+            {/* size="lg" quedaba mas alto que el manifiesto; el max-w lo
+                acota sin pelear con el `w-*` del componente. */}
+            <Polaroid src="https://picsum.photos/seed/team-polaroid/800/1000" alt="Equipo" caption="Equipo" seed={11} size="lg" className="max-w-[340px]" />
+            <div className="body-copy space-y-4 text-lg text-cream-200/90">
+              <p>Lo Que La Vida Esconde nace de una idea simple: todos tenemos una historia que el mundo no ve.</p>
+              <p>Vivimos rodeados de apariencias, conclusiones rápidas y conversaciones superficiales.</p>
+              <p>Vemos resultados, pero pocas veces conocemos los procesos. Escuchamos lo que pasó, pero rara vez entendemos cómo se sintió.</p>
+              <p>Creemos que detrás de cada persona hay emociones, luchas, aprendizajes, miedos y cicatrices que merecen ser escuchadas.</p>
+              <p>Por eso creamos un espacio seguro para hablar sin máscaras, sin personajes y sin juicios.</p>
+              <p>Un lugar donde las historias importan, pero las emociones que viven detrás de ellas importan todavía más.</p>
+              <p>Porque cuando una persona se anima a abrirse, muchas otras descubren que no están solas.</p>
+              <p>Y cuando dejamos de escondernos, empezamos a entendernos.</p>
             </div>
           </div>
         </div>

@@ -11,10 +11,10 @@ export default function SuccessPage() {
       <div className="container-page">
         <div className="mx-auto max-w-2xl text-center">
           <div className="flex justify-center opacity-90"><Stamp /></div>
-          <h1 className="mt-8 font-serif text-5xl italic leading-tight text-cream-50 md:text-6xl">
+          <h1 className="title-display mt-8 text-5xl leading-tight md:text-6xl">
             Gracias por confiar.
           </h1>
-          <p className="mt-6 text-base text-cream-200/80">
+          <p className="body-copy mt-6 text-lg text-cream-200/80">
             Recibimos tu historia. La vamos a leer con el cuidado que merece.
             Te vamos a escribir en breve.
           </p>

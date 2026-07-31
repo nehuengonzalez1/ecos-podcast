@@ -20,7 +20,7 @@ export default async function CuentaPage({
         <div className="container-page">
           <div className="mx-auto max-w-lg text-center">
             <p className="eyebrow mb-4">Mi cuenta</p>
-            <h1 className="font-serif text-4xl italic text-cream-50">Próximamente</h1>
+            <h1 className="title-display text-4xl">Próximamente</h1>
             <p className="mt-4 text-sm text-cream-200/70">
               Las cuentas de socios todavía no están activas en este entorno. Configurá las credenciales de Clerk y Mercado Pago para habilitarlas.
             </p>
@@ -49,7 +49,7 @@ export default async function CuentaPage({
       <div className="container-page">
         <div className="mx-auto max-w-3xl">
           <p className="eyebrow mb-4">Mi cuenta</p>
-          <h1 className="font-serif text-5xl italic text-cream-50 md:text-6xl">Hola, {name}</h1>
+          <h1 className="title-display text-5xl md:text-6xl">Hola, {name}</h1>
           <p className="mt-3 text-sm text-cream-200/70">{email}</p>
 
           <CuentaClient

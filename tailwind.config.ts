@@ -33,6 +33,10 @@ export default {
         serif: ['"Cormorant Garamond"', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
         hand: ['Caveat', 'cursive'],
+        // Títulos.
+        display: ['Now', '"Cormorant Garamond"', 'serif'],
+        // Subtítulos.
+        signature: ['"Brother Signature"', 'cursive'],
       },
       backgroundImage: {
         spotlight:

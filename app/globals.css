@@ -2,6 +2,27 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ── Tipografías de marca ─────────────────────────────────────────────
+   Se sirven desde /public/fonts para que rendericen en cualquier
+   dispositivo. Sin esto solo se verían bien en maquinas que tengan las
+   fuentes instaladas localmente.
+   ------------------------------------------------------------------ */
+@font-face {
+  font-family: 'Brother Signature';
+  src: url('/fonts/BrotherSignature.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Now';
+  src: url('/fonts/Now-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -35,6 +56,16 @@
   }
   .eyebrow {
     @apply text-[10px] font-semibold uppercase tracking-[0.35em] text-gold;
+  }
+  /* Jerarquía tipográfica de marca — usar estas tres en todas las páginas */
+  .title-display {
+    @apply font-display font-bold uppercase text-white;
+  }
+  .subtitle-signature {
+    @apply font-signature text-gold;
+  }
+  .body-copy {
+    @apply font-serif;
   }
   .card-panel {
     @apply relative rounded-sm border border-cream-400/10 bg-ink-800/80 p-6 backdrop-blur-sm;

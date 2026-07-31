@@ -48,7 +48,7 @@ export default async function AdminPage() {
     <section className="spotlight-bg pt-32 pb-24 min-h-[80vh]">
       <div className="container-page">
         <p className="eyebrow mb-4">Admin</p>
-        <h1 className="font-serif text-5xl italic text-cream-50">Panel {brand.name}</h1>
+        <h1 className="title-display text-5xl">Panel {brand.name}</h1>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           <StatBox label="Total registrados con actividad" value={stats.total} />
@@ -57,7 +57,7 @@ export default async function AdminPage() {
         </div>
 
         <div className="mt-12">
-          <h2 className="font-serif text-2xl text-cream-50">Suscripciones</h2>
+          <h2 className="title-display text-2xl">Suscripciones</h2>
           <div className="mt-4 overflow-x-auto rounded-sm border border-cream-400/10 bg-ink-800/60">
             <table className="w-full text-left text-xs">
               <thead className="text-[10px] uppercase tracking-widest text-cream-400/70">
@@ -95,7 +95,7 @@ export default async function AdminPage() {
         </div>
 
         <div className="mt-12">
-          <h2 className="font-serif text-2xl text-cream-50">Últimos mensajes (Contá tu historia)</h2>
+          <h2 className="title-display text-2xl">Últimos mensajes (Contá tu historia)</h2>
           <div className="mt-4 space-y-4">
             {contact.length === 0 && (
               <p className="text-sm text-cream-400/70">Sin mensajes por ahora.</p>
@@ -111,8 +111,24 @@ export default async function AdminPage() {
                     {c.at ? new Date(c.at).toLocaleString('es-AR') : ''}
                   </div>
                 </div>
-                {c.asunto && <div className="mt-2 text-xs text-cream-200/80">Asunto: {c.asunto}</div>}
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs text-cream-200/80">
+                  {c.ubicacion && <span>{c.ubicacion}</span>}
+                  {c.instagram && <span>{c.instagram}</span>}
+                  {c.origen && <span>Llegó por: {c.origen}</span>}
+                </div>
                 <p className="mt-3 whitespace-pre-wrap text-sm text-cream-100/90">{c.historia}</p>
+                {c.motivo && (
+                  <>
+                    <div className="eyebrow mt-4 mb-1">Por qué quiere contarla</div>
+                    <p className="whitespace-pre-wrap text-sm text-cream-100/80">{c.motivo}</p>
+                  </>
+                )}
+                {c.notas && (
+                  <>
+                    <div className="eyebrow mt-4 mb-1">A tener en cuenta</div>
+                    <p className="whitespace-pre-wrap text-sm text-cream-100/80">{c.notas}</p>
+                  </>
+                )}
               </div>
             ))}
           </div>

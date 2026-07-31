@@ -96,7 +96,7 @@ export function CuentaClient({
             </div>
             <div>
               <p className="eyebrow text-gold">Suscripción activa</p>
-              <h2 className="mt-1 font-serif text-2xl text-cream-50">Sos parte del Archivo Completo</h2>
+              <h2 className="title-display mt-1 text-2xl">Sos parte del Archivo Completo</h2>
             </div>
           </div>
           <p className="mt-4 text-sm text-cream-200/80">
@@ -121,7 +121,7 @@ export function CuentaClient({
             </div>
             <div>
               <p className="eyebrow text-gold">Archivo Completo</p>
-              <h2 className="mt-1 font-serif text-2xl text-cream-50">Desbloqueá todo el contenido premium</h2>
+              <h2 className="title-display mt-1 text-2xl">Desbloqueá todo el contenido premium</h2>
             </div>
           </div>
           <ul className="mt-4 grid gap-2 text-sm text-cream-200/90 sm:grid-cols-2">

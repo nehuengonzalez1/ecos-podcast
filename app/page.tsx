@@ -28,22 +28,22 @@ export default function HomePage() {
             transition={{ delay: 0.3, duration: 1 }}
             className="eyebrow mb-6"
           >
-            {brand.slogan}
+            {brand.fullName}
           </motion.p>
           <motion.h1
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-            className="max-w-4xl font-serif text-5xl leading-[1.05] text-cream-50 sm:text-6xl md:text-7xl"
+            className="title-display max-w-4xl text-5xl leading-[1.05] sm:text-6xl md:text-7xl"
           >
             Hay historias<br />
-            <span className="italic text-gold-light">que cambian vidas.</span>
+            que cambian vidas
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.7, duration: 0.8 }}
-            className="mt-6 max-w-xl font-serif text-xl italic text-cream-200/90 sm:text-2xl"
+            className="subtitle-signature mt-6 max-w-xl text-3xl sm:text-4xl"
           >
             Algunas todavía no fueron contadas.
           </motion.p>
@@ -53,10 +53,12 @@ export default function HomePage() {
             transition={{ delay: 1, duration: 0.8 }}
             className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
           >
-            <Link href="/archivo" className="btn-gold">
+            {/* Ambos con el mismo ancho, padding y tamaño de texto. Las
+                utilidades pisan a .btn-ghost, que por defecto es más chico. */}
+            <Link href="/archivo" className="btn-gold w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
               {brand.cta.exploreArchive} <ArrowRight size={16} />
             </Link>
-            <Link href="/contacto" className="btn-ghost">
+            <Link href="/contacto" className="btn-ghost w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
               {brand.cta.tellStory}
             </Link>
           </motion.div>
@@ -78,12 +80,12 @@ export default function HomePage() {
         <div className="container-page grid gap-10 md:grid-cols-2 md:items-center">
           <div className="text-center md:text-left">
             <p className="eyebrow mb-3">La comunidad</p>
-            <h2 className="font-serif text-4xl leading-tight text-cream-50 md:text-5xl">
+            <h2 className="title-display text-3xl leading-tight md:text-4xl">
               Más de<br />
               <span className="text-gold">1.000.000</span><br />
-              <span className="italic">de personas ya escucharon una historia.</span>
+              <span>de personas ya escucharon una historia.</span>
             </h2>
-            <p className="mt-4 max-w-md text-sm text-cream-200/70">
+            <p className="body-copy mt-4 max-w-md text-base text-cream-200/70">
               Y seguimos creciendo. Cada episodio deja una huella, un pensamiento, un momento que se queda.
             </p>
             <div className="mt-6 flex items-center gap-2 justify-center md:justify-start">
@@ -106,7 +108,7 @@ export default function HomePage() {
         <div className="container-page">
           <SectionHeading
             eyebrow="Últimas historias"
-            title={<>Historias reales.<br /><span className="italic">Conversaciones que quedan.</span></>}
+            title={<>Historias reales.<br /><span>Conversaciones que quedan.</span></>}
             subtitle="Cada persona tiene algo para contar. Cada historia, algo para enseñarnos."
           />
           <div className="mt-14 grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-4">
@@ -126,7 +128,7 @@ export default function HomePage() {
         <div className="container-page">
           <SectionHeading
             eyebrow="Lo que quedó"
-            title={<>Más que un episodio.<br /><span className="italic">Recuerdos que se quedan.</span></>}
+            title={<>Más que un episodio.<br /><span>Recuerdos que se quedan.</span></>}
             subtitle="Cada historia deja algo. Acá vas a encontrar esas perlitas — con acceso al Archivo Completo."
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
@@ -152,10 +154,10 @@ export default function HomePage() {
                   <Mail size={20} />
                   <span className="eyebrow">Contá tu historia</span>
                 </div>
-                <h3 className="mt-4 font-serif text-3xl italic text-cream-50 md:text-4xl">
+                <h3 className="title-display mt-4 text-3xl md:text-4xl">
                   ¿Y si la próxima historia es la tuya?
                 </h3>
-                <p className="mt-4 max-w-lg text-sm text-cream-200/80">
+                <p className="body-copy mt-4 max-w-lg text-base text-cream-200/80">
                   Nos encantaría escucharte. Contanos lo que te pasó, lo que aprendiste, o simplemente lo que necesitás decir.
                 </p>
               </div>
@@ -176,7 +178,7 @@ export default function HomePage() {
             eyebrow="05 · Nosotros"
             title={<>Detrás de cada historia,<br /><span className="italic">hay un equipo que la hace posible.</span></>}
           />
-          <div className="mt-14 grid grid-cols-2 gap-8 md:grid-cols-5">
+          <div className="mt-14 grid grid-cols-2 gap-8 md:grid-cols-4">
             {team.members.map((m, i) => (
               <TeamCard key={m.name} member={m} index={i} />
             ))}
@@ -220,7 +222,7 @@ export default function HomePage() {
               </div>
               <div>
                 <p className="eyebrow mb-4">Un lugar</p>
-                <h3 className="font-serif text-4xl italic text-cream-50 md:text-5xl">
+                <h3 className="title-display text-3xl leading-tight md:text-4xl">
                   Donde las historias<br />
                   <span className="hand-underline">se quedan.</span>
                 </h3>
