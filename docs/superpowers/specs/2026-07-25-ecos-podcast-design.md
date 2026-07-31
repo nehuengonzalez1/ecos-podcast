@@ -1,5 +1,11 @@
 # ECOS · Historias que quedan — Design
 
+> **DOCUMENTO HISTÓRICO — no refleja el estado actual del proyecto.**
+> Describe el diseño original (Vite + React Router + Netlify Forms, marca "ECOS").
+> Desde entonces el proyecto migró a **Next.js 15 App Router + Clerk + Mercado Pago
+> + Vercel KV, deployado en Vercel**, y la marca pasó a ser **LQLVE**.
+> Para el estado real ver [README.md](../../../README.md) y `lib/config/brand.ts`.
+
 ## Objetivo
 Sitio web tipo storytelling/podcast inspirado visualmente en lqlve.com.ar, deployable a Netlify sin fricción. Marca genérica ("ECOS") renombrable en 1 línea.
 

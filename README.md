@@ -108,7 +108,7 @@ npm run dev
 
 ## Deploy
 
-Push a `master` con el repo linkeado a Vercel, o:
+Push a `main` con el repo linkeado a Vercel, o:
 ```bash
 npx vercel deploy --prod --yes
 ```

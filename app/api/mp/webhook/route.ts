@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getPreapproval } from '@/lib/mp'
 import { getUserByPreapproval, getSubscription, setSubscription } from '@/lib/subscriptions'
+import { verifyMpSignature, MP_WEBHOOK_SECRET } from '@/lib/mp-signature'
 
 export const runtime = 'nodejs'
 
@@ -16,6 +17,19 @@ async function process(preapprovalId: string) {
   const status = pre.status // "authorized" | "pending" | "paused" | "cancelled"
   const active = status === 'authorized'
   const existing = await getSubscription(userId)
+
+  // Una persona puede dejar checkouts abandonados: cada intento crea un
+  // preapproval nuevo. Cuando MP vence o cancela uno viejo nos llega un evento
+  // que NO debe apagar la suscripcion vigente, que corresponde a otro id.
+  // Solo un evento "authorized" puede reemplazar al preapproval activo.
+  if (
+    existing.preapprovalId &&
+    existing.preapprovalId !== preapprovalId &&
+    !active
+  ) {
+    return { ok: true, ignored: 'stale-preapproval', status, userId }
+  }
+
   await setSubscription(userId, {
     active,
     preapprovalId,
@@ -39,6 +53,18 @@ export async function POST(req: Request) {
       return NextResponse.json({ ignored: true, topic })
     }
     if (!id) return NextResponse.json({ error: 'no-id' }, { status: 400 })
+
+    // Only genuine MP notifications may mutate subscription state.
+    const sig = verifyMpSignature(req, String(id))
+    if (!sig.ok) {
+      if (!MP_WEBHOOK_SECRET) {
+        // Not configured yet: keep working, but make the gap loud in the logs.
+        console.warn('[mp-webhook] MP_WEBHOOK_SECRET no configurado — procesando sin validar firma')
+      } else {
+        console.warn('[mp-webhook] firma rechazada:', sig.reason)
+        return NextResponse.json({ error: 'invalid-signature' }, { status: 401 })
+      }
+    }
 
     const res = await process(String(id))
     return NextResponse.json(res)

@@ -28,7 +28,7 @@ const inputBase =
 
 export default function ContactPage() {
   const router = useRouter()
-  const [status, setStatus] = useState<'idle' | 'sending' | 'error'>('idle')
+  const [status, setStatus] = useState<'idle' | 'sending' | 'error' | 'unavailable'>('idle')
   const [contadores, setContadores] = useState({ historia: 0, motivo: 0, notas: 0 })
 
   const contar = (campo: keyof typeof LIMITES) => (e: React.ChangeEvent<HTMLTextAreaElement>) =>
@@ -47,6 +47,7 @@ export default function ContactPage() {
         body: JSON.stringify(payload),
       })
       if (res.ok) router.push('/gracias')
+      else if (res.status === 503) setStatus('unavailable')
       else setStatus('error')
     } catch {
       setStatus('error')
@@ -184,6 +185,16 @@ export default function ContactPage() {
               {status === 'error' && (
                 <p className="text-center text-sm text-red-400" role="alert">
                   Ocurrió un error. Probá de nuevo en unos minutos.
+                </p>
+              )}
+
+              {status === 'unavailable' && (
+                <p className="text-center text-sm text-red-400" role="alert">
+                  No pudimos guardar tu historia en este momento. Escribinos directo a{' '}
+                  <a href={`mailto:${brand.emailContact}`} className="text-gold underline">
+                    {brand.emailContact}
+                  </a>{' '}
+                  así no se pierde.
                 </p>
               )}
             </form>
