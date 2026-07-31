@@ -17,6 +17,19 @@ async function process(preapprovalId: string) {
   const status = pre.status // "authorized" | "pending" | "paused" | "cancelled"
   const active = status === 'authorized'
   const existing = await getSubscription(userId)
+
+  // Una persona puede dejar checkouts abandonados: cada intento crea un
+  // preapproval nuevo. Cuando MP vence o cancela uno viejo nos llega un evento
+  // que NO debe apagar la suscripcion vigente, que corresponde a otro id.
+  // Solo un evento "authorized" puede reemplazar al preapproval activo.
+  if (
+    existing.preapprovalId &&
+    existing.preapprovalId !== preapprovalId &&
+    !active
+  ) {
+    return { ok: true, ignored: 'stale-preapproval', status, userId }
+  }
+
   await setSubscription(userId, {
     active,
     preapprovalId,
