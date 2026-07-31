@@ -39,10 +39,14 @@ export default function TeamPage() {
           />
           <div className="mx-auto mt-14 grid max-w-4xl gap-10 md:grid-cols-[auto_1fr] md:items-center">
             <Polaroid src="https://picsum.photos/seed/team-polaroid/800/1000" alt="Equipo" caption="Equipo" seed={11} size="md" />
-            <div className="space-y-4 text-cream-200/90">
-              <p>Creemos que las mejores conversaciones se dan cuando alguien se anima a bajar la guardia. Nuestro trabajo es sostener ese espacio.</p>
-              <p>No hay clickbait. No hay guiones cerrados. Hay preguntas, silencios, tiempo. Y una cámara que no busca captar el efecto, sino el momento.</p>
-              <p className="font-hand text-2xl text-gold/80">Historias reales. Conversaciones que quedan.</p>
+            <div className="body-copy space-y-4 text-lg text-cream-200/90">
+              <p>Lo Que La Vida Esconde nace de una idea simple: todos tenemos una historia que el mundo no ve.</p>
+              <p>Vivimos rodeados de apariencias, conclusiones rápidas y conversaciones superficiales. Vemos resultados, pero pocas veces conocemos los procesos. Escuchamos lo que pasó, pero rara vez entendemos cómo se sintió.</p>
+              <p>Creemos que detrás de cada persona hay emociones, luchas, aprendizajes, miedos y cicatrices que merecen ser escuchadas.</p>
+              <p>Por eso creamos un espacio seguro para hablar sin máscaras, sin personajes y sin juicios.</p>
+              <p>Un lugar donde las historias importan, pero las emociones que viven detrás de ellas importan todavía más.</p>
+              <p>Porque cuando una persona se anima a abrirse, muchas otras descubren que no están solas.</p>
+              <p>Y cuando dejamos de escondernos, empezamos a entendernos.</p>
             </div>
           </div>
         </div>
