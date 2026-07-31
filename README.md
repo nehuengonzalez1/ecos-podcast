@@ -1,6 +1,11 @@
-# ECOS · Historias que quedan
+# LQLVE · Lo que la vida esconde
 
-Sitio storytelling + membresía mensual (Mercado Pago) construido en **Next.js 15 (App Router)** + **Clerk** (auth) + **Vercel KV** (estado de suscripción). Deploy en Vercel.
+Sitio storytelling + membresía mensual (Mercado Pago) construido en **Next.js 15 (App Router)** + **Clerk** (auth) + **Redis** (estado de suscripción). Deploy en Vercel.
+
+> **Importante:** todas las cuentas externas (Clerk, Mercado Pago, base de datos)
+> tienen que crearse con las credenciales del dueño del proyecto. Una versión
+> anterior de este sitio se desplegó bajo otras cuentas y quedó fuera de nuestro
+> control: no la uses como referencia ni reutilices sus claves.
 
 ## Activación productiva — 3 pasos
 
@@ -26,8 +31,10 @@ MP_ACCESS_TOKEN=APP_USR_xxxxxxxxxxxx
 ```
 3. En la app MP → *Webhooks* → Add URL:
 ```
-https://ecos-podcast.vercel.app/api/mp/webhook
+https://ecos-podcast-kohl.vercel.app/api/mp/webhook
 ```
+Si el dominio del proyecto cambia, hay que actualizar esta URL **y** la variable
+`NEXT_PUBLIC_APP_URL`: de ahí salen las URLs de retorno del pago.
 Eventos a suscribir: `preapproval` (obligatorio) y `subscription_preapproval` si aparece.
 
 4. Precio (podés cambiar cuando quieras, se lee en runtime):
@@ -37,9 +44,12 @@ NEXT_PUBLIC_SUBSCRIPTION_PRICE_ARS=1500
 
 Para testing: crear una app de test y usar `TEST-…` en `MP_ACCESS_TOKEN`. Usar usuarios de prueba de MP.
 
-### 3) Vercel KV (para persistir suscripciones y mensajes)
+### 3) Base de datos Redis (para persistir suscripciones y mensajes)
 
-Vercel Dashboard → *Storage* → **Create Database** → **KV** → Connect al proyecto `ecos-podcast`. Vercel inyecta solo:
+Vercel KV está discontinuado. Ahora se usa **Upstash Redis** desde el Marketplace:
+
+Vercel Dashboard → *Storage* → **Marketplace** → **Upstash Redis** → Connect al
+proyecto. Vercel inyecta solo (los nombres `KV_*` se mantienen por compatibilidad):
 ```
 KV_REST_API_URL
 KV_REST_API_TOKEN
