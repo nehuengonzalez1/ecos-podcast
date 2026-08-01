@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next'
 import { ClerkProvider } from '@clerk/nextjs'
+import { dark } from '@clerk/themes'
 import { esES } from '@clerk/localizations'
 import { brand } from '@/lib/config/brand'
 import { CLERK_ACTIVE } from '@/lib/env'
@@ -52,6 +53,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
       localization={esES}
       appearance={{
+        // Sin baseTheme, Clerk deriva sus grises de un neutro claro y los
+        // menus quedan con texto casi invisible sobre nuestro fondo oscuro.
+        baseTheme: dark,
         variables: {
           colorPrimary: '#ff8000',
           colorBackground: '#100d0a',
@@ -59,6 +63,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           colorInputText: '#f5e9d3',
           colorText: '#f5e9d3',
           colorTextSecondary: '#c7b58f',
+          colorNeutral: '#f5e9d3',
           fontFamily: 'Inter, sans-serif',
         },
       }}
