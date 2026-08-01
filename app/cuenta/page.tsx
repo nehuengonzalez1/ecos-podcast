@@ -1,7 +1,9 @@
 import Link from 'next/link'
 import { redirect } from 'next/navigation'
+import { Shield } from 'lucide-react'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { getSubscription } from '@/lib/subscriptions'
+import { isAdmin } from '@/lib/admin'
 import { brand } from '@/lib/config/brand'
 import { CLERK_ACTIVE } from '@/lib/env'
 import { CuentaClient } from './CuentaClient'
@@ -41,6 +43,7 @@ export default async function CuentaPage({
   const name = user?.firstName ?? user?.username ?? email.split('@')[0]
 
   const sub = await getSubscription(userId)
+  const admin = await isAdmin()
   const params = await searchParams
   const price = Number(process.env.NEXT_PUBLIC_SUBSCRIPTION_PRICE_ARS ?? '1500')
 
@@ -51,6 +54,14 @@ export default async function CuentaPage({
           <p className="eyebrow mb-4">Mi cuenta</p>
           <h1 className="title-display text-5xl md:text-6xl">Hola, {name}</h1>
           <p className="mt-3 text-sm text-cream-200/70">{email}</p>
+
+          {/* Acceso al panel sin tener que escribir /admin a mano.
+              Solo aparece para los emails de ADMIN_EMAILS. */}
+          {admin && (
+            <Link href="/admin" className="btn-ghost mt-5 inline-flex">
+              <Shield size={14} /> Panel de administración
+            </Link>
+          )}
 
           <CuentaClient
             initialActive={sub.active}

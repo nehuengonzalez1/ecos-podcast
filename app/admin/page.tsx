@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { isAdmin } from '@/lib/admin'
-import { kv } from '@vercel/kv'
+import { kv, KV_ACTIVE, kvSource } from '@/lib/kv'
 import { brand } from '@/lib/config/brand'
 import { formatDate } from '@/lib/utils'
 
@@ -16,9 +16,10 @@ type Sub = {
 }
 
 async function loadStats() {
+  if (!kv) return { total: 0, active: 0, subs: [] as Sub[], keys: [] as string[], error: true }
   try {
     const keys = await kv.keys('sub:*')
-    const values = await Promise.all(keys.map((k) => kv.get<Sub>(k)))
+    const values = await Promise.all(keys.map((k) => kv!.get<Sub>(k)))
     const subs = values.filter(Boolean) as Sub[]
     const active = subs.filter((s) => s.active).length
     return { total: subs.length, active, subs, keys }
@@ -28,6 +29,7 @@ async function loadStats() {
 }
 
 async function loadContact() {
+  if (!kv) return []
   try {
     const items = await kv.lrange('contact:inbox', 0, 49)
     return items.map((raw) => {
@@ -49,6 +51,23 @@ export default async function AdminPage() {
       <div className="container-page">
         <p className="eyebrow mb-4">Admin</p>
         <h1 className="title-display text-5xl">Panel {brand.name}</h1>
+
+        {/* Sin esto, un Redis mal conectado se ve igual que "todavia no hay
+            datos": los contadores muestran 0 y nada avisa del problema. */}
+        <div
+          className={`mt-6 inline-flex items-center gap-2 rounded-sm border px-3 py-2 text-xs ${
+            KV_ACTIVE
+              ? 'border-gold/40 bg-gold/5 text-cream-200/90'
+              : 'border-red-400/50 bg-red-400/5 text-red-300'
+          }`}
+        >
+          <span className={`h-2 w-2 rounded-full ${KV_ACTIVE ? 'bg-gold' : 'bg-red-400'}`} />
+          {KV_ACTIVE ? (
+            <>Base de datos conectada · variables <code>{kvSource()}</code></>
+          ) : (
+            <>Base de datos NO conectada — las suscripciones y los mensajes no se están guardando</>
+          )}
+        </div>
 
         <div className="mt-10 grid gap-4 sm:grid-cols-3">
           <StatBox label="Total registrados con actividad" value={stats.total} />
