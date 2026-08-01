@@ -30,6 +30,11 @@ export type KvClient = {
   lpush(key: string, value: string): Promise<unknown>
   lrange(key: string, start: number, stop: number): Promise<string[]>
   keys(pattern: string): Promise<string[]>
+  incr(key: string): Promise<number>
+  sadd(key: string, member: string): Promise<unknown>
+  smembers(key: string): Promise<string[]>
+  /** Recorta la lista a los primeros `max` elementos. */
+  ltrim(key: string, max: number): Promise<unknown>
 }
 
 /**
@@ -65,6 +70,10 @@ function tcpClient(): KvClient {
     lpush: (key, value) => getTcp().lpush(key, value),
     lrange: (key, start, stop) => getTcp().lrange(key, start, stop),
     keys: (pattern) => getTcp().keys(pattern),
+    incr: (key) => getTcp().incr(key),
+    sadd: (key, member) => getTcp().sadd(key, member),
+    smembers: (key) => getTcp().smembers(key),
+    ltrim: (key, max) => getTcp().ltrim(key, 0, max - 1),
   }
 }
 
@@ -76,6 +85,10 @@ function restClient(): KvClient {
     lpush: (key, value) => c.lpush(key, value),
     lrange: (key, start, stop) => c.lrange(key, start, stop),
     keys: (pattern) => c.keys(pattern),
+    incr: (key) => c.incr(key),
+    sadd: (key, member) => c.sadd(key, member),
+    smembers: (key) => c.smembers(key),
+    ltrim: (key, max) => c.ltrim(key, 0, max - 1),
   }
 }
 

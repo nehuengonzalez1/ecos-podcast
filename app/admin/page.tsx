@@ -3,8 +3,11 @@ import { isAdmin } from '@/lib/admin'
 import { kv, KV_ACTIVE, kvSource } from '@/lib/kv'
 import { brand } from '@/lib/config/brand'
 import { cargarSuscriptores, calcularMetricas } from '@/lib/admin-data'
+import { statsPorEpisodio, totalesPorAccion, ACCIONES } from '@/lib/analytics'
+import data from '@/data/episodes.json'
 import { SuscriptoresTabla } from './SuscriptoresTabla'
 import { ResyncButton } from './ResyncButton'
+import { Evolucion } from './Evolucion'
 
 export const metadata = { title: `Panel · ${brand.name}` }
 export const dynamic = 'force-dynamic'
@@ -25,8 +28,15 @@ export default async function AdminPage() {
   const ok = await isAdmin()
   if (!ok) redirect('/')
 
-  const [subs, contact] = await Promise.all([cargarSuscriptores(), loadContact()])
+  const [subs, contact, porEpisodio, totales] = await Promise.all([
+    cargarSuscriptores(),
+    loadContact(),
+    statsPorEpisodio(),
+    totalesPorAccion(),
+  ])
   const m = await calcularMetricas(subs)
+  const nombreEpisodio = (slug: string) =>
+    data.episodes.find((e) => e.slug === slug)?.guest ?? slug
 
   return (
     <section className="spotlight-bg pt-32 pb-24 min-h-[80vh]">
@@ -82,6 +92,54 @@ export default async function AdminPage() {
             quedaron guardadas y no se pueden reconstruir. De acá en adelante sí.
           </p>
         )}
+
+        <div className="mt-12">
+          <h2 className="title-display text-2xl">Evolución</h2>
+          <div className="mt-4">
+            <Evolucion eventos={m.eventos} />
+          </div>
+        </div>
+
+        <div className="mt-12">
+          <h2 className="title-display text-2xl">Qué consumen</h2>
+          <div className="mt-4 grid gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {ACCIONES.map((a) => (
+              <StatBox key={a} label={a === 'episodio' ? 'Vistas de episodio' : a} value={totales[a]} />
+            ))}
+          </div>
+
+          <div className="mt-4 overflow-x-auto rounded-sm border border-cream-400/10 bg-ink-800/60">
+            <table className="w-full min-w-[600px] text-left text-xs">
+              <thead className="text-[10px] uppercase tracking-[0.2em] text-cream-400/70">
+                <tr className="border-b border-cream-400/10">
+                  <th className="px-4 py-3">Episodio</th>
+                  {ACCIONES.map((a) => (
+                    <th key={a} className="px-4 py-3">{a === 'episodio' ? 'Vistas' : a}</th>
+                  ))}
+                  <th className="px-4 py-3">Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {porEpisodio.length === 0 && (
+                  <tr>
+                    <td colSpan={ACCIONES.length + 2} className="px-4 py-8 text-center text-cream-400/70">
+                      Todavía no hay actividad registrada. Se empieza a medir desde este cambio.
+                    </td>
+                  </tr>
+                )}
+                {porEpisodio.map((e) => (
+                  <tr key={e.slug} className="border-b border-cream-400/5 last:border-0 hover:bg-ink-700/40">
+                    <td className="px-4 py-3 font-medium text-cream-50">{nombreEpisodio(e.slug)}</td>
+                    {ACCIONES.map((a) => (
+                      <td key={a} className="px-4 py-3 text-cream-200/70">{e.porAccion[a] || '—'}</td>
+                    ))}
+                    <td className="px-4 py-3 text-gold">{e.total}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
 
         <div className="mt-12">
           <h2 className="title-display text-2xl">Suscriptores</h2>

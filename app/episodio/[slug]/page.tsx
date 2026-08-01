@@ -3,6 +3,7 @@ import type { Metadata } from 'next'
 import data from '@/data/episodes.json'
 import { brand } from '@/lib/config/brand'
 import { EpisodeView } from './EpisodeView'
+import { TrackView } from '@/components/TrackView'
 
 // Rendered on-demand — client PremiumGate + Clerk work in dynamic mode without needing SSG.
 export const dynamic = 'force-dynamic'
@@ -33,5 +34,10 @@ export default async function EpisodePage({
   const availableEpisodes = data.episodes.filter((e) => e.status === 'available')
   const upcomingEpisodes = data.episodes.filter((e) => e.status === 'coming-soon')
 
-  return <EpisodeView ep={ep} available={availableEpisodes} upcoming={upcomingEpisodes} />
+  return (
+    <>
+      <TrackView accion="episodio" slug={ep.slug} />
+      <EpisodeView ep={ep} available={availableEpisodes} upcoming={upcomingEpisodes} />
+    </>
+  )
 }

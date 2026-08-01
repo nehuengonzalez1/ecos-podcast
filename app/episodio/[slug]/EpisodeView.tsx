@@ -11,6 +11,7 @@ import { Polaroid } from '@/components/Polaroid'
 import { Stamp } from '@/components/Stamp'
 import { Envelope } from '@/components/Envelope'
 import { PremiumGate } from '@/components/PremiumGate'
+import { TrackedLink } from '@/components/TrackedLink'
 import { formatDate } from '@/lib/utils'
 
 export function EpisodeView({ ep, available, upcoming }: { ep: any; available: any[]; upcoming: any[] }) {
@@ -167,9 +168,9 @@ export function EpisodeView({ ep, available, upcoming }: { ep: any; available: a
                   <div className="mt-4">
                     <Envelope label="La carta" sealText={brand.name[0]} />
                   </div>
-                  <a href={`/premium/${ep.slug}/carta.pdf`} className="mt-4 btn-ghost justify-center">
+                  <TrackedLink accion="carta" slug={ep.slug} href={`/premium/${ep.slug}/carta.pdf`} className="mt-4 btn-ghost justify-center">
                     <Download size={12} /> Descargar carta
-                  </a>
+                  </TrackedLink>
                 </div>
               </PremiumGate>
             </div>
@@ -183,9 +184,9 @@ export function EpisodeView({ ep, available, upcoming }: { ep: any; available: a
                     <div className="aspect-square bg-gradient-to-br from-cream-200/10 to-cream-200/5 flex items-center justify-center text-2xl text-cream-300/60">◱</div>
                     <div className="aspect-square bg-gradient-to-br from-cream-200/10 to-cream-200/5 flex items-center justify-center text-2xl text-cream-300/60">◱</div>
                   </div>
-                  <a href={`/premium/${ep.slug}/regalos.zip`} className="mt-4 btn-ghost w-full justify-center">
+                  <TrackedLink accion="regalos" slug={ep.slug} href={`/premium/${ep.slug}/regalos.zip`} className="mt-4 btn-ghost w-full justify-center">
                     <Download size={12} /> Descargar contenido
-                  </a>
+                  </TrackedLink>
                 </div>
               </PremiumGate>
 
@@ -201,9 +202,9 @@ export function EpisodeView({ ep, available, upcoming }: { ep: any; available: a
                       </div>
                     </div>
                   </div>
-                  <a href={`/premium/${ep.slug}/no-al-aire.mp4`} className="mt-4 btn-ghost w-full justify-center">
+                  <TrackedLink accion="audio" slug={ep.slug} href={`/premium/${ep.slug}/no-al-aire.mp4`} className="mt-4 btn-ghost w-full justify-center">
                     <Play size={12} /> Ver video
-                  </a>
+                  </TrackedLink>
                 </div>
               </PremiumGate>
 

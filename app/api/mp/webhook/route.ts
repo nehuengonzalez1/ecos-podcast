@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { getPreapproval } from '@/lib/mp'
 import { getUserByPreapproval, getSubscription, setSubscription, logEvent } from '@/lib/subscriptions'
+import { validarFirmaMP } from '@/lib/mp-signature'
 
 export const runtime = 'nodejs'
 
@@ -36,7 +37,7 @@ async function process(preapprovalId: string) {
   return { ok: true, status, userId }
 }
 
-export async function POST(req: Request) {
+async function handle(req: Request, exigirFirma: boolean) {
   try {
     const body = await req.json().catch(() => ({} as any))
     const url = new URL(req.url)
@@ -48,6 +49,23 @@ export async function POST(req: Request) {
     }
     if (!id) return NextResponse.json({ error: 'no-id' }, { status: 400 })
 
+    // La firma se valida recién acá: primero descartamos los topics que no
+    // nos interesan, para no rechazar por firma algo que igual ignoraríamos.
+    if (exigirFirma) {
+      const firma = validarFirmaMP(req, String(id))
+      if (!firma.valida) {
+        if (firma.motivo === 'sin-secreto') {
+          // Sin MP_WEBHOOK_SECRET no se puede validar. Seguimos, porque el
+          // estado igual se verifica contra la API de MP, pero lo dejamos
+          // anotado para que no pase inadvertido.
+          console.warn('[mp webhook] MP_WEBHOOK_SECRET sin configurar: firma no validada')
+        } else {
+          console.error('[mp webhook] firma rechazada:', firma.motivo)
+          return NextResponse.json({ error: 'firma-invalida' }, { status: 401 })
+        }
+      }
+    }
+
     const res = await process(String(id))
     return NextResponse.json(res)
   } catch (e: any) {
@@ -57,7 +75,15 @@ export async function POST(req: Request) {
   }
 }
 
-// MP a veces pega también con GET para verificar el endpoint
+export async function POST(req: Request) {
+  return handle(req, true)
+}
+
+/**
+ * MP también pega con GET para verificar que el endpoint existe. Esos
+ * pedidos no vienen firmados, así que no se les exige firma: igual no
+ * pueden alterar nada, porque el estado se resuelve consultando a MP.
+ */
 export async function GET(req: Request) {
-  return POST(req)
+  return handle(req, false)
 }
