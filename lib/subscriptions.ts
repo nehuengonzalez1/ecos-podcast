@@ -10,6 +10,49 @@ export type SubscriptionStatus = {
 
 const key = (userId: string) => `sub:${userId}`
 const revKey = (preapprovalId: string) => `pre:${preapprovalId}:user`
+const EVENTS_KEY = 'sub:events'
+
+export type SubEvent = {
+  at: string
+  userId: string
+  status: string
+  preapprovalId?: string
+  /** true cuando el evento representa una alta (paso a activa) */
+  activated: boolean
+}
+
+/**
+ * Registro append-only de cada cambio de suscripción.
+ *
+ * El estado por usuario (sub:{id}) se sobrescribe en cada webhook, así que
+ * por sí solo no permite reconstruir la evolución: cuántas altas hubo el mes
+ * pasado, cuánta gente se fue, etc. Esta lista es lo único que guarda esa
+ * historia, y no se puede reconstruir hacia atrás.
+ */
+export async function logEvent(e: SubEvent): Promise<void> {
+  if (!kv) return
+  try {
+    await kv.lpush(EVENTS_KEY, JSON.stringify(e))
+  } catch (err) {
+    // No romper el webhook por un fallo del registro: el estado del
+    // suscriptor es más importante que la métrica.
+    console.error('[subs] no se pudo registrar el evento:', err)
+  }
+}
+
+export async function listEvents(limit = 500): Promise<SubEvent[]> {
+  if (!kv) return []
+  try {
+    const raw = await kv.lrange(EVENTS_KEY, 0, limit - 1)
+    return raw
+      .map((r) => {
+        try { return JSON.parse(r as string) as SubEvent } catch { return null }
+      })
+      .filter(Boolean) as SubEvent[]
+  } catch {
+    return []
+  }
+}
 
 export async function getSubscription(userId: string): Promise<SubscriptionStatus> {
   if (!kv) return { active: false }
