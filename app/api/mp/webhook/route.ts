@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { getPreapproval } from '@/lib/mp'
-import { getUserByPreapproval, getSubscription, setSubscription } from '@/lib/subscriptions'
+import { getUserByPreapproval, getSubscription, setSubscription, logEvent } from '@/lib/subscriptions'
 
 export const runtime = 'nodejs'
 
@@ -24,6 +24,14 @@ async function process(preapprovalId: string) {
       ? new Date().toISOString()
       : existing.cancelledAt,
     lastEvent: status ?? 'unknown',
+  })
+  // Después de guardar el estado, para no perder el evento si esto falla.
+  await logEvent({
+    at: new Date().toISOString(),
+    userId,
+    status: status ?? 'unknown',
+    preapprovalId,
+    activated: active && !existing.active,
   })
   return { ok: true, status, userId }
 }

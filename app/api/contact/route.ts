@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server'
 import { kv, kvSource } from '@/lib/kv'
+import { enviarAvisoContacto } from '@/lib/mailer'
 
 export const runtime = 'nodejs'
 
@@ -41,7 +42,13 @@ export async function POST(req: Request) {
       // pero lo dejamos en los logs con el detalle para poder rastrearlo.
       console.error('[contact] no se pudo guardar el mensaje:', kvSource(), e, entry)
     }
-    return NextResponse.json({ ok: true, stored })
+    // El email es la copia que sobrevive aunque se pierda la base, así que
+    // se manda aunque el guardado haya fallado.
+    const emailed = await enviarAvisoContacto({
+      nombre, email, instagram, ubicacion, historia, motivo, notas, origen,
+    })
+
+    return NextResponse.json({ ok: true, stored, emailed })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'error' }, { status: 500 })
   }

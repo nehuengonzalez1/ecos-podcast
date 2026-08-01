@@ -2,31 +2,12 @@ import { redirect } from 'next/navigation'
 import { isAdmin } from '@/lib/admin'
 import { kv, KV_ACTIVE, kvSource } from '@/lib/kv'
 import { brand } from '@/lib/config/brand'
-import { formatDate } from '@/lib/utils'
+import { cargarSuscriptores, calcularMetricas } from '@/lib/admin-data'
+import { SuscriptoresTabla } from './SuscriptoresTabla'
+import { ResyncButton } from './ResyncButton'
 
 export const metadata = { title: `Panel · ${brand.name}` }
 export const dynamic = 'force-dynamic'
-
-type Sub = {
-  active: boolean
-  preapprovalId?: string
-  activatedAt?: string
-  cancelledAt?: string
-  lastEvent?: string
-}
-
-async function loadStats() {
-  if (!kv) return { total: 0, active: 0, subs: [] as Sub[], keys: [] as string[], error: true }
-  try {
-    const keys = await kv.keys('sub:*')
-    const values = await Promise.all(keys.map((k) => kv!.get<Sub>(k)))
-    const subs = values.filter(Boolean) as Sub[]
-    const active = subs.filter((s) => s.active).length
-    return { total: subs.length, active, subs, keys }
-  } catch {
-    return { total: 0, active: 0, subs: [] as Sub[], keys: [] as string[], error: true }
-  }
-}
 
 async function loadContact() {
   if (!kv) return []
@@ -44,7 +25,8 @@ export default async function AdminPage() {
   const ok = await isAdmin()
   if (!ok) redirect('/')
 
-  const [stats, contact] = await Promise.all([loadStats(), loadContact()])
+  const [subs, contact] = await Promise.all([cargarSuscriptores(), loadContact()])
+  const m = await calcularMetricas(subs)
 
   return (
     <section className="spotlight-bg pt-32 pb-24 min-h-[80vh]">
@@ -69,47 +51,42 @@ export default async function AdminPage() {
           )}
         </div>
 
-        <div className="mt-10 grid gap-4 sm:grid-cols-3">
-          <StatBox label="Total registrados con actividad" value={stats.total} />
-          <StatBox label="Suscriptores activos" value={stats.active} accent />
+        <div className="mt-6">
+          <ResyncButton />
+        </div>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <StatBox label="Suscriptores activos" value={m.activos} accent />
+          <StatBox
+            label="Ingreso mensual"
+            value={`$${m.ingresoMensual.toLocaleString('es-AR')}`}
+            hint={`${m.activos} × $${m.precio.toLocaleString('es-AR')}`}
+          />
+          <StatBox
+            label="Antigüedad promedio"
+            value={m.antiguedadPromedio === null ? '—' : `${m.antiguedadPromedio} d`}
+            hint="de los activos"
+          />
           <StatBox label="Mensajes recibidos" value={contact.length} />
         </div>
 
+        <div className="mt-4 grid gap-4 sm:grid-cols-3">
+          <StatBox label="Altas · últimos 30 días" value={m.altasUltimos30} />
+          <StatBox label="Bajas · últimos 30 días" value={m.bajasUltimos30} />
+          <StatBox label="Cancelados históricos" value={m.cancelados} />
+        </div>
+
+        {m.eventos.length === 0 && (
+          <p className="mt-4 text-[11px] text-cream-400/70">
+            El registro de eventos empezó recién: las altas y bajas anteriores a este cambio no
+            quedaron guardadas y no se pueden reconstruir. De acá en adelante sí.
+          </p>
+        )}
+
         <div className="mt-12">
-          <h2 className="title-display text-2xl">Suscripciones</h2>
-          <div className="mt-4 overflow-x-auto rounded-sm border border-cream-400/10 bg-ink-800/60">
-            <table className="w-full text-left text-xs">
-              <thead className="text-[10px] uppercase tracking-widest text-cream-400/70">
-                <tr>
-                  <th className="p-3">User ID</th>
-                  <th className="p-3">Estado</th>
-                  <th className="p-3">Preapproval</th>
-                  <th className="p-3">Activada</th>
-                  <th className="p-3">Cancelada</th>
-                  <th className="p-3">Último evento</th>
-                </tr>
-              </thead>
-              <tbody className="text-cream-100/90">
-                {stats.keys.map((k, i) => {
-                  const s = stats.subs[i]
-                  if (!s) return null
-                  const uid = k.replace(/^sub:/, '')
-                  return (
-                    <tr key={k} className="border-t border-cream-400/10">
-                      <td className="p-3 font-mono text-[10px]">{uid}</td>
-                      <td className="p-3">{s.active ? <span className="text-gold">Activa</span> : <span className="text-cream-400/70">Inactiva</span>}</td>
-                      <td className="p-3 font-mono text-[10px]">{s.preapprovalId ?? '—'}</td>
-                      <td className="p-3">{s.activatedAt ? formatDate(s.activatedAt) : '—'}</td>
-                      <td className="p-3">{s.cancelledAt ? formatDate(s.cancelledAt) : '—'}</td>
-                      <td className="p-3">{s.lastEvent ?? '—'}</td>
-                    </tr>
-                  )
-                })}
-                {stats.keys.length === 0 && (
-                  <tr><td colSpan={6} className="p-6 text-center text-cream-400/70">Todavía no hay suscripciones registradas.</td></tr>
-                )}
-              </tbody>
-            </table>
+          <h2 className="title-display text-2xl">Suscriptores</h2>
+          <div className="mt-4">
+            <SuscriptoresTabla subs={subs} />
           </div>
         </div>
 
@@ -157,11 +134,22 @@ export default async function AdminPage() {
   )
 }
 
-function StatBox({ label, value, accent }: { label: string; value: number; accent?: boolean }) {
+function StatBox({
+  label,
+  value,
+  accent,
+  hint,
+}: {
+  label: string
+  value: number | string
+  accent?: boolean
+  hint?: string
+}) {
   return (
     <div className={`border p-6 text-center ${accent ? 'border-gold/60 bg-gold/5' : 'border-cream-400/10 bg-ink-800/60'}`}>
       <div className="font-serif text-4xl text-cream-50">{value}</div>
       <div className="mt-1 text-[10px] uppercase tracking-widest text-cream-400/70">{label}</div>
+      {hint && <div className="mt-1 text-[10px] text-cream-400/50">{hint}</div>}
     </div>
   )
 }

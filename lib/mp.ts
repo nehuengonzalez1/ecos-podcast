@@ -55,3 +55,36 @@ export async function cancelPreapproval(id: string) {
   if (!preapproval) throw new Error('MP not configured')
   return await preapproval.update({ id, body: { status: 'cancelled' } })
 }
+
+export type MpPreapproval = {
+  id: string
+  status: string
+  external_reference?: string
+  date_created?: string
+  last_modified?: string
+}
+
+/**
+ * Lista todas las suscripciones de la cuenta, paginando.
+ *
+ * Esto es lo que hace recuperable la base de datos: cada preapproval lleva
+ * en `external_reference` el id del usuario de Clerk (ver createPreapproval),
+ * así que Mercado Pago es de hecho la fuente de verdad y el estado local es
+ * una copia acelerada. Si Redis se vacía, se reconstruye desde acá.
+ */
+export async function searchPreapprovals(): Promise<MpPreapproval[]> {
+  if (!preapproval) throw new Error('MP not configured')
+  const out: MpPreapproval[] = []
+  const limit = 50
+  let offset = 0
+
+  // Tope de seguridad: evita un bucle infinito si la API cambia de forma.
+  for (let page = 0; page < 40; page++) {
+    const res: any = await preapproval.search({ options: { limit, offset } })
+    const batch: MpPreapproval[] = res?.results ?? []
+    out.push(...batch)
+    if (batch.length < limit) break
+    offset += limit
+  }
+  return out
+}
