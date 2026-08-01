@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server'
-import { kv } from '@vercel/kv'
+import { kv, kvSource } from '@/lib/kv'
 
 export const runtime = 'nodejs'
 
@@ -28,13 +28,20 @@ export async function POST(req: Request) {
       origen,
       at: new Date().toISOString(),
     }
+    // `stored` viaja en la respuesta para poder diagnosticar desde afuera si
+    // el mensaje se persistió. Sin esto, un fallo de Redis es invisible: la
+    // API respondía ok igual y el mensaje se perdía sin dejar rastro.
+    let stored = false
     try {
+      if (!kv) throw new Error(`Redis ${kvSource()}`)
       await kv.lpush('contact:inbox', JSON.stringify(entry))
+      stored = true
     } catch (e) {
-      // KV not configured yet — log to server, don't fail the user submission
-      console.warn('[contact] KV not configured, entry lost:', entry)
+      // No fallamos la operación del usuario por un problema de infraestructura,
+      // pero lo dejamos en los logs con el detalle para poder rastrearlo.
+      console.error('[contact] no se pudo guardar el mensaje:', kvSource(), e, entry)
     }
-    return NextResponse.json({ ok: true })
+    return NextResponse.json({ ok: true, stored })
   } catch (e: any) {
     return NextResponse.json({ error: e?.message ?? 'error' }, { status: 500 })
   }
