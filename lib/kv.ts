@@ -35,6 +35,12 @@ export type KvClient = {
   smembers(key: string): Promise<string[]>
   /** Recorta la lista a los primeros `max` elementos. */
   ltrim(key: string, max: number): Promise<unknown>
+  del(key: string): Promise<unknown>
+  /** Vencimiento en segundos. Se usa para los contadores de rate limit. */
+  expire(key: string, segundos: number): Promise<unknown>
+  /** Saca todas las apariciones de `value` de la lista. */
+  lrem(key: string, value: string): Promise<unknown>
+  llen(key: string): Promise<number>
 }
 
 /**
@@ -74,6 +80,11 @@ function tcpClient(): KvClient {
     sadd: (key, member) => getTcp().sadd(key, member),
     smembers: (key) => getTcp().smembers(key),
     ltrim: (key, max) => getTcp().ltrim(key, 0, max - 1),
+    del: (key) => getTcp().del(key),
+    expire: (key, segundos) => getTcp().expire(key, segundos),
+    // count 0 = borra todas las apariciones, sin importar en qué posición estén.
+    lrem: (key, value) => getTcp().lrem(key, 0, value),
+    llen: (key) => getTcp().llen(key),
   }
 }
 
@@ -89,6 +100,10 @@ function restClient(): KvClient {
     sadd: (key, member) => c.sadd(key, member),
     smembers: (key) => c.smembers(key),
     ltrim: (key, max) => c.ltrim(key, 0, max - 1),
+    del: (key) => c.del(key),
+    expire: (key, segundos) => c.expire(key, segundos),
+    lrem: (key, value) => c.lrem(key, 0, value),
+    llen: (key) => c.llen(key),
   }
 }
 
