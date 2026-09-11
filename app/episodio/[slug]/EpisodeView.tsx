@@ -12,6 +12,7 @@ import { Stamp } from '@/components/Stamp'
 import { Envelope } from '@/components/Envelope'
 import { PremiumGate } from '@/components/PremiumGate'
 import { TrackedLink } from '@/components/TrackedLink'
+import { MuroMensajes } from '@/components/MuroMensajes'
 import { formatDate } from '@/lib/utils'
 
 export function EpisodeView({ ep, available, upcoming }: { ep: any; available: any[]; upcoming: any[] }) {
@@ -267,6 +268,8 @@ export function EpisodeView({ ep, available, upcoming }: { ep: any; available: a
                 </div>
               </div>
             </div>
+
+            <MuroMensajes slug={ep.slug} guest={ep.guest} />
 
             <p className="mt-16 text-center font-hand text-2xl text-gold/80">
               Detrás de cada historia, hay alguien que decidió ser real. Gracias por ser parte de esto. ♡

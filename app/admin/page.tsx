@@ -4,10 +4,13 @@ import { kv, KV_ACTIVE, kvSource } from '@/lib/kv'
 import { brand } from '@/lib/config/brand'
 import { cargarSuscriptores, calcularMetricas } from '@/lib/admin-data'
 import { statsPorEpisodio, totalesPorAccion, ACCIONES } from '@/lib/analytics'
+import { mensajesPendientes, AUTO_APROBAR } from '@/lib/muro'
+import { buscarEpisodio } from '@/lib/episodios'
 import data from '@/data/episodes.json'
 import { SuscriptoresTabla } from './SuscriptoresTabla'
 import { ResyncButton } from './ResyncButton'
 import { Evolucion } from './Evolucion'
+import { MuroModeracion, type ItemModeracion } from './MuroModeracion'
 
 export const metadata = { title: `Panel · ${brand.name}` }
 export const dynamic = 'force-dynamic'
@@ -28,13 +31,25 @@ export default async function AdminPage() {
   const ok = await isAdmin()
   if (!ok) redirect('/')
 
-  const [subs, contact, porEpisodio, totales] = await Promise.all([
+  const [subs, contact, porEpisodio, totales, pendientes] = await Promise.all([
     cargarSuscriptores(),
     loadContact(),
     statsPorEpisodio(),
     totalesPorAccion(),
+    mensajesPendientes(),
   ])
   const m = await calcularMetricas(subs)
+
+  // El invitado y su casilla se resuelven acá, en el servidor: así el panel
+  // puede avisar antes de aprobar si el mensaje va a llegarle o no.
+  const aModerar: ItemModeracion[] = pendientes.map((msg) => {
+    const ep = buscarEpisodio(msg.slug)
+    return {
+      ...msg,
+      episodio: ep?.guest ?? msg.slug,
+      avisaAlProtagonista: !!ep?.guestEmail,
+    }
+  })
   const nombreEpisodio = (slug: string) =>
     data.episodes.find((e) => e.slug === slug)?.guest ?? slug
 
@@ -92,6 +107,33 @@ export default async function AdminPage() {
             quedaron guardadas y no se pueden reconstruir. De acá en adelante sí.
           </p>
         )}
+
+        <div className="mt-12 scroll-mt-24" id="muro">
+          <div className="flex flex-wrap items-baseline gap-3">
+            <h2 className="title-display text-2xl">Muro · a moderar</h2>
+            {aModerar.length > 0 && (
+              <span className="rounded-sm border border-gold/60 bg-gold/10 px-2 py-0.5 text-[11px] uppercase tracking-widest text-gold">
+                {aModerar.length} esperando
+              </span>
+            )}
+          </div>
+          <p className="mt-2 max-w-2xl text-sm text-cream-200/70">
+            Mensajes que la gente le dejó a cada invitado. Al publicar uno, además de aparecer en
+            el muro del episodio se le envía por mail al protagonista si tiene casilla cargada en{' '}
+            <code className="text-cream-100/80">data/episodes.json</code>.
+          </p>
+
+          {AUTO_APROBAR && (
+            <p className="mt-3 rounded-sm border border-red-400/50 bg-red-400/5 px-3 py-2 text-xs text-red-300">
+              <code>MURO_AUTO_APROBAR=1</code> está activo: los mensajes se publican solos, sin
+              pasar por acá.
+            </p>
+          )}
+
+          <div className="mt-4">
+            <MuroModeracion pendientes={aModerar} />
+          </div>
+        </div>
 
         <div className="mt-12">
           <h2 className="title-display text-2xl">Evolución</h2>

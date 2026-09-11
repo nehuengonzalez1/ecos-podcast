@@ -5,8 +5,8 @@ import { usePathname } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Menu, X, User } from 'lucide-react'
 import { brand } from '@/lib/config/brand'
-import { CLERK_ACTIVE_CLIENT } from '@/lib/env'
 import { cn } from '@/lib/utils'
+import { useClerkReady } from './ClerkReady'
 import { NavAuth } from './NavAuth'
 
 const links = [
@@ -18,6 +18,7 @@ const links = [
 
 export function Nav() {
   const pathname = usePathname()
+  const clerkListo = useClerkReady()
   const [scrolled, setScrolled] = useState(false)
   const [open, setOpen] = useState(false)
 
@@ -68,7 +69,7 @@ export function Nav() {
         </nav>
 
         <div className="hidden md:flex items-center gap-3">
-          {CLERK_ACTIVE_CLIENT ? (
+          {clerkListo ? (
             <NavAuth />
           ) : (
             <span className="rounded-sm border border-cream-400/15 px-3 py-1 text-[10px] uppercase tracking-widest text-cream-400/60">
@@ -102,7 +103,7 @@ export function Nav() {
                 </Link>
               )
             })}
-            {CLERK_ACTIVE_CLIENT && (
+            {clerkListo && (
               <div className="pt-2" onClick={() => setOpen(false)}>
                 <NavAuth />
               </div>
