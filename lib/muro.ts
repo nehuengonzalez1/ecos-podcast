@@ -181,8 +181,8 @@ export async function contarPendientes(): Promise<number> {
 }
 
 /**
- * Publica un mensaje. Devuelve el mensaje ya aprobado para que quien llama
- * pueda avisarle al protagonista sin volver a leerlo de la base.
+ * Publica un mensaje. Devuelve el mensaje ya aprobado, o null si no existe:
+ * quien llama lo usa para distinguir "publicado" de "ese id no está".
  *
  * Es idempotente: aprobar dos veces no lo duplica en el muro. Importa
  * porque el panel puede recibir dos clicks o quedar abierto en dos pestañas.

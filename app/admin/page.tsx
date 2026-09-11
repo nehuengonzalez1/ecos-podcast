@@ -40,16 +40,12 @@ export default async function AdminPage() {
   ])
   const m = await calcularMetricas(subs)
 
-  // El invitado y su casilla se resuelven acá, en el servidor: así el panel
-  // puede avisar antes de aprobar si el mensaje va a llegarle o no.
-  const aModerar: ItemModeracion[] = pendientes.map((msg) => {
-    const ep = buscarEpisodio(msg.slug)
-    return {
-      ...msg,
-      episodio: ep?.guest ?? msg.slug,
-      avisaAlProtagonista: !!ep?.guestEmail,
-    }
-  })
+  // El nombre del invitado se resuelve acá, en el servidor, para que la cola
+  // muestre a quién le escribieron y no un slug.
+  const aModerar: ItemModeracion[] = pendientes.map((msg) => ({
+    ...msg,
+    episodio: buscarEpisodio(msg.slug)?.guest ?? msg.slug,
+  }))
   const nombreEpisodio = (slug: string) =>
     data.episodes.find((e) => e.slug === slug)?.guest ?? slug
 
@@ -118,9 +114,8 @@ export default async function AdminPage() {
             )}
           </div>
           <p className="mt-2 max-w-2xl text-sm text-cream-200/70">
-            Mensajes que la gente le dejó a cada invitado. Al publicar uno, además de aparecer en
-            el muro del episodio se le envía por mail al protagonista si tiene casilla cargada en{' '}
-            <code className="text-cream-100/80">data/episodes.json</code>.
+            Mensajes que la gente le dejó a cada invitado. Al publicar uno aparece en el muro de
+            ese episodio. No se le reenvía por mail a nadie: el muro es donde vive.
           </p>
 
           {AUTO_APROBAR && (

@@ -1,23 +1,19 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, X, Loader2, Mail, MailX } from 'lucide-react'
+import { Check, X, Loader2 } from 'lucide-react'
 import { ETIQUETAS, type Mensaje } from '@/lib/muro-publico'
 
 /**
  * Cola de moderación del muro.
  *
- * Aprobar acá es lo que hace que el mensaje se publique y le llegue por mail
- * al protagonista. Por eso la fila avisa de antemano si el episodio tiene
- * casilla cargada: no es lo mismo publicar sabiendo que la persona lo va a
- * recibir que publicar a ciegas.
+ * Aprobar acá es lo único que hace que el mensaje se vea en la página. No se
+ * le reenvía a nadie por mail: el muro es el lugar donde el mensaje vive.
  */
 
 export type ItemModeracion = Mensaje & {
   /** Nombre del invitado, para no mostrar solo el slug. */
   episodio: string
-  /** Si el episodio tiene `guestEmail`, aprobar también se lo manda. */
-  avisaAlProtagonista: boolean
 }
 
 type Resultado = { texto: string; ok: boolean }
@@ -47,16 +43,11 @@ export function MuroModeracion({ pendientes }: { pendientes: ItemModeracion[] })
       // el mensaje sigue en la cola y se puede reintentar.
       setItems((xs) => xs.filter((x) => x.id !== item.id))
 
-      if (accion === 'rechazar') {
-        setResultado({ ok: true, texto: `Mensaje de ${item.nombre} descartado.` })
-      } else if (json?.avisado) {
-        setResultado({ ok: true, texto: `Publicado y enviado a ${item.episodio}.` })
-      } else {
-        setResultado({
-          ok: true,
-          texto: `Publicado en el muro. ${item.episodio} no tiene email cargado, así que no se le envió.`,
-        })
-      }
+      setResultado(
+        accion === 'rechazar'
+          ? { ok: true, texto: `Mensaje de ${item.nombre} descartado.` }
+          : { ok: true, texto: `Publicado en el muro de ${item.episodio}.` },
+      )
     } catch {
       setResultado({ ok: false, texto: 'Error de red. Probá de nuevo.' })
     } finally {
@@ -127,18 +118,6 @@ export function MuroModeracion({ pendientes }: { pendientes: ItemModeracion[] })
               >
                 <X size={13} /> Descartar
               </button>
-
-              <span className="inline-flex items-center gap-1.5 text-[11px] text-cream-400/70">
-                {m.avisaAlProtagonista ? (
-                  <>
-                    <Mail size={12} /> Al publicar se le envía por mail
-                  </>
-                ) : (
-                  <>
-                    <MailX size={12} /> Sin email del invitado: solo se publica
-                  </>
-                )}
-              </span>
             </div>
           </div>
         )

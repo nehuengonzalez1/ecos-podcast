@@ -94,13 +94,11 @@ export async function enviarAvisoContacto(m: MensajeContacto): Promise<boolean> 
   }
 }
 
-/** Lo mínimo del episodio que necesitan los mails del muro. */
+/** Lo mínimo del episodio que necesita el aviso de moderación del muro. */
 export type EpisodioRef = {
   slug: string
   guest: string
   number: string
-  /** Casilla del protagonista. Si no está, el mensaje igual se publica. */
-  guestEmail?: string
 }
 
 export type MensajeMuro = {
@@ -114,10 +112,12 @@ export type MensajeMuro = {
 /**
  * Aviso a moderación: entró un mensaje nuevo y está esperando aprobación.
  *
- * El `replyTo` apunta a quien escribió (si dejó email) para poder
- * responderle sin salir del cliente de correo. Ese dato no viaja al mail del
- * protagonista: la persona lo dejó para que le avisemos nosotros, no para
- * que quede expuesto ante un tercero.
+ * Es el único mail que dispara el muro. Los mensajes no se le reenvían a la
+ * persona del episodio: viven en la página y se leen ahí.
+ *
+ * El `replyTo` apunta a quien escribió (si dejó email) para poder responderle
+ * sin salir del cliente de correo. Esa dirección no sale de acá, que es una
+ * casilla del equipo.
  */
 export async function enviarAvisoMuro(m: MensajeMuro, ep: EpisodioRef): Promise<boolean> {
   const to = moderadores()
@@ -150,61 +150,6 @@ export async function enviarAvisoMuro(m: MensajeMuro, ep: EpisodioRef): Promise<
     return true
   } catch (e) {
     console.error('[mailer] no se pudo avisar del mensaje del muro:', e)
-    return false
-  }
-}
-
-/**
- * El mensaje llega a la persona de la que habla el episodio.
- *
- * Se manda recién cuando el mensaje está aprobado, que es el punto de toda
- * la moderación: lo que llega a esa casilla ya pasó por ojos humanos.
- */
-export async function enviarMensajeAlProtagonista(
-  m: MensajeMuro,
-  ep: EpisodioRef,
-): Promise<boolean> {
-  if (!resend || !ep.guestEmail) return false
-
-  const url = `${appUrl()}/episodio/${ep.slug}`
-  const html = `
-    <div style="font-family:system-ui,sans-serif;background:#0a0806;color:#f5e9d3;padding:28px">
-      <p style="color:#ff8000;font-size:11px;letter-spacing:3px;text-transform:uppercase;margin:0 0 14px">
-        ${brand.name} · ${brand.tagline}
-      </p>
-      <h2 style="margin:0 0 6px;font-size:22px;font-weight:600">
-        ${escapar(ep.guest.split(' ')[0])}, alguien te dejó un mensaje.
-      </h2>
-      <p style="color:#8f8168;font-size:13px;line-height:1.6;margin:0 0 24px">
-        Lo escribieron después de ver tu episodio. Lo leímos antes de enviártelo.
-      </p>
-
-      <div style="background:#100d0a;border:1px solid rgba(143,129,104,0.25);padding:20px;margin-bottom:24px">
-        <p style="white-space:pre-wrap;line-height:1.7;margin:0 0 14px;font-size:15px">${escapar(m.mensaje)}</p>
-        <p style="color:#ff8000;font-size:12px;letter-spacing:1px;margin:0">
-          — ${escapar(m.nombre)}${m.ciudad ? `, ${escapar(m.ciudad)}` : ''}
-        </p>
-      </div>
-
-      <a href="${url}#muro" style="display:inline-block;border:1px solid #ff8000;color:#ff8000;padding:10px 18px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase">Ver el muro de tu episodio</a>
-
-      <p style="color:#8f8168;font-size:12px;line-height:1.6;margin:24px 0 0">
-        Gracias por haber contado tu historia. Esto es lo que dejó.
-      </p>
-    </div>`
-
-  try {
-    await resend.emails.send({
-      from: remitente(),
-      to: [ep.guestEmail],
-      // Responder vuelve al equipo, no a quien escribió: su casilla es privada.
-      ...(moderadores()[0] ? { replyTo: moderadores()[0] } : {}),
-      subject: `Te dejaron un mensaje en ${brand.name}`,
-      html,
-    })
-    return true
-  } catch (e) {
-    console.error('[mailer] no se pudo enviar el mensaje al protagonista:', e)
     return false
   }
 }

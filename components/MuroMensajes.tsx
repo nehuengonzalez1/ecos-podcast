@@ -166,7 +166,7 @@ export function MuroMensajes({ slug, guest }: { slug: string; guest: string }) {
         <div className="divider-line" />
         <p className="body-copy mx-auto mt-4 max-w-xl text-base leading-relaxed text-cream-200/70">
           {nombrePila} contó algo que no era fácil de contar. Si algo de su historia te tocó,
-          escribíselo acá: lo leemos, lo publicamos en este muro y se lo hacemos llegar.
+          escribíselo acá: lo leemos y queda publicado en este muro, para que lo lea quien pase.
         </p>
       </div>
 
@@ -264,8 +264,7 @@ export function MuroMensajes({ slug, guest }: { slug: string; guest: string }) {
                 className={inputBase}
               />
               <p className="mt-1 text-[11px] text-cream-400/60">
-                No se publica ni se le pasa a nadie. Lo usamos solo para avisarte cuando tu
-                mensaje esté en el muro.
+                No se publica ni se comparte con nadie. Es solo por si necesitamos escribirte.
               </p>
             </div>
 
@@ -295,8 +294,8 @@ export function MuroMensajes({ slug, guest }: { slug: string; guest: string }) {
             <div aria-live="polite">
               {estado === 'pendiente' && (
                 <p className="rounded-sm border border-gold/40 bg-gold/5 p-4 text-center text-sm text-cream-100/90">
-                  Tu mensaje ya está en camino. Lo leemos, lo publicamos acá y se lo hacemos
-                  llegar a {nombrePila}. Gracias por tomarte el momento.
+                  Recibimos tu mensaje. Lo leemos y en breve va a estar publicado en el muro de
+                  {' '}{nombrePila}. Gracias por tomarte el momento.
                 </p>
               )}
               {estado === 'publicado' && (

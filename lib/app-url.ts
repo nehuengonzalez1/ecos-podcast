@@ -1,10 +1,10 @@
 /**
  * La URL publica del sitio.
  *
- * Se usa para armar links que se leen fuera del sitio: los mails del muro
- * y el back_url del checkout de Mercado Pago. Un valor equivocado aca no se
- * nota navegando -- se nota cuando alguien termina de pagar y cae en un 404,
- * o cuando el protagonista abre el mail y el link no lleva a ningun lado.
+ * Se usa para armar links que se leen fuera del sitio: el aviso de moderacion
+ * del muro y el back_url del checkout de Mercado Pago. Un valor equivocado
+ * aca no se nota navegando -- se nota cuando alguien termina de pagar y cae
+ * en un 404, o cuando el boton del mail no lleva a ningun lado.
  *
  * Vive en un solo lugar a proposito. Antes la resolvian por separado
  * lib/mailer.ts y lib/mp.ts, y alcanza con que una de las dos se quede atras

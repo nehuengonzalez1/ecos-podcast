@@ -1,8 +1,6 @@
 import { NextResponse } from 'next/server'
 import { isAdmin } from '@/lib/admin'
-import { buscarEpisodio, refDeEpisodio } from '@/lib/episodios'
-import { enviarMensajeAlProtagonista } from '@/lib/mailer'
-import { aprobar, rechazar, limpiar, ETIQUETAS } from '@/lib/muro'
+import { aprobar, rechazar, limpiar } from '@/lib/muro'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
@@ -10,9 +8,9 @@ export const dynamic = 'force-dynamic'
 /**
  * Moderación del muro: aprobar publica, rechazar borra.
  *
- * Aprobar es el momento en que el mensaje efectivamente le llega al
- * protagonista, no cuando alguien lo escribe. Todo lo que sale por mail
- * desde acá ya pasó por una persona del equipo.
+ * Nada de lo que entra al muro se ve en público sin pasar antes por acá, que
+ * es el punto de toda la moderación: el muro vive en la página de alguien que
+ * contó algo difícil, y lo que se publique ahí ya lo leyó una persona.
  */
 export async function POST(req: Request) {
   if (!(await isAdmin())) {
@@ -36,23 +34,9 @@ export async function POST(req: Request) {
     const m = await aprobar(id)
     if (!m) return NextResponse.json({ error: 'mensaje-desconocido' }, { status: 404 })
 
-    // Se avisa al protagonista solo si el episodio tiene casilla cargada.
-    // El mensaje se publica igual: `avisado` es información, no condición.
-    let avisado = false
-    const ep = buscarEpisodio(m.slug)
-    if (ep) {
-      avisado = await enviarMensajeAlProtagonista(
-        {
-          nombre: m.nombre,
-          mensaje: m.mensaje,
-          etiqueta: ETIQUETAS[m.tipo],
-          ...(m.ciudad ? { ciudad: m.ciudad } : {}),
-        },
-        refDeEpisodio(ep),
-      )
-    }
-
-    return NextResponse.json({ ok: true, accion, avisado })
+    // Aprobar solo publica. El mensaje no se le reenvía por mail a la persona
+    // del episodio: el muro es el lugar donde vive y donde se lo lee.
+    return NextResponse.json({ ok: true, accion })
   } catch (e) {
     console.error('[muro] error moderando:', e)
     return NextResponse.json({ error: 'error' }, { status: 500 })

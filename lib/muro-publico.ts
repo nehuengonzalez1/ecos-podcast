@@ -32,9 +32,10 @@ export type Mensaje = {
   tipo: TipoMensaje
   ciudad?: string
   /**
-   * Privado. Sirve para poder avisarle si el protagonista responde, y para
-   * tener a quién escribirle si hay que verificar algo. Nunca se publica:
-   * `aPublico()` lo saca antes de que el mensaje salga de la capa de datos.
+   * Privado y opcional. Lo único que se hace con él es ponerlo como `replyTo`
+   * del aviso de moderación, para poder responderle a quien escribió sin
+   * salir del cliente de correo. Nunca se publica: `aPublico()` lo saca antes
+   * de que el mensaje salga de la capa de datos.
    */
   email?: string
   at: string

@@ -21,16 +21,11 @@ export function esEpisodioPublicado(slug: string): boolean {
   return !!ep && ep.status === 'available'
 }
 
-/**
- * `guestEmail` es opcional y se agrega a mano en data/episodes.json cuando
- * el protagonista quiere recibir los mensajes. Si no está, el muro funciona
- * igual: los mensajes se publican y quedan para cuando se lo quieras pasar.
- */
+/** Lo que necesita el aviso de moderación para identificar el episodio. */
 export function refDeEpisodio(ep: any): EpisodioRef {
   return {
     slug: ep.slug,
     guest: ep.guest,
     number: String(ep.number),
-    ...(ep.guestEmail ? { guestEmail: String(ep.guestEmail) } : {}),
   }
 }
