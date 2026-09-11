@@ -12,3 +12,10 @@ dist
 .vercel
 
 .vercel
+.env*
+# La plantilla de variables si tiene que viajar: es lo que le dice a quien
+# clone el repo que necesita configurar. No lleva ningun valor real.
+!.env.example
+
+# Cache incremental de TypeScript, se regenera en cada build.
+tsconfig.tsbuildinfo
