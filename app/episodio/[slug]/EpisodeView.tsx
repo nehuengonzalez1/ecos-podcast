@@ -11,6 +11,7 @@ import { TrackedLink } from '@/components/TrackedLink'
 import { idDeYoutube, miniaturaDeYoutube } from '@/lib/youtube'
 import { IconoSpotify } from '@/components/IconoSpotify'
 import { ReproductorEpisodio } from '@/components/ReproductorEpisodio'
+import { ModalCarta } from '@/components/ModalCarta'
 import { MuroProvider, DejaTuMensaje, LoQueQuedo } from '@/components/Muro'
 
 const GUARDADOS = 'episodios:guardados'
@@ -31,6 +32,21 @@ const CARTA_POR_DEFECTO = '/imagenes/carta.jpg'
  * episodio tenga la foto de su regalo puntual.
  */
 const REGALO_POR_DEFECTO = '/imagenes/regalo.jpg'
+
+/**
+ * Texto de la carta cuando el episodio todavía no tiene el suyo.
+ *
+ * Está escrito para servirle a cualquier invitado, así que los trece
+ * episodios tienen una carta de verdad desde hoy en vez de un bloque vacío.
+ * `carta.texto` lo reemplaza cuando se cargue el de cada uno.
+ */
+const CARTA_POR_DEFECTO_TEXTO = `Gracias por abrirte, por confiar y por compartir una parte de tu historia.
+
+Lo que contaste no termina acá. Queda en quienes te escuchamos, en las preguntas que nos hiciste pensar y en las conversaciones que todavía siguen.
+
+A veces, una sola historia puede cambiar la forma en la que vemos las cosas. Esta ya es parte del archivo.
+
+Gracias por ser parte.`
 
 /**
  * Los dos botones principales comparten forma y tamaño; solo cambia el
@@ -73,6 +89,8 @@ export function EpisodeView({
     ...available.filter((e) => e.slug !== ep.slug && e.category === ep.category),
     ...available.filter((e) => e.slug !== ep.slug && e.category !== ep.category),
   ].slice(0, 2)
+
+  const [cartaAbierta, setCartaAbierta] = useState(false)
 
   return (
     <MuroProvider slug={ep.slug} guest={ep.guest} nombreUsuario={nombreUsuario}>
@@ -167,14 +185,22 @@ export function EpisodeView({
               <p className="mt-3 text-xs text-cream-200/70">
                 La carta completa de {ep.guest.split(' ')[0]}.
               </p>
-              <TrackedLink
-                accion="carta"
-                slug={ep.slug}
-                href={`/premium/${ep.slug}/carta.pdf`}
+              <button
+                onClick={() => {
+                  // Se sigue registrando el uso, igual que cuando esto era un
+                  // enlace: es la señal que distingue mirar de leer.
+                  fetch('/api/track', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accion: 'carta', slug: ep.slug }),
+                    keepalive: true,
+                  }).catch(() => {})
+                  setCartaAbierta(true)
+                }}
                 className="btn-ghost mt-auto w-full justify-center"
               >
                 Leer carta <ArrowRight size={12} />
-              </TrackedLink>
+              </button>
             </div>
 
             <div className="flex h-full flex-col xl:border-l xl:border-cream-400/10 xl:pl-6">
@@ -185,6 +211,13 @@ export function EpisodeView({
           <LoQueQuedo />
         </div>
       </section>
+
+      <ModalCarta
+        abierto={cartaAbierta}
+        onCerrar={() => setCartaAbierta(false)}
+        guest={ep.guest}
+        texto={ep.carta?.texto ?? CARTA_POR_DEFECTO_TEXTO}
+      />
     </MuroProvider>
   )
 }
