@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, Loader2, X } from 'lucide-react'
-import { brand } from '@/lib/config/brand'
 import { LIMITES, MINIMO_MENSAJE, type MensajePublico } from '@/lib/muro-publico'
 
 /**
@@ -19,7 +18,7 @@ import { LIMITES, MINIMO_MENSAJE, type MensajePublico } from '@/lib/muro-publico
  */
 
 const inputBase =
-  'w-full rounded-sm border border-cream-400/20 bg-ink-900/60 px-3.5 py-3 text-sm text-cream-100 placeholder:text-cream-400/45 transition focus:border-gold focus:outline-none'
+  'w-full rounded-sm border border-cream-400/20 bg-ink-900/60 px-3 py-2.5 text-sm text-cream-100 placeholder:text-cream-400/45 transition focus:border-gold focus:outline-none'
 
 type Estado = 'idle' | 'enviando' | 'listo' | 'error'
 
@@ -129,7 +128,7 @@ export function ModalMensaje({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-muro-titulo"
-        className="relative my-auto w-full max-w-4xl overflow-hidden border border-cream-400/15 bg-ink-800 shadow-soft"
+        className="relative my-auto w-full max-w-3xl overflow-hidden border border-cream-400/15 bg-ink-800 shadow-soft"
       >
         <button
           onClick={onCerrar}
@@ -139,43 +138,34 @@ export function ModalMensaje({
           <X size={20} />
         </button>
 
-        <div className="grid md:grid-cols-2">
-          {/* La nota de papel. Decorativa: en pantallas chicas se va, para que
-              el formulario no quede empujado abajo de todo. */}
-          <div className="kraft relative hidden min-h-[420px] items-center justify-center p-10 md:flex">
-            <div
-              className="w-full max-w-[280px] rotate-[-2deg] bg-cream-50/95 px-7 py-10 text-center shadow-polaroid"
+        <div className="grid md:grid-cols-[36%_1fr]">
+          {/* La foto de la nota. Decorativa: en pantallas chicas se va, para
+              que el formulario no quede empujado abajo de todo. */}
+          <div className="relative hidden bg-ink-900 md:block">
+            <img
+              src="/imagenes/mensaje.jpg"
+              alt=""
               aria-hidden="true"
-            >
-              <p className="font-hand text-3xl leading-tight text-ink-900/85">
-                Las palabras
-                <br />
-                también son
-                <br />
-                encuentros.
-              </p>
-              <p className="mt-8 text-[10px] font-semibold uppercase tracking-[0.3em] text-ink-900/45">
-                {brand.name}
-              </p>
-            </div>
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           </div>
 
-          <div className="p-7 sm:p-9">
+          <div className="p-6 sm:p-7">
             {estado === 'listo' ? (
               <Confirmacion nombrePila={nombrePila} onCerrar={onCerrar} />
             ) : (
               <>
-                <p className="eyebrow mb-3">Lo que quedó</p>
-                <h2 id="modal-muro-titulo" className="font-serif text-3xl leading-tight text-cream-50">
+                <p className="eyebrow mb-2.5">Lo que quedó</p>
+                <h2 id="modal-muro-titulo" className="font-serif text-2xl leading-tight text-cream-50">
                   Dejá tu mensaje para {nombrePila}
                 </h2>
-                <p className="body-copy mt-3 text-sm leading-relaxed text-cream-200/70">
+                <p className="body-copy mt-2.5 text-[13px] leading-relaxed text-cream-200/70">
                   Si esta historia te resonó, si algo de esta conversación te acompañó, te inspiró
                   o simplemente querés decirle algo, este es el lugar. Tu palabra también forma
                   parte de esta historia.
                 </p>
 
-                <form onSubmit={enviar} className="mt-7 space-y-5">
+                <form onSubmit={enviar} className="mt-5 space-y-4">
                   {nombreUsuario ? (
                     <p className="rounded-sm border border-cream-400/15 bg-ink-900/40 px-3.5 py-3 text-xs text-cream-200/80">
                       Vas a firmar como{' '}
@@ -224,7 +214,7 @@ export function ModalMensaje({
                       id="modal-mensaje"
                       name="mensaje"
                       required
-                      rows={5}
+                      rows={4}
                       minLength={MINIMO_MENSAJE}
                       maxLength={LIMITES.mensaje}
                       onChange={(e) => setLargo(e.target.value.length)}
@@ -236,7 +226,7 @@ export function ModalMensaje({
                     </p>
                   </div>
 
-                  <fieldset className="space-y-2.5">
+                  <fieldset className="space-y-2">
                     <legend className="sr-only">Cómo querés aparecer</legend>
                     <Opcion
                       nombre="firma"
@@ -261,7 +251,7 @@ export function ModalMensaje({
                   <button
                     type="submit"
                     disabled={estado === 'enviando'}
-                    className="flex w-full items-center justify-center gap-2 rounded-sm bg-cream-50 px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-ink-900 transition hover:bg-white disabled:opacity-60"
+                    className="flex w-full items-center justify-center gap-2 rounded-sm bg-cream-50 px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:opacity-60"
                   >
                     {estado === 'enviando' ? (
                       <>
@@ -334,7 +324,7 @@ function Opcion({
 
 function Confirmacion({ nombrePila, onCerrar }: { nombrePila: string; onCerrar: () => void }) {
   return (
-    <div className="flex min-h-[360px] flex-col items-center justify-center text-center">
+    <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
       <div className="font-serif text-5xl leading-none text-gold/60">&ldquo;</div>
       <p className="mt-4 font-serif text-2xl leading-snug text-cream-50">Gracias por escribir.</p>
       <div className="divider-line" />
