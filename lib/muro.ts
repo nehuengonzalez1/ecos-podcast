@@ -85,11 +85,14 @@ export async function dentroDelLimite(ip: string): Promise<boolean> {
 
 export type NuevoMensaje = {
   slug: string
+  /**
+   * Ya resuelto por quien llama: de la sesion si la hay, o del formulario si
+   * no. Esta capa no decide eso, solo guarda lo que le dan.
+   */
   nombre: string
   mensaje: string
   tipo: TipoMensaje
   ciudad?: string
-  email?: string
 }
 
 export async function crearMensaje(input: NuevoMensaje): Promise<Mensaje | null> {
@@ -101,7 +104,6 @@ export async function crearMensaje(input: NuevoMensaje): Promise<Mensaje | null>
     mensaje: input.mensaje,
     tipo: input.tipo,
     ...(input.ciudad ? { ciudad: input.ciudad } : {}),
-    ...(input.email ? { email: input.email } : {}),
     at: new Date().toISOString(),
     estado: AUTO_APROBAR ? 'aprobado' : 'pendiente',
   }
@@ -158,7 +160,7 @@ export async function contarAprobados(slug: string): Promise<number> {
   }
 }
 
-/** Cola de moderación. Incluye el email porque solo la lee el panel. */
+/** Cola de moderación. Devuelve el mensaje entero porque solo la lee el panel. */
 export async function mensajesPendientes(limite = 100): Promise<Mensaje[]> {
   if (!kv) return []
   try {

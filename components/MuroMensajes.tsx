@@ -29,7 +29,20 @@ const inputBase =
 
 type Estado = 'idle' | 'enviando' | 'pendiente' | 'publicado' | 'error'
 
-export function MuroMensajes({ slug, guest }: { slug: string; guest: string }) {
+export function MuroMensajes({
+  slug,
+  guest,
+  nombreUsuario,
+}: {
+  slug: string
+  guest: string
+  /**
+   * Nombre de quien tiene sesion iniciada. Si viene, el formulario no pide
+   * nombre: ya lo sabemos. Es solo para mostrarlo -- quien firma el mensaje
+   * lo decide el servidor a partir de la sesion, no este valor.
+   */
+  nombreUsuario: string | null
+}) {
   const nombrePila = guest.split(' ')[0]
 
   const [mensajes, setMensajes] = useState<MensajePublico[]>([])
@@ -125,7 +138,6 @@ export function MuroMensajes({ slug, guest }: { slug: string; guest: string }) {
           tipo,
           nombre: datos.get('nombre'),
           ciudad: datos.get('ciudad'),
-          email: datos.get('email'),
           mensaje: datos.get('mensaje'),
           web: datos.get('web'),
         }),
@@ -224,20 +236,24 @@ export function MuroMensajes({ slug, guest }: { slug: string; guest: string }) {
               </p>
             </div>
 
-            <div className="grid gap-5 sm:grid-cols-2">
-              <div>
-                <label htmlFor="muro-nombre" className="eyebrow mb-2 block">
-                  Tu nombre
-                </label>
-                <input
-                  id="muro-nombre"
-                  name="nombre"
-                  required
-                  maxLength={LIMITES.nombre}
-                  placeholder="Como querés que te lea"
-                  className={inputBase}
-                />
-              </div>
+            <div className={nombreUsuario ? '' : 'grid gap-5 sm:grid-cols-2'}>
+              {/* Con sesion iniciada el nombre ya lo sabemos: pedirlo de nuevo
+                  seria hacerle escribir algo que la cuenta ya tiene. */}
+              {!nombreUsuario && (
+                <div>
+                  <label htmlFor="muro-nombre" className="eyebrow mb-2 block">
+                    Tu nombre
+                  </label>
+                  <input
+                    id="muro-nombre"
+                    name="nombre"
+                    required
+                    maxLength={LIMITES.nombre}
+                    placeholder="Como querés que te lea"
+                    className={inputBase}
+                  />
+                </div>
+              )}
               <div>
                 <label htmlFor="muro-ciudad" className="eyebrow mb-2 block">
                   ¿De dónde escribís? (opcional)
@@ -252,21 +268,12 @@ export function MuroMensajes({ slug, guest }: { slug: string; guest: string }) {
               </div>
             </div>
 
-            <div>
-              <label htmlFor="muro-email" className="eyebrow mb-2 block">
-                Tu email (opcional, privado)
-              </label>
-              <input
-                id="muro-email"
-                name="email"
-                type="email"
-                placeholder="tu@correo.com"
-                className={inputBase}
-              />
-              <p className="mt-1 text-[11px] text-cream-400/60">
-                No se publica ni se comparte con nadie. Es solo por si necesitamos escribirte.
+            {nombreUsuario && (
+              <p className="text-[11px] text-cream-400/70">
+                Vas a firmar como <span className="text-cream-100">{nombreUsuario}</span>, el
+                nombre de tu cuenta.
               </p>
-            </div>
+            )}
 
             {/* Campo trampa: invisible para una persona, irresistible para un bot. */}
             <div className="hidden" aria-hidden="true">
@@ -437,7 +444,6 @@ function mensajeDeError(status: number, codigo?: string): string {
   if (codigo === 'muro-inactivo') {
     return 'El muro todavía no está disponible. Volvé a intentarlo en un rato.'
   }
-  if (codigo === 'email-invalido') return 'Revisá el email que escribiste.'
   if (codigo === 'faltan-datos') return 'Necesitamos tu nombre y un mensaje un poco más largo.'
   return 'No pudimos enviar tu mensaje. Probá de nuevo en un momento.'
 }

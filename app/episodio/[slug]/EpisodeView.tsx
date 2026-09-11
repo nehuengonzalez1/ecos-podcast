@@ -15,7 +15,18 @@ import { TrackedLink } from '@/components/TrackedLink'
 import { MuroMensajes } from '@/components/MuroMensajes'
 import { formatDate } from '@/lib/utils'
 
-export function EpisodeView({ ep, available, upcoming }: { ep: any; available: any[]; upcoming: any[] }) {
+export function EpisodeView({
+  ep,
+  available,
+  upcoming,
+  nombreUsuario,
+}: {
+  ep: any
+  available: any[]
+  upcoming: any[]
+  /** Nombre de quien tiene sesion iniciada, o null si no hay. */
+  nombreUsuario: string | null
+}) {
   const share = (net: string) => {
     if (typeof window === 'undefined') return
     const url = window.location.href
@@ -269,7 +280,7 @@ export function EpisodeView({ ep, available, upcoming }: { ep: any; available: a
               </div>
             </div>
 
-            <MuroMensajes slug={ep.slug} guest={ep.guest} />
+            <MuroMensajes slug={ep.slug} guest={ep.guest} nombreUsuario={nombreUsuario} />
 
             <p className="mt-16 text-center font-hand text-2xl text-gold/80">
               Detrás de cada historia, hay alguien que decidió ser real. Gracias por ser parte de esto. ♡

@@ -106,7 +106,6 @@ export type MensajeMuro = {
   mensaje: string
   etiqueta: string
   ciudad?: string
-  email?: string
 }
 
 /**
@@ -114,10 +113,6 @@ export type MensajeMuro = {
  *
  * Es el único mail que dispara el muro. Los mensajes no se le reenvían a la
  * persona del episodio: viven en la página y se leen ahí.
- *
- * El `replyTo` apunta a quien escribió (si dejó email) para poder responderle
- * sin salir del cliente de correo. Esa dirección no sale de acá, que es una
- * casilla del equipo.
  */
 export async function enviarAvisoMuro(m: MensajeMuro, ep: EpisodioRef): Promise<boolean> {
   const to = moderadores()
@@ -131,7 +126,7 @@ export async function enviarAvisoMuro(m: MensajeMuro, ep: EpisodioRef): Promise<
       </p>
       <h2 style="margin:0 0 4px;font-size:20px">${escapar(m.nombre)} le escribió a ${escapar(ep.guest)}</h2>
       <p style="color:#8f8168;font-size:13px;margin:0 0 20px">
-        ${escapar(m.etiqueta)}${m.ciudad ? ` · ${escapar(m.ciudad)}` : ''}${m.email ? ` · ${escapar(m.email)}` : ' · sin email'}
+        ${escapar(m.etiqueta)}${m.ciudad ? ` · ${escapar(m.ciudad)}` : ''}
       </p>
       <div style="border-left:2px solid #ff8000;padding-left:14px;margin-bottom:24px">
         <p style="white-space:pre-wrap;line-height:1.6;margin:0">${escapar(m.mensaje)}</p>
@@ -143,7 +138,6 @@ export async function enviarAvisoMuro(m: MensajeMuro, ep: EpisodioRef): Promise<
     await resend.emails.send({
       from: remitente(),
       to,
-      ...(m.email ? { replyTo: m.email } : {}),
       subject: `Mensaje para ${ep.guest} — esperando moderación`,
       html,
     })

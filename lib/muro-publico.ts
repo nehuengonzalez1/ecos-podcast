@@ -32,10 +32,10 @@ export type Mensaje = {
   tipo: TipoMensaje
   ciudad?: string
   /**
-   * Privado y opcional. Lo único que se hace con él es ponerlo como `replyTo`
-   * del aviso de moderación, para poder responderle a quien escribió sin
-   * salir del cliente de correo. Nunca se publica: `aPublico()` lo saca antes
-   * de que el mensaje salga de la capa de datos.
+   * Historico: el muro ya no pide email. El campo sigue declarado porque en
+   * Redis todavia hay mensajes guardados cuando si se pedia, y `aPublico()`
+   * tiene que poder seguir sacandolo. Quitarlo del tipo no lo quitaria de los
+   * datos: lo dejaria pasar al muro publico sin que nadie lo note.
    */
   email?: string
   at: string

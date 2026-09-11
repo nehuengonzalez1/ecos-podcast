@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server'
 import { esEpisodioPublicado, buscarEpisodio, refDeEpisodio } from '@/lib/episodios'
 import { enviarAvisoMuro } from '@/lib/mailer'
+import { nombreDeUsuarioActual } from '@/lib/usuario'
 import {
   crearMensaje,
   dentroDelLimite,
@@ -25,9 +26,6 @@ function ipDe(req: Request): string {
   return req.headers.get('x-real-ip') ?? ''
 }
 
-function emailValido(s: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)
-}
 
 /** Los mensajes publicados de un episodio. Público: los lee cualquiera. */
 export async function GET(req: Request) {
@@ -55,18 +53,19 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'episodio-desconocido' }, { status: 404 })
     }
 
-    const nombre = limpiar(body?.nombre, LIMITES.nombre)
     const mensaje = limpiar(body?.mensaje, LIMITES.mensaje)
     const ciudad = limpiar(body?.ciudad, LIMITES.ciudad)
-    const email = limpiar(body?.email, 200).toLowerCase()
     const tipoCrudo = limpiar(body?.tipo, 20) as TipoMensaje
     const tipo: TipoMensaje = TIPOS.includes(tipoCrudo) ? tipoCrudo : 'mensaje'
 
+    // Con sesion iniciada el nombre sale de la cuenta, no del cuerpo del
+    // pedido. Si se tomara del pedido, cualquiera podria firmar con el nombre
+    // de una cuenta ajena mandando el JSON a mano.
+    const nombreSesion = await nombreDeUsuarioActual()
+    const nombre = nombreSesion ?? limpiar(body?.nombre, LIMITES.nombre)
+
     if (nombre.length < 2 || mensaje.length < MINIMO_MENSAJE) {
       return NextResponse.json({ error: 'faltan-datos' }, { status: 400 })
-    }
-    if (email && !emailValido(email)) {
-      return NextResponse.json({ error: 'email-invalido' }, { status: 400 })
     }
 
     if (!MURO_ACTIVO) {
@@ -84,7 +83,6 @@ export async function POST(req: Request) {
       mensaje,
       tipo,
       ...(ciudad ? { ciudad } : {}),
-      ...(email ? { email } : {}),
     })
     if (!guardado) {
       return NextResponse.json({ error: 'no-se-pudo-guardar' }, { status: 503 })
@@ -93,7 +91,7 @@ export async function POST(req: Request) {
     // El aviso no debe hacer fallar el envío: si Resend está caído el
     // mensaje ya está guardado y se modera igual desde el panel.
     enviarAvisoMuro(
-      { nombre, mensaje, etiqueta: ETIQUETAS[tipo], ...(ciudad ? { ciudad } : {}), ...(email ? { email } : {}) },
+      { nombre, mensaje, etiqueta: ETIQUETAS[tipo], ...(ciudad ? { ciudad } : {}) },
       refDeEpisodio(ep),
     ).catch(() => {})
 
