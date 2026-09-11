@@ -128,25 +128,40 @@ export function ModalMensaje({
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-muro-titulo"
-        className="relative my-auto w-full max-w-3xl overflow-hidden border border-cream-400/15 bg-ink-800 shadow-soft"
+        className="relative my-auto w-full max-w-3xl overflow-hidden border border-cream-400/15 bg-ink-900 shadow-soft"
       >
+        {/* La foto es el fondo de toda la ventana, no una columna. La nota
+            queda abajo a la izquierda y el lado derecho de la foto ya viene
+            oscuro y despejado: ahí se apoya el formulario sin taparla. */}
+        <img
+          src="/imagenes/mensaje.jpg"
+          alt=""
+          aria-hidden="true"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+        {/* Velo para que el texto se lea. En degradado y no plano: del lado
+            de la nota apenas la atenúa, y se va cerrando hacia la derecha,
+            donde el texto necesita fondo parejo. */}
+        <div
+          aria-hidden="true"
+          className="absolute inset-0 bg-gradient-to-r from-ink-900/45 via-ink-900/60 to-ink-900/90"
+        />
+
         <button
           onClick={onCerrar}
           aria-label="Cerrar"
-          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full text-cream-200/70 transition hover:bg-cream-100/10 hover:text-cream-50"
+          className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full text-cream-200/80 transition hover:bg-cream-100/10 hover:text-cream-50"
         >
           <X size={20} />
         </button>
 
         {estado === 'listo' ? (
-          <div className="p-7">
+          <div className="relative z-10 p-7">
             <Confirmacion nombrePila={nombrePila} onCerrar={onCerrar} />
           </div>
         ) : (
-          <>
-            {/* El encabezado va a todo el ancho, por encima de la imagen, y no
-                encerrado en la columna del formulario: es lo que le da aire a
-                la ventana y deja que la foto ocupe la mitad de abajo. */}
+          <div className="relative z-10">
+            {/* El encabezado va a todo el ancho, montado sobre la foto. */}
             <div className="px-6 pb-4 pt-6 sm:px-7">
               <p className="eyebrow">Lo que quedó</p>
               <div className="mx-auto mt-2.5 max-w-[420px]">
@@ -156,7 +171,7 @@ export function ModalMensaje({
                 >
                   Dejá tu mensaje para {nombrePila}
                 </h2>
-                <p className="body-copy mt-2 text-[13px] leading-relaxed text-cream-200/70">
+                <p className="body-copy mt-2 text-[13px] leading-relaxed text-cream-100/80">
                   Si esta historia te resonó, si algo de esta conversación te acompañó, te inspiró
                   o simplemente querés decirle algo, este es el lugar. Tu palabra también forma
                   parte de esta historia.
@@ -165,18 +180,12 @@ export function ModalMensaje({
             </div>
 
             <div className="grid md:grid-cols-[43%_1fr]">
-              {/* La foto de la nota. Decorativa: en pantallas chicas se va,
-                  para que el formulario no quede empujado abajo de todo. */}
-              <div className="relative hidden bg-ink-900 md:block">
-                <img
-                  src="/imagenes/mensaje.jpg"
-                  alt=""
-                  aria-hidden="true"
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
-              </div>
+              {/* Columna vacía a propósito: deja ver la nota del fondo. En
+                  pantallas chicas desaparece y el formulario toma todo el
+                  ancho, porque ahí no sobra lugar para dejar aire. */}
+              <div className="hidden md:block" aria-hidden="true" />
 
-              <div className="px-6 pb-6 sm:px-7 sm:pb-7 md:pl-6">
+              <div className="px-6 pb-6 sm:px-7 sm:pb-7 md:pl-0">
                 <form onSubmit={enviar} className="space-y-3">
                   {nombreUsuario ? (
                     <p className="rounded-sm border border-cream-400/15 bg-ink-900/40 px-3 py-2.5 text-xs text-cream-200/80">
@@ -289,7 +298,7 @@ export function ModalMensaje({
                 </form>
               </div>
             </div>
-          </>
+          </div>
         )}
       </div>
     </div>
