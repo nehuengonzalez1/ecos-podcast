@@ -5,6 +5,7 @@ import { motion } from 'framer-motion'
 import { ArrowRight, Heart } from 'lucide-react'
 import { type MensajePublico } from '@/lib/muro-publico'
 import { ModalMensaje } from '@/components/ModalMensaje'
+import { nombreParaHablarle } from '@/lib/utils'
 
 /**
  * El muro de un episodio, partido en las dos piezas que pide el diseño.
@@ -55,7 +56,7 @@ export function MuroProvider({
   nombreUsuario: string | null
   children: React.ReactNode
 }) {
-  const nombrePila = guest.split(' ')[0]
+  const nombrePila = nombreParaHablarle(guest)
 
   const [mensajes, setMensajes] = useState<MensajePublico[]>([])
   const [cargando, setCargando] = useState(true)

@@ -9,6 +9,7 @@ import { brand } from '@/lib/config/brand'
 import { PremiumGate } from '@/components/PremiumGate'
 import { TrackedLink } from '@/components/TrackedLink'
 import { idDeYoutube, miniaturaDeYoutube } from '@/lib/youtube'
+import { nombreParaHablarle } from '@/lib/utils'
 import { IconoSpotify } from '@/components/IconoSpotify'
 import { ReproductorEpisodio } from '@/components/ReproductorEpisodio'
 import { ModalCarta } from '@/components/ModalCarta'
@@ -183,7 +184,7 @@ export function EpisodeView({
                 <PapelCarta />
               </Foto>
               <p className="mt-3 text-xs text-cream-200/70">
-                La carta completa de {ep.guest.split(' ')[0]}.
+                La carta completa de {nombreParaHablarle(ep.guest)}.
               </p>
               <button
                 onClick={() => {
@@ -311,7 +312,7 @@ function Corte({ corte, guest }: { corte: any; guest: string }) {
  * bloque dice que viene en camino en vez de quedar vacío y descolgar la fila.
  */
 function RegaloDelEpisodio({ ep }: { ep: any }) {
-  const nombrePila = ep.guest.split(' ')[0]
+  const nombrePila = nombreParaHablarle(ep.guest)
   const nota =
     ep.regalo?.nota ??
     `En cada episodio le dejamos algo a quien vino a contar su historia. El de ${nombrePila} lo publicamos muy pronto.`

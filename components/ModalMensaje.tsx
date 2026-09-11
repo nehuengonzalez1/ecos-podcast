@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ArrowRight, Loader2, X } from 'lucide-react'
 import { LIMITES, MINIMO_MENSAJE, type MensajePublico } from '@/lib/muro-publico'
+import { nombreParaHablarle } from '@/lib/utils'
 
 /**
  * La ventana para dejar un mensaje.
@@ -39,7 +40,7 @@ export function ModalMensaje({
   /** Se llama cuando el mensaje sale publicado al instante (auto-aprobacion). */
   onPublicado: (m: MensajePublico) => void
 }) {
-  const nombrePila = guest.split(' ')[0]
+  const nombrePila = nombreParaHablarle(guest)
 
   const [largo, setLargo] = useState(0)
   const [anonimo, setAnonimo] = useState(false)

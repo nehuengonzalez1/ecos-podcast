@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react'
 import { X } from 'lucide-react'
+import { nombreParaHablarle } from '@/lib/utils'
 
 /**
  * La carta del episodio.
@@ -105,7 +106,7 @@ export function ModalCarta({
               id="modal-carta-titulo"
               className="font-serif text-[clamp(15px,2.6vw,19px)] text-ink-900"
             >
-              {guest.split(' ')[0]},
+              {nombreParaHablarle(guest)},
             </h2>
 
             <div className="mt-[1.2em] space-y-[1em]">
