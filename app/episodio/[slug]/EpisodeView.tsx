@@ -6,7 +6,6 @@ import {
   ArrowLeft, ArrowRight, Bookmark, BookmarkCheck, Check, Mail, MessageSquare, Play, Share2,
 } from 'lucide-react'
 import { brand } from '@/lib/config/brand'
-import { Envelope } from '@/components/Envelope'
 import { PremiumGate } from '@/components/PremiumGate'
 import { TrackedLink } from '@/components/TrackedLink'
 import { idDeYoutube, miniaturaDeYoutube } from '@/lib/youtube'
@@ -141,8 +140,10 @@ export function EpisodeView({
               className="flex h-full scroll-mt-24 flex-col xl:border-l xl:border-cream-400/10 xl:pl-6"
             >
               <p className="eyebrow mb-3">La carta</p>
-              <Envelope label="La carta" sealText={brand.name[0]} className="max-w-[190px]" />
-              <p className="mt-4 text-xs text-cream-200/70">
+              <Foto src={ep.carta?.imagen} alt={`La carta de ${ep.guest}`} proporcion="aspect-[16/11]">
+                <PapelCarta />
+              </Foto>
+              <p className="mt-3 text-xs text-cream-200/70">
                 La carta completa de {ep.guest.split(' ')[0]}.
               </p>
               <TrackedLink
@@ -256,53 +257,101 @@ function Corte({ corte, guest }: { corte: any; guest: string }) {
  * bloque dice que viene en camino en vez de quedar vacío y descolgar la fila.
  */
 function RegaloDelEpisodio({ ep }: { ep: any }) {
-  const regalo = ep.regalo
+  const nombrePila = ep.guest.split(' ')[0]
+  const nota =
+    ep.regalo?.nota ??
+    `En cada episodio le dejamos algo a quien vino a contar su historia. El de ${nombrePila} lo publicamos muy pronto.`
 
   return (
     <>
       <p className="eyebrow mb-3">El regalo del episodio</p>
 
-      {regalo ? (
-        <>
-          <div className="flex gap-4">
-            <div className="aspect-[4/3] w-[45%] shrink-0 overflow-hidden bg-ink-700">
-              {regalo.imagen ? (
-                <img
-                  src={regalo.imagen}
-                  alt=""
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
-              ) : (
-                <span className="kraft flex h-full w-full items-center justify-center text-[10px] uppercase tracking-widest text-cream-100/60">
-                  {brand.name}
-                </span>
-              )}
-            </div>
-            <p className="text-xs leading-relaxed text-cream-200/80">{regalo.nota}</p>
-          </div>
+      {/* Imagen a la izquierda y texto al costado, como en el diseño. La
+          estructura es la misma haya o no datos cargados: si cambiara segun
+          el caso, la fila se vería distinta en cada episodio hasta terminar
+          de cargar el contenido. */}
+      <div className="flex gap-4">
+        <div className="w-[44%] shrink-0">
+          <Foto src={ep.regalo?.imagen} alt={`El regalo de ${ep.guest}`} proporcion="aspect-[4/5]">
+            <CajaRegalo />
+          </Foto>
+        </div>
+        <p className="text-xs leading-relaxed text-cream-200/80">{nota}</p>
+      </div>
 
-          <TrackedLink
-            accion="regalos"
-            slug={ep.slug}
-            href={`/premium/${ep.slug}/regalo`}
-            className="btn-ghost mt-auto w-full justify-center"
-          >
-            Ver el regalo <ArrowRight size={12} />
-          </TrackedLink>
-        </>
-      ) : (
-        <>
-          <div className="kraft flex aspect-[16/9] items-center justify-center text-[10px] uppercase tracking-widest text-cream-100/50">
-            {brand.name}
-          </div>
-          <p className="mt-4 text-xs leading-relaxed text-cream-200/70">
-            En cada episodio le dejamos algo a quien vino a contar su historia. El de{' '}
-            {ep.guest.split(' ')[0]} lo publicamos muy pronto.
-          </p>
-        </>
-      )}
+      <TrackedLink
+        accion="regalos"
+        slug={ep.slug}
+        href={`/premium/${ep.slug}/regalo`}
+        className="btn-ghost mt-auto w-full justify-center"
+      >
+        Ver el regalo <ArrowRight size={12} />
+      </TrackedLink>
     </>
+  )
+}
+
+/**
+ * Marco de imagen con respaldo dibujado.
+ *
+ * El diseño muestra fotos reales de la carta y del regalo. Todavía no hay
+ * ninguna cargada, así que mientras tanto se dibuja algo con la misma forma
+ * y el mismo peso visual: la fila se ve como va a verse, y el día que se
+ * carguen las fotos entran en el mismo hueco sin mover nada.
+ */
+function Foto({
+  src,
+  alt,
+  proporcion,
+  children,
+}: {
+  src?: string | null
+  alt: string
+  proporcion: string
+  children: React.ReactNode
+}) {
+  return (
+    <div className={`${proporcion} relative w-full overflow-hidden bg-ink-700`}>
+      {src ? (
+        <img src={src} alt={alt} className="h-full w-full object-cover" loading="lazy" />
+      ) : (
+        children
+      )}
+    </div>
+  )
+}
+
+/** Respaldo de la carta: una tarjeta clara apoyada sobre un fondo oscuro. */
+function PapelCarta() {
+  return (
+    <span
+      aria-hidden="true"
+      className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-ink-600 to-ink-900"
+    >
+      <span className="w-[62%] rotate-[-3deg] bg-cream-100 px-3 py-5 text-center shadow-polaroid">
+        <span className="block text-[9px] font-semibold uppercase tracking-[0.3em] text-ink-900/70">
+          {brand.name}
+        </span>
+      </span>
+    </span>
+  )
+}
+
+/** Respaldo del regalo: una caja de papel madera con una tarjeta adentro. */
+function CajaRegalo() {
+  return (
+    <span
+      aria-hidden="true"
+      className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-ink-600 to-ink-900 p-3"
+    >
+      <span className="kraft flex h-full w-full items-center justify-center rounded-sm p-2">
+        <span className="w-full rotate-[-2deg] bg-cream-100/95 py-3 text-center shadow-md">
+          <span className="block text-[8px] font-semibold uppercase tracking-[0.25em] text-ink-900/70">
+            {brand.name}
+          </span>
+        </span>
+      </span>
+    </span>
   )
 }
 

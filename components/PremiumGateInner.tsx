@@ -14,20 +14,22 @@ type Props = {
 
 export function GateInner({ children, label = 'Contenido premium', className, compact = false }: Props) {
   const { isLoaded, isSignedIn } = useAuth()
-  const [subscribed, setSubscribed] = useState<boolean | null>(null)
+  const [acceso, setAcceso] = useState<boolean | null>(null)
 
   useEffect(() => {
     if (!isLoaded) return
-    if (!isSignedIn) { setSubscribed(false); return }
+    if (!isSignedIn) { setAcceso(false); return }
     let cancelled = false
     fetch('/api/user/status')
       .then((r) => r.json())
-      .then((d) => { if (!cancelled) setSubscribed(!!d.active) })
-      .catch(() => { if (!cancelled) setSubscribed(false) })
+      // `acceso` ya combina suscripcion y admin del lado del servidor: aca
+        // no se vuelve a decidir nada.
+        .then((d) => { if (!cancelled) setAcceso(!!d.acceso) })
+      .catch(() => { if (!cancelled) setAcceso(false) })
     return () => { cancelled = true }
   }, [isLoaded, isSignedIn])
 
-  if (subscribed === true) {
+  if (acceso === true) {
     return <div className={className}>{children}</div>
   }
 
@@ -35,7 +37,7 @@ export function GateInner({ children, label = 'Contenido premium', className, co
     <div className={`relative ${className ?? ''}`}>
       <div className="pointer-events-none blur-md opacity-40 select-none">{children}</div>
       <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 bg-ink-900/85 p-6 text-center backdrop-blur-sm">
-        {subscribed === null && isSignedIn ? (
+        {acceso === null && isSignedIn ? (
           <Loader2 size={20} className="animate-spin text-gold" />
         ) : (
           <>
