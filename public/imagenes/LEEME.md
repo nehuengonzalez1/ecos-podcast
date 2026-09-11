@@ -8,10 +8,11 @@ disponible en `/imagenes/<nombre>`.
 | Archivo | Dónde se usa | Si falta |
 |---|---|---|
 | `carta.jpg` | La foto de "La carta" en todos los episodios | Se dibuja un respaldo; no se rompe nada |
+| `regalo.jpg` | La foto de "El regalo del episodio" | Ídem |
 
 ## Cómo reemplazar una por episodio
 
-La foto de `carta.jpg` es de marca y sirve para todos los episodios. Si algún
+Las dos son fotos de marca y sirven para todos los episodios. Si algún
 episodio tiene la suya, se carga en `data/episodes.json`:
 
 ```json
@@ -36,6 +37,6 @@ es distinto en cada uno:
 ## Recomendaciones
 
 - **La carta**: apaisada, cerca de 16:11. La del diseño es 1536×1024.
-- **El regalo**: vertical, cerca de 4:5.
+- **El regalo**: se recorta cuadrado, asi que conviene el sujeto centrado.
 - Guardar en JPG con calidad alta. Estas fotos son oscuras y con grano: en PNG
   pesan varias veces más sin verse mejor.

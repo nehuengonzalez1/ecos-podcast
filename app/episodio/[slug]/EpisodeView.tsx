@@ -26,6 +26,13 @@ const GUARDADOS = 'episodios:guardados'
 const CARTA_POR_DEFECTO = '/imagenes/carta.jpg'
 
 /**
+ * Foto del regalo por defecto. Misma idea que la de la carta: la caja de
+ * LQLVE sirve para cualquier episodio, y `regalo.imagen` la pisa cuando un
+ * episodio tenga la foto de su regalo puntual.
+ */
+const REGALO_POR_DEFECTO = '/imagenes/regalo.jpg'
+
+/**
  * Los dos botones principales comparten forma y tamaño; solo cambia el
  * relleno. Salen de la misma constante a proposito: cuando cada uno tenia
  * sus clases sueltas, el borde de uno le sumaba dos pixeles de alto y
@@ -286,7 +293,13 @@ function RegaloDelEpisodio({ ep }: { ep: any }) {
           de cargar el contenido. */}
       <div className="flex gap-4">
         <div className="w-[44%] shrink-0">
-          <Foto src={ep.regalo?.imagen} alt={`El regalo de ${ep.guest}`} proporcion="aspect-[4/5]">
+          {/* Cuadrado y no vertical: las fotos son apaisadas y en un hueco 4:5
+                  se les comia los costados. */}
+              <Foto
+                src={ep.regalo?.imagen ?? REGALO_POR_DEFECTO}
+                alt={`El regalo de ${ep.guest}`}
+                proporcion="aspect-square"
+              >
             <CajaRegalo />
           </Foto>
         </div>
