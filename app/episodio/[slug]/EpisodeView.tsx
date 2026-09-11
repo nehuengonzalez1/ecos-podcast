@@ -9,6 +9,7 @@ import { brand } from '@/lib/config/brand'
 import { Envelope } from '@/components/Envelope'
 import { PremiumGate } from '@/components/PremiumGate'
 import { TrackedLink } from '@/components/TrackedLink'
+import { idDeYoutube, miniaturaDeYoutube } from '@/lib/youtube'
 import { IconoSpotify } from '@/components/IconoSpotify'
 import { ReproductorEpisodio } from '@/components/ReproductorEpisodio'
 import { MuroProvider, DejaTuMensaje, LoQueQuedo } from '@/components/Muro'
@@ -128,69 +129,180 @@ export function EpisodeView({
             </div>
           </div>
 
-          {/* La carta · regalos · objetos */}
-          <div
-            id="carta"
-            className="mt-8 grid scroll-mt-24 gap-6 border-t border-cream-400/10 pt-6 md:grid-cols-3"
-          >
-            <PremiumGate label="La carta (Archivo Completo)">
-              <div className="flex h-full flex-col">
-                <p className="eyebrow mb-3">La carta</p>
-                {/* Acotado para que el sobre no estire la fila entera: las
-                    tres columnas tienen que leerse como pares. */}
-                <Envelope label="La carta" sealText={brand.name[0]} className="max-w-[190px]" />
-                <p className="mt-4 text-xs text-cream-200/70">
-                  La carta completa de {ep.guest.split(' ')[0]}.
-                </p>
-                <TrackedLink
-                  accion="carta"
-                  slug={ep.slug}
-                  href={`/premium/${ep.slug}/carta.pdf`}
-                  className="btn-ghost mt-auto w-full justify-center"
-                >
-                  Leer carta <ArrowRight size={12} />
-                </TrackedLink>
-              </div>
+          {/* Detrás de escena · la carta · el regalo */}
+          <div className="mt-8 grid gap-6 border-t border-cream-400/10 pt-6 lg:grid-cols-2 xl:grid-cols-[1.55fr_0.62fr_1fr]">
+            <PremiumGate label="Detrás de escena (Archivo Completo)">
+              <DetrasDeEscena ep={ep} />
             </PremiumGate>
 
-            <PremiumGate
-              label="Regalos ocultos (Archivo Completo)"
-              className="md:border-l md:border-cream-400/10 md:pl-6"
+            {/* La carta queda fuera del muro de pago a propósito: es gratis. */}
+            <div
+              id="carta"
+              className="flex h-full scroll-mt-24 flex-col xl:border-l xl:border-cream-400/10 xl:pl-6"
             >
-              <div className="flex h-full flex-col">
-                <p className="eyebrow mb-3">Regalos ocultos</p>
-                <p className="text-xs leading-relaxed text-cream-200/70">
-                  Desbloqueá el archivo completo y accedé a los regalos ocultos, audios inéditos y
-                  más contenido de este episodio.
-                </p>
-                <TrackedLink
-                  accion="regalos"
-                  slug={ep.slug}
-                  href={`/premium/${ep.slug}/regalos.zip`}
-                  className="btn-ghost mt-auto w-full justify-center"
-                >
-                  Desbloquear
-                </TrackedLink>
-              </div>
-            </PremiumGate>
+              <p className="eyebrow mb-3">La carta</p>
+              <Envelope label="La carta" sealText={brand.name[0]} className="max-w-[190px]" />
+              <p className="mt-4 text-xs text-cream-200/70">
+                La carta completa de {ep.guest.split(' ')[0]}.
+              </p>
+              <TrackedLink
+                accion="carta"
+                slug={ep.slug}
+                href={`/premium/${ep.slug}/carta.pdf`}
+                className="btn-ghost mt-auto w-full justify-center"
+              >
+                Leer carta <ArrowRight size={12} />
+              </TrackedLink>
+            </div>
 
-            {ep.extras?.object && (
-              <div className="flex h-full flex-col md:border-l md:border-cream-400/10 md:pl-6">
-                <p className="eyebrow mb-3">Objetos de su historia</p>
-                <div className="flex aspect-[4/3] max-w-[190px] items-center justify-center border border-cream-400/15 bg-ink-700 px-3 text-center text-xs uppercase tracking-widest text-cream-300/50">
-                  {ep.extras.object.name}
-                </div>
-                <p className="mt-4 font-serif text-sm italic leading-relaxed text-cream-200/80">
-                  &ldquo;{ep.extras.object.note}&rdquo;
-                </p>
-              </div>
-            )}
+            <div className="flex h-full flex-col xl:border-l xl:border-cream-400/10 xl:pl-6">
+              <RegaloDelEpisodio ep={ep} />
+            </div>
           </div>
 
           <LoQueQuedo />
         </div>
       </section>
     </MuroProvider>
+  )
+}
+
+/**
+ * Los cortes del episodio. Es contenido de suscriptores, así que esta parte
+ * se renderiza dentro del candado.
+ *
+ * Los cortes salen de `ep.detrasDeEscena`, un campo que todavía no tiene
+ * ningún episodio: se carga por episodio desde el panel de contenido. Cuando
+ * está vacío se dibujan marcos vacíos en vez de cortes inventados —- detrás
+ * del candado hacen de fondo, y a un suscriptor le dicen la verdad: que
+ * todavía no hay nada cargado.
+ */
+function DetrasDeEscena({ ep }: { ep: any }) {
+  const cortes: any[] = Array.isArray(ep.detrasDeEscena) ? ep.detrasDeEscena : []
+
+  return (
+    <div>
+      <div className="mb-1 flex flex-wrap items-baseline justify-between gap-3">
+        <p className="eyebrow">Detrás de escena</p>
+        {cortes.length > 4 && (
+          <span className="inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.18em] text-cream-200/60">
+            Ver todos <ArrowRight size={11} />
+          </span>
+        )}
+      </div>
+      <p className="mb-4 text-xs text-cream-200/70">Todo lo que no viste en el episodio.</p>
+
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        {cortes.length > 0
+          ? cortes.slice(0, 4).map((c, i) => <Corte key={i} corte={c} guest={ep.guest} />)
+          : Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="aspect-video bg-ink-700/70" aria-hidden="true" />
+            ))}
+      </div>
+
+      {cortes.length === 0 && (
+        <p className="mt-3 text-[11px] text-cream-400/60">
+          Todavía no cargamos los cortes de este episodio.
+        </p>
+      )}
+    </div>
+  )
+}
+
+function Corte({ corte, guest }: { corte: any; guest: string }) {
+  const id = idDeYoutube(corte?.youtube)
+  const portada = corte?.thumb || (id ? miniaturaDeYoutube(id) : '')
+
+  return (
+    <a
+      href={corte?.youtube || '#'}
+      target="_blank"
+      rel="noreferrer"
+      className="group block"
+      aria-label={`${corte?.titulo ?? 'Corte'} · episodio con ${guest}`}
+    >
+      <div className="relative aspect-video overflow-hidden bg-ink-700">
+        {portada && (
+          <img
+            src={portada}
+            alt=""
+            className="h-full w-full object-cover transition duration-500 group-hover:scale-[1.03]"
+            loading="lazy"
+          />
+        )}
+        <span className="absolute inset-0 flex items-center justify-center">
+          <span className="flex h-8 w-8 items-center justify-center rounded-full border border-cream-50/70 bg-ink-900/35 text-cream-50 backdrop-blur-sm transition group-hover:bg-ink-900/60">
+            <Play size={12} fill="currentColor" className="ml-0.5" />
+          </span>
+        </span>
+        {corte?.duracion && (
+          <span className="absolute bottom-1.5 left-1.5 rounded-sm bg-ink-900/80 px-1.5 py-0.5 text-[10px] text-cream-100">
+            {corte.duracion}
+          </span>
+        )}
+      </div>
+      {corte?.titulo && (
+        <p className="mt-2 truncate text-xs text-cream-100/85">{corte.titulo}</p>
+      )}
+    </a>
+  )
+}
+
+/**
+ * El objeto que el equipo le regaló a la persona del episodio.
+ *
+ * Reemplaza a "Objetos de su historia". Sale de `ep.regalo`, que todavía no
+ * tiene ningún episodio: se carga desde el panel de contenido. Sin datos, el
+ * bloque dice que viene en camino en vez de quedar vacío y descolgar la fila.
+ */
+function RegaloDelEpisodio({ ep }: { ep: any }) {
+  const regalo = ep.regalo
+
+  return (
+    <>
+      <p className="eyebrow mb-3">El regalo del episodio</p>
+
+      {regalo ? (
+        <>
+          <div className="flex gap-4">
+            <div className="aspect-[4/3] w-[45%] shrink-0 overflow-hidden bg-ink-700">
+              {regalo.imagen ? (
+                <img
+                  src={regalo.imagen}
+                  alt=""
+                  className="h-full w-full object-cover"
+                  loading="lazy"
+                />
+              ) : (
+                <span className="kraft flex h-full w-full items-center justify-center text-[10px] uppercase tracking-widest text-cream-100/60">
+                  {brand.name}
+                </span>
+              )}
+            </div>
+            <p className="text-xs leading-relaxed text-cream-200/80">{regalo.nota}</p>
+          </div>
+
+          <TrackedLink
+            accion="regalos"
+            slug={ep.slug}
+            href={`/premium/${ep.slug}/regalo`}
+            className="btn-ghost mt-auto w-full justify-center"
+          >
+            Ver el regalo <ArrowRight size={12} />
+          </TrackedLink>
+        </>
+      ) : (
+        <>
+          <div className="kraft flex aspect-[16/9] items-center justify-center text-[10px] uppercase tracking-widest text-cream-100/50">
+            {brand.name}
+          </div>
+          <p className="mt-4 text-xs leading-relaxed text-cream-200/70">
+            En cada episodio le dejamos algo a quien vino a contar su historia. El de{' '}
+            {ep.guest.split(' ')[0]} lo publicamos muy pronto.
+          </p>
+        </>
+      )}
+    </>
   )
 }
 
