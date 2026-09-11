@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { Lock, Sparkles, Loader2, Info } from 'lucide-react'
-import { CLERK_ACTIVE_CLIENT } from '@/lib/env'
+import { useClerkReady } from './ClerkReady'
 import { GateInner } from './PremiumGateInner'
 
 type Props = {
@@ -14,7 +14,11 @@ type Props = {
 }
 
 export function PremiumGate({ children, label = 'Contenido premium', className, compact = false }: Props) {
-  if (!CLERK_ACTIVE_CLIENT) {
+  // Sin Clerk montado no se puede llamar a useAuth(): GateInner lo usa, así
+  // que acá se corta antes y se muestra el aviso de "muy pronto".
+  const clerkListo = useClerkReady()
+
+  if (!clerkListo) {
     return (
       <div className={`relative ${className ?? ''}`}>
         <div className="pointer-events-none blur-md opacity-40 select-none">{children}</div>

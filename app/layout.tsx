@@ -7,6 +7,7 @@ import { CLERK_ACTIVE } from '@/lib/env'
 import { Nav } from '@/components/Nav'
 import { Footer } from '@/components/Footer'
 import { GrainOverlay } from '@/components/GrainOverlay'
+import { ClerkReadyProvider } from '@/components/ClerkReady'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -38,10 +39,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body className="bg-ink-900 text-cream-100 antialiased">
-        <GrainOverlay />
-        <Nav />
-        <main>{children}</main>
-        <Footer />
+        {/* Única decisión sobre Clerk. Se toma acá, que es servidor y ve la
+            clave secreta, y baja por contexto a los componentes de cliente
+            para que no puedan quedar en desacuerdo con <ClerkProvider>. */}
+        <ClerkReadyProvider ready={CLERK_ACTIVE}>
+          <GrainOverlay />
+          <Nav />
+          <main>{children}</main>
+          <Footer />
+        </ClerkReadyProvider>
       </body>
     </html>
   )
