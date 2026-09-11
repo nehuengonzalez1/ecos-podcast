@@ -16,6 +16,16 @@ import { MuroProvider, DejaTuMensaje, LoQueQuedo } from '@/components/Muro'
 const GUARDADOS = 'episodios:guardados'
 
 /**
+ * Foto de la carta por defecto.
+ *
+ * La imagen es de marca -- el sobre de LQLVE --, no de un episodio puntual,
+ * asi que sirve para todos. Un episodio puede pisarla con la suya cargando
+ * `carta.imagen`. Si el archivo todavia no esta subido no se rompe nada: el
+ * marco cae al dibujo de respaldo.
+ */
+const CARTA_POR_DEFECTO = '/imagenes/carta.jpg'
+
+/**
  * Los dos botones principales comparten forma y tamaño; solo cambia el
  * relleno. Salen de la misma constante a proposito: cuando cada uno tenia
  * sus clases sueltas, el borde de uno le sumaba dos pixeles de alto y
@@ -140,7 +150,11 @@ export function EpisodeView({
               className="flex h-full scroll-mt-24 flex-col xl:border-l xl:border-cream-400/10 xl:pl-6"
             >
               <p className="eyebrow mb-3">La carta</p>
-              <Foto src={ep.carta?.imagen} alt={`La carta de ${ep.guest}`} proporcion="aspect-[16/11]">
+              <Foto
+                src={ep.carta?.imagen ?? CARTA_POR_DEFECTO}
+                alt={`La carta de ${ep.guest}`}
+                proporcion="aspect-[16/11]"
+              >
                 <PapelCarta />
               </Foto>
               <p className="mt-3 text-xs text-cream-200/70">
@@ -310,10 +324,24 @@ function Foto({
   proporcion: string
   children: React.ReactNode
 }) {
+  // Si el archivo todavía no está subido, el navegador mostraría el ícono de
+  // imagen rota. Cayendo al dibujo, la página se ve entera igual y el día que
+  // el archivo aparece se usa solo, sin tocar nada.
+  const [fallo, setFallo] = useState(false)
+  useEffect(() => setFallo(false), [src])
+
+  const mostrarImagen = !!src && !fallo
+
   return (
     <div className={`${proporcion} relative w-full overflow-hidden bg-ink-700`}>
-      {src ? (
-        <img src={src} alt={alt} className="h-full w-full object-cover" loading="lazy" />
+      {mostrarImagen ? (
+        <img
+          src={src!}
+          alt={alt}
+          onError={() => setFallo(true)}
+          className="h-full w-full object-cover"
+          loading="lazy"
+        />
       ) : (
         children
       )}
