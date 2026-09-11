@@ -129,13 +129,13 @@ export default function HomePage() {
           <SectionHeading
             eyebrow="Lo que quedó"
             title={<>Más que un episodio.<br /><span>Recuerdos que se quedan.</span></>}
-            subtitle="Cada historia deja algo. Acá vas a encontrar esas perlitas — con acceso al Archivo Completo."
+            subtitle="Cada historia deja algo. La carta y el regalo quedan para todos; el detrás de escena, para quien se suma al Archivo Completo."
           />
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             <RemainsCard icon="✉" title="La Carta" text="La carta que le escribimos a cada invitado." />
-            <RemainsCard icon="◱" title="Fotos inéditas" text="Detrás de escena y momentos que nadie vio." />
-            <RemainsCard icon="♪" title="Audio exclusivo" text="Un audio que no salió al aire." />
-            <RemainsCard icon="◯" title="Playlist" text="La banda de sonido de cada historia." />
+            <RemainsCard icon="◱" title="El regalo" text="Lo que le dejamos a cada invitado." />
+            <RemainsCard icon="♪" title="Detrás de escena" text="Los cortes que no salieron al aire." />
+            <RemainsCard icon="◯" title="El muro" text="Lo que le dejó la gente que lo escuchó." />
           </div>
           <div className="mt-10 text-center">
             <Link href="/cuenta?upgrade=1" className="btn-gold">

@@ -45,7 +45,7 @@ export function GateInner({ children, label = 'Contenido premium', className, co
             <p className="eyebrow">{label}</p>
             {!compact && (
               <p className="max-w-xs text-xs text-cream-200/70">
-                Desbloqueá el <span className="text-gold">Archivo Completo</span> y accedé a los regalos ocultos, audios inéditos y detrás de escena de cada episodio.
+                Sumate al <span className="text-gold">Archivo Completo</span> y accedé al detrás de escena de cada episodio: los cortes que no salieron al aire.
               </p>
             )}
             <Link

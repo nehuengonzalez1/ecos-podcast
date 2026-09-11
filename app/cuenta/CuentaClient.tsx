@@ -100,7 +100,7 @@ export function CuentaClient({
             </div>
           </div>
           <p className="mt-4 text-sm text-cream-200/80">
-            Tenés acceso ilimitado a cartas, regalos ocultos, audios inéditos y detrás de escena de todos los episodios.
+            Tenés acceso al detrás de escena de todos los episodios, y a lo que vayamos sumando al Archivo.
           </p>
           <div className="mt-6 flex flex-wrap items-center gap-3">
             <button onClick={refresh} className="btn-ghost" disabled={refreshing}>
@@ -121,13 +121,13 @@ export function CuentaClient({
             </div>
             <div>
               <p className="eyebrow text-gold">Archivo Completo</p>
-              <h2 className="title-display mt-1 text-2xl">Desbloqueá todo el contenido premium</h2>
+              <h2 className="title-display mt-1 text-2xl">Sumate al Archivo Completo</h2>
             </div>
           </div>
           <ul className="mt-4 grid gap-2 text-sm text-cream-200/90 sm:grid-cols-2">
-            <li className="flex items-start gap-2"><Check size={14} className="mt-0.5 text-gold" />Cartas descargables</li>
-            <li className="flex items-start gap-2"><Check size={14} className="mt-0.5 text-gold" />Regalos ocultos por episodio</li>
-            <li className="flex items-start gap-2"><Check size={14} className="mt-0.5 text-gold" />Audio y video inéditos</li>
+            <li className="flex items-start gap-2"><Check size={14} className="mt-0.5 text-gold" />El detrás de escena de cada episodio</li>
+            <li className="flex items-start gap-2"><Check size={14} className="mt-0.5 text-gold" />Los cortes que no salieron al aire</li>
+            <li className="flex items-start gap-2"><Check size={14} className="mt-0.5 text-gold" />Lo que sumemos al Archivo, incluido</li>
             <li className="flex items-start gap-2"><Check size={14} className="mt-0.5 text-gold" />Cancelás cuando quieras</li>
           </ul>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">

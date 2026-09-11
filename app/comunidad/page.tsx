@@ -33,17 +33,23 @@ export default function CommunityPage() {
           <SectionHeading
             eyebrow="Archivo completo"
             title={<>Sumate al <span className="italic">Archivo</span></>}
-            subtitle={`Por $${price.toLocaleString('es-AR')} al mes desbloqueás todo el contenido premium: cartas, regalos ocultos, audios inéditos, detrás de escena. Cancelás cuando quieras.`}
+            subtitle={`Por $${price.toLocaleString('es-AR')} al mes accedés al detrás de escena de cada episodio, y bancás que estas historias se sigan contando. Cancelás cuando quieras.`}
           />
           <div className="mx-auto mt-10 grid max-w-3xl gap-6 md:grid-cols-2">
+            {/* Esta lista dice únicamente lo que hoy existe en el sitio.
+                Antes prometía cartas, regalos ocultos, audios y playlists:
+                de esos, la carta paso a ser gratuita, los regalos ocultos y
+                los objetos se sacaron de la página, y la playlist nunca
+                existió. Cobrar por cosas que no están es la forma más rápida
+                de que alguien se sienta estafado, así que se enumera lo real
+                y se dice el resto como lo que es: un compromiso, no una
+                función ya entregada. */}
             <ul className="space-y-3 text-sm text-cream-200/90">
               {[
-                'La carta escrita para cada invitado (PDF)',
-                'Regalos ocultos: fotos inéditas y descargables',
-                'Audio exclusivo: lo que no salió al aire',
-                'Video sin cortes del detrás de escena',
-                'Playlist curada por episodio',
-                'Cancelás cuando quieras desde tu cuenta',
+                'El detrás de escena de cada episodio: los cortes que no salieron al aire',
+                'Lo que vayamos sumando al Archivo, incluido',
+                'Bancás que estas historias se sigan contando',
+                'Cancelás cuando quieras, desde tu cuenta, en un click',
               ].map((f) => (
                 <li key={f} className="flex items-start gap-3">
                   <Check size={16} className="mt-0.5 shrink-0 text-gold" />
