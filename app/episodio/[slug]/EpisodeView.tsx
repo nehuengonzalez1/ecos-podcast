@@ -29,15 +29,36 @@ const GUARDADOS = 'episodios:guardados'
 const CARTA_POR_DEFECTO = '/imagenes/carta.jpg'
 
 /**
- * Foto del regalo por defecto: la carta escrita por uno mismo a los diez
- * años. Es la única de las cuatro que sirve para cualquier invitado; las
- * otras tres (Cromañón, Malvinas, autismo) son de una historia puntual y se
- * asignan por episodio con `regalo.imagen`, no se ponen de comodín.
- *
- * Está recortada contra transparencia, que es lo que le permite flotar en el
- * visor sin quedar como un rectángulo pegado sobre la página.
+ * Los regalos disponibles hoy. Están recortados contra transparencia, que es
+ * lo que les permite flotar en el visor sin quedar como un rectángulo pegado
+ * sobre la página.
  */
-const REGALO_POR_DEFECTO = '/imagenes/regalos/emprendedor.webp'
+const REGALOS = [
+  '/imagenes/regalos/emprendedor.webp',
+  '/imagenes/regalos/cromanon.webp',
+  '/imagenes/regalos/malvinas.webp',
+  '/imagenes/regalos/autismo.webp',
+] as const
+
+/**
+ * Qué regalo le toca a un episodio que todavía no tiene el suyo cargado.
+ *
+ * Es provisorio y se nota que lo es: hay cuatro fotos para trece episodios,
+ * así que se reparten rotando por id. No se intenta adivinar cuál le
+ * corresponde a cada historia -- pegarle el regalo de Malvinas a un episodio
+ * que no habla de Malvinas sería peor que repetir.
+ *
+ * La rotación vive acá y no escrita en episodes.json a propósito: ese archivo
+ * es contenido real, y llenarlo de asignaciones inventadas obligaría después
+ * a distinguir cuáles puso una persona y cuáles puse yo. Cuando cargues el
+ * regalo de verdad en `regalo.imagen`, pisa esto sin que haya nada que
+ * limpiar.
+ */
+function regaloDe(ep: any): string {
+  if (ep.regalo?.imagen) return ep.regalo.imagen
+  const n = Number(ep.id ?? ep.number) || 0
+  return REGALOS[n % REGALOS.length]
+}
 
 /**
  * Texto de la carta cuando el episodio todavía no tiene el suyo.
@@ -229,7 +250,7 @@ export function EpisodeView({
       <ModalRegalo
         abierto={regaloAbierto}
         onCerrar={() => setRegaloAbierto(false)}
-        imagen={ep.regalo?.imagen ?? REGALO_POR_DEFECTO}
+        imagen={regaloDe(ep)}
         guest={ep.guest}
         nota={ep.regalo?.nota}
       />
@@ -344,7 +365,7 @@ function RegaloDelEpisodio({ ep, onAbrir }: { ep: any; onAbrir: () => void }) {
           {/* Cuadrado y no vertical: las fotos son apaisadas y en un hueco 4:5
                   se les comia los costados. */}
               <Foto
-                src={ep.regalo?.imagen ?? REGALO_POR_DEFECTO}
+                src={regaloDe(ep)}
                 alt={`El regalo de ${ep.guest}`}
                 proporcion="aspect-square"
               >
