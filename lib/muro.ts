@@ -1,4 +1,5 @@
 import { kv } from '@/lib/kv'
+import { FIRMA_ANONIMA } from '@/lib/muro-publico'
 import type { Mensaje, MensajePublico, TipoMensaje } from '@/lib/muro-publico'
 
 /**
@@ -26,6 +27,7 @@ export {
   ETIQUETAS,
   LIMITES,
   MINIMO_MENSAJE,
+  FIRMA_ANONIMA,
   limpiar,
   type TipoMensaje,
   type Mensaje,
@@ -93,6 +95,10 @@ export type NuevoMensaje = {
   mensaje: string
   tipo: TipoMensaje
   ciudad?: string
+  /** Solo para quien escribe sin sesion. Privado. */
+  email?: string
+  /** Publicar el mensaje sin el nombre. El nombre igual se guarda. */
+  anonimo?: boolean
 }
 
 export async function crearMensaje(input: NuevoMensaje): Promise<Mensaje | null> {
@@ -104,6 +110,8 @@ export async function crearMensaje(input: NuevoMensaje): Promise<Mensaje | null>
     mensaje: input.mensaje,
     tipo: input.tipo,
     ...(input.ciudad ? { ciudad: input.ciudad } : {}),
+    ...(input.email ? { email: input.email } : {}),
+    ...(input.anonimo ? { anonimo: true } : {}),
     at: new Date().toISOString(),
     estado: AUTO_APROBAR ? 'aprobado' : 'pendiente',
   }
@@ -119,9 +127,23 @@ export async function crearMensaje(input: NuevoMensaje): Promise<Mensaje | null>
   return m
 }
 
+/**
+ * Única puerta por la que un mensaje sale hacia el navegador.
+ *
+ * Acá se sacan los campos privados y se aplica el anonimato. Que sea un solo
+ * lugar es la garantía: cualquier lectura nueva que se agregue pasa por acá y
+ * no puede olvidarse de ocultar el email ni de respetar el pedido de aparecer
+ * sin nombre.
+ */
 function aPublico(m: Mensaje, apoyos: number): MensajePublico {
-  const { email: _privado, estado: _interno, ...resto } = m
-  return { ...resto, apoyos }
+  const { email: _privado, estado: _interno, anonimo, ...resto } = m
+  return {
+    ...resto,
+    // El nombre real queda guardado para quien modera; lo que se publica es
+    // la firma anónima.
+    nombre: anonimo ? FIRMA_ANONIMA : resto.nombre,
+    apoyos,
+  }
 }
 
 /**

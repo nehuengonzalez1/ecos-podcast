@@ -10,6 +10,7 @@ import {
   ETIQUETAS,
   LIMITES,
   MINIMO_MENSAJE,
+  FIRMA_ANONIMA,
   TIPOS,
   AUTO_APROBAR,
   MURO_ACTIVO,
@@ -24,6 +25,14 @@ function ipDe(req: Request): string {
   const fwd = req.headers.get('x-forwarded-for')
   if (fwd) return fwd.split(',')[0].trim()
   return req.headers.get('x-real-ip') ?? ''
+}
+
+/**
+ * Comprobación de forma, no de existencia. Alcanza para frenar un tipeo; no
+ * pretende verificar que la casilla exista, cosa que solo probaría un envío.
+ */
+function emailValido(s: string): boolean {
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(s)
 }
 
 
@@ -54,18 +63,37 @@ export async function POST(req: Request) {
     }
 
     const mensaje = limpiar(body?.mensaje, LIMITES.mensaje)
-    const ciudad = limpiar(body?.ciudad, LIMITES.ciudad)
     const tipoCrudo = limpiar(body?.tipo, 20) as TipoMensaje
     const tipo: TipoMensaje = TIPOS.includes(tipoCrudo) ? tipoCrudo : 'mensaje'
+    const anonimo = body?.anonimo === true
+
+    if (mensaje.length < MINIMO_MENSAJE) {
+      return NextResponse.json({ error: 'faltan-datos' }, { status: 400 })
+    }
 
     // Con sesion iniciada el nombre sale de la cuenta, no del cuerpo del
     // pedido. Si se tomara del pedido, cualquiera podria firmar con el nombre
     // de una cuenta ajena mandando el JSON a mano.
     const nombreSesion = await nombreDeUsuarioActual()
-    const nombre = nombreSesion ?? limpiar(body?.nombre, LIMITES.nombre)
 
-    if (nombre.length < 2 || mensaje.length < MINIMO_MENSAJE) {
-      return NextResponse.json({ error: 'faltan-datos' }, { status: 400 })
+    let nombre: string
+    let email = ''
+
+    if (nombreSesion) {
+      nombre = nombreSesion
+    } else {
+      // Sin sesion, el nombre y el email son la unica forma de saber quien
+      // escribio. El email no se publica: queda para poder identificar a la
+      // persona si un mensaje trae problemas.
+      nombre = limpiar(body?.nombre, LIMITES.nombre)
+      email = limpiar(body?.email, LIMITES.email).toLowerCase()
+
+      if (nombre.length < 2) {
+        return NextResponse.json({ error: 'falta-nombre' }, { status: 400 })
+      }
+      if (!emailValido(email)) {
+        return NextResponse.json({ error: 'email-invalido' }, { status: 400 })
+      }
     }
 
     if (!MURO_ACTIVO) {
@@ -82,7 +110,8 @@ export async function POST(req: Request) {
       nombre,
       mensaje,
       tipo,
-      ...(ciudad ? { ciudad } : {}),
+      ...(email ? { email } : {}),
+      ...(anonimo ? { anonimo: true } : {}),
     })
     if (!guardado) {
       return NextResponse.json({ error: 'no-se-pudo-guardar' }, { status: 503 })
@@ -91,7 +120,7 @@ export async function POST(req: Request) {
     // El aviso no debe hacer fallar el envío: si Resend está caído el
     // mensaje ya está guardado y se modera igual desde el panel.
     enviarAvisoMuro(
-      { nombre, mensaje, etiqueta: ETIQUETAS[tipo], ...(ciudad ? { ciudad } : {}) },
+      { nombre: anonimo ? `${nombre} (pidio anonimato)` : nombre, mensaje, etiqueta: ETIQUETAS[tipo] },
       refDeEpisodio(ep),
     ).catch(() => {})
 
@@ -103,10 +132,9 @@ export async function POST(req: Request) {
         ? {
             id: guardado.id,
             slug: guardado.slug,
-            nombre: guardado.nombre,
+            nombre: anonimo ? FIRMA_ANONIMA : guardado.nombre,
             mensaje: guardado.mensaje,
             tipo: guardado.tipo,
-            ...(guardado.ciudad ? { ciudad: guardado.ciudad } : {}),
             at: guardado.at,
             apoyos: 0,
           }

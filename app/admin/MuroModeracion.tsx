@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { Check, X, Loader2 } from 'lucide-react'
-import { ETIQUETAS, type Mensaje } from '@/lib/muro-publico'
+import { FIRMA_ANONIMA, type Mensaje } from '@/lib/muro-publico'
 
 /**
  * Cola de moderación del muro.
@@ -78,9 +78,15 @@ export function MuroModeracion({ pendientes }: { pendientes: ItemModeracion[] })
               <div>
                 <div className="font-serif text-lg text-cream-50">
                   {m.nombre}
-                  <span className="ml-2 text-xs uppercase tracking-widest text-gold/80">
-                    {ETIQUETAS[m.tipo]}
-                  </span>
+                  {/* El nombre real se muestra acá para poder moderar, pero
+                      el muro lo va a publicar como anónimo. Sin este aviso,
+                      aprobar y después ver otro nombre en la página parece
+                      un error del sistema. */}
+                  {m.anonimo && (
+                    <span className="ml-2 rounded-sm border border-cream-400/25 px-2 py-0.5 text-[10px] uppercase tracking-widest text-cream-200/70">
+                      se publica como {FIRMA_ANONIMA}
+                    </span>
+                  )}
                 </div>
                 <div className="mt-0.5 text-xs text-cream-200/70">
                   Para <span className="text-cream-50">{m.episodio}</span>

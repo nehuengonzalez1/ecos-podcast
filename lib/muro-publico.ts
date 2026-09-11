@@ -19,7 +19,10 @@ export const ETIQUETAS: Record<TipoMensaje, string> = {
   mensaje: 'Un mensaje',
 }
 
-export const LIMITES = { nombre: 60, ciudad: 60, mensaje: 900 } as const
+export const LIMITES = { nombre: 60, ciudad: 60, mensaje: 500, email: 200 } as const
+
+/** Con qué firma un mensaje que pidió no mostrar su nombre. */
+export const FIRMA_ANONIMA = 'Anónimo'
 
 /** Menos que esto no es un mensaje, es un golpe de teclado. */
 export const MINIMO_MENSAJE = 4
@@ -32,18 +35,33 @@ export type Mensaje = {
   tipo: TipoMensaje
   ciudad?: string
   /**
-   * Historico: el muro ya no pide email. El campo sigue declarado porque en
-   * Redis todavia hay mensajes guardados cuando si se pedia, y `aPublico()`
-   * tiene que poder seguir sacandolo. Quitarlo del tipo no lo quitaria de los
-   * datos: lo dejaria pasar al muro publico sin que nadie lo note.
+   * Privado. Se le pide a quien escribe sin sesion iniciada, como unica
+   * forma de saber quien es. Con sesion no se pide: la cuenta ya lo tiene.
+   * Nunca se publica: `aPublico()` lo saca antes de que el mensaje salga de
+   * la capa de datos.
    */
   email?: string
+  /**
+   * La persona pidio que su mensaje aparezca sin su nombre.
+   *
+   * El nombre igual se guarda: quien modera tiene que poder saber quien
+   * escribio. Lo que cambia es lo que se publica, y eso lo resuelve
+   * `aPublico()` en un solo lugar, para que ningun camino de lectura pueda
+   * olvidarse de aplicarlo.
+   */
+  anonimo?: boolean
   at: string
   estado: 'pendiente' | 'aprobado'
 }
 
-/** Lo que efectivamente viaja al navegador: sin email y sin estado interno. */
-export type MensajePublico = Omit<Mensaje, 'email' | 'estado'> & { apoyos: number }
+/**
+ * Lo que efectivamente viaja al navegador.
+ *
+ * Sin email y sin estado interno. `anonimo` tampoco viaja: cuando lo está, el
+ * `nombre` ya viene reemplazado por la firma anónima, así que el navegador no
+ * tiene que saber ni decidir nada.
+ */
+export type MensajePublico = Omit<Mensaje, 'email' | 'estado' | 'anonimo'> & { apoyos: number }
 
 /** Normaliza lo que escribió una persona sin alterar lo que quiso decir. */
 export function limpiar(s: unknown, max: number): string {
