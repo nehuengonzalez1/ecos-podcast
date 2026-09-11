@@ -46,3 +46,30 @@ export function appUrl(): string {
 function sinBarraFinal(u: string): string {
   return u.replace(/\/+$/, '')
 }
+
+/**
+ * Si el sitio debe dejarse indexar por los buscadores.
+ *
+ * Mientras la URL publica sea un dominio *.vercel.app, el sitio todavia se
+ * esta construyendo: que Google lo levante solo sirve para que termine
+ * compitiendo en resultados con lqlve.com.ar, que es el sitio de verdad.
+ *
+ * Se deduce de appUrl() en vez de ser un interruptor manual, a proposito. Un
+ * "acordate de sacar el noindex antes de lanzar" es exactamente el tipo de
+ * paso que se olvida, y el sintoma -- el sitio nuevo invisible en Google --
+ * no da ninguna senal: no hay error, no hay log, simplemente no aparece y uno
+ * se entera meses despues. Atado a la URL publica, el dia que el dominio
+ * propio quede adelante esto se enciende solo.
+ *
+ * De paso deja fuera del indice a los deploys de preview, que tambien viven
+ * en *.vercel.app y tampoco deberian aparecer.
+ *
+ * SITE_INDEXABLE fuerza el resultado a mano si alguna vez hace falta:
+ * '1' indexa, '0' no, sin definir decide la regla de arriba.
+ */
+export function sitioIndexable(): boolean {
+  const forzado = process.env.SITE_INDEXABLE
+  if (forzado === '1') return true
+  if (forzado === '0') return false
+  return !appUrl().includes('.vercel.app')
+}

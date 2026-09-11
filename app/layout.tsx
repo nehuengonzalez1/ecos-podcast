@@ -8,6 +8,7 @@ import { Nav } from '@/components/Nav'
 import { Footer } from '@/components/Footer'
 import { GrainOverlay } from '@/components/GrainOverlay'
 import { ClerkReadyProvider } from '@/components/ClerkReady'
+import { sitioIndexable } from '@/lib/app-url'
 import './globals.css'
 
 export const metadata: Metadata = {
@@ -18,6 +19,12 @@ export const metadata: Metadata = {
     description: brand.slogan,
     type: 'website',
   },
+  // Mientras el sitio viva en *.vercel.app no se deja indexar, para no
+  // competirle en Google a lqlve.com.ar. Se enciende solo al poner el
+  // dominio propio adelante: ver sitioIndexable() en lib/app-url.ts.
+  // robots.txt queda en Allow a proposito -- si se prohibiera rastrear,
+  // Google nunca leeria este noindex y la URL podria aparecer igual.
+  robots: sitioIndexable() ? undefined : { index: false, follow: false },
 }
 
 export const viewport: Viewport = {
