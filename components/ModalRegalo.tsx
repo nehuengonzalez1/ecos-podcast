@@ -1,7 +1,19 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import dynamic from 'next/dynamic'
 import { X, RotateCcw } from 'lucide-react'
+
+/**
+ * El visor 3D se carga aparte y solo en el navegador.
+ *
+ * three.js son unos cientos de kB que no tienen por qué viajar con la página
+ * del episodio: la mayoría de la gente nunca abre un regalo. Con `dynamic` se
+ * descarga recién cuando este modal se monta, o sea cuando alguien lo pidió.
+ */
+const RegaloTresD = dynamic(() => import('./RegaloTresD').then((m) => m.RegaloTresD), {
+  ssr: false,
+})
 
 /**
  * El regalo del episodio.
@@ -48,6 +60,14 @@ export function ModalRegalo({
   const [tocando, setTocando] = useState(false)
   const [menosMovimiento, setMenosMovimiento] = useState(false)
 
+  /**
+   * La foto se muestra desde el primer instante y el 3D la reemplaza cuando
+   * termina de armarse. Así no hay un hueco en blanco mientras carga la
+   * librería, y si el equipo no tiene WebGL la foto simplemente se queda.
+   */
+  const [tresDListo, setTresDListo] = useState(false)
+  const avisarListo = useCallback(() => setTresDListo(true), [])
+
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
     const leer = () => setMenosMovimiento(mq.matches)
@@ -77,6 +97,7 @@ export function ModalRegalo({
     if (!abierto) {
       setGiro({ x: 0, y: 0 })
       setTocando(false)
+      setTresDListo(false)
     }
   }, [abierto])
 
@@ -123,10 +144,23 @@ export function ModalRegalo({
       </button>
 
       <div className="flex min-h-full flex-col items-center justify-center gap-5 py-6">
-        <div ref={panelRef} role="dialog" aria-modal="true" aria-label={`El regalo de ${guest}`}>
-          {/* La perspectiva vive en el padre: es la distancia del ojo al
-              objeto. Cuanto más chica, más pronunciado el efecto. */}
-          <div style={{ perspective: '1100px' }}>
+        <div
+          ref={panelRef}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`El regalo de ${guest}`}
+          className="relative aspect-square w-[min(88vw,560px)] max-h-[72dvh]"
+        >
+          {/* Dos capas sobre el mismo hueco: la foto, que aparece al
+              instante, y el objeto 3D, que la releva cuando termina de
+              armarse. El hueco tiene medida propia para que no haya salto
+              entre una y otra. */}
+          <div
+            className={`absolute inset-0 flex items-center justify-center transition-opacity duration-500 ${
+              tresDListo ? 'pointer-events-none opacity-0' : 'opacity-100'
+            }`}
+            style={{ perspective: '1100px' }}
+          >
             {/* La flotación va acá y la inclinación en el hijo: si compartieran
                 elemento, una transformación pisaría a la otra. */}
             <div className={menosMovimiento ? '' : 'animate-float-slow'}>
@@ -154,7 +188,7 @@ export function ModalRegalo({
                   src={imagen}
                   alt={`El regalo de ${guest}`}
                   draggable={false}
-                  className="block max-h-[72dvh] w-auto max-w-full object-contain"
+                  className="block max-h-full w-auto max-w-full object-contain"
                 />
 
                 {/* El brillo se recorta contra la silueta del objeto con una
@@ -179,13 +213,23 @@ export function ModalRegalo({
               </div>
             </div>
           </div>
+
+          {/* El objeto 3D, encima. Mientras no esté listo no recibe el
+              puntero, así la foto de abajo se puede seguir inclinando. */}
+          <div className={`absolute inset-0 ${tresDListo ? '' : 'pointer-events-none'}`}>
+            <RegaloTresD
+              imagen={imagen}
+              alt={`El regalo de ${guest}`}
+              onListo={avisarListo}
+            />
+          </div>
         </div>
 
         <div className="max-w-md px-4 text-center">
           {nota && <p className="text-xs leading-relaxed text-cream-200/70">{nota}</p>}
           {!menosMovimiento && (
             <p className="mt-2 inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.2em] text-cream-400/50">
-              <RotateCcw size={11} /> Movelo para verlo
+              <RotateCcw size={11} /> Arrastralo para girarlo
             </p>
           )}
         </div>
