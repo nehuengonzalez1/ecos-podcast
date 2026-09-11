@@ -1,19 +1,25 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
+import { useEffect, useState } from 'react'
 import {
-  Play, Youtube, Music2, Clock, MapPin, Calendar, Share2, Download, ArrowLeft, ChevronRight,
-  Instagram, Facebook, Link as LinkIcon,
+  ArrowLeft, ArrowRight, Bookmark, BookmarkCheck, Check, Mail, MessageSquare, Play, Share2,
 } from 'lucide-react'
 import { brand } from '@/lib/config/brand'
-import { Polaroid } from '@/components/Polaroid'
-import { Stamp } from '@/components/Stamp'
 import { Envelope } from '@/components/Envelope'
 import { PremiumGate } from '@/components/PremiumGate'
 import { TrackedLink } from '@/components/TrackedLink'
-import { MuroMensajes } from '@/components/MuroMensajes'
-import { formatDate } from '@/lib/utils'
+import { ReproductorEpisodio } from '@/components/ReproductorEpisodio'
+import { MuroProvider, DejaTuMensaje, LoQueQuedo } from '@/components/Muro'
+
+const GUARDADOS = 'episodios:guardados'
+
+/** Primera oración de un texto, para usar de bajada sin repetir el resumen. */
+function primeraFrase(texto?: string | null): string {
+  if (!texto) return ''
+  const corte = texto.search(/[.?!](\s|$)/)
+  return corte === -1 ? texto : texto.slice(0, corte + 1)
+}
 
 export function EpisodeView({
   ep,
@@ -24,270 +30,337 @@ export function EpisodeView({
   ep: any
   available: any[]
   upcoming: any[]
-  /** Nombre de quien tiene sesion iniciada, o null si no hay. */
+  /** Nombre de quien tiene sesión iniciada, o null si no hay. */
   nombreUsuario: string | null
 }) {
-  const share = (net: string) => {
-    if (typeof window === 'undefined') return
-    const url = window.location.href
-    const text = `"${ep.quote}" — ${ep.guest} · ${brand.name}`
-    const map: Record<string, string> = {
-      whatsapp: `https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`,
-      x: `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`,
-      facebook: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
-      instagram: brand.socials.instagram,
-    }
-    window.open(map[net], '_blank', 'noopener')
-  }
+  // El siguiente puede estar todavía sin publicar: en ese caso se muestra
+  // igual, en modo "muy pronto", que es parte de lo que sostiene el interés.
+  const numero = Number(ep.number)
+  const siguiente = [...available, ...upcoming].find((e) => Number(e.number) === numero + 1) ?? null
+
+  // Se prefieren los de la misma categoría; si no alcanzan, se completa con
+  // el resto, para que el bloque nunca quede a medias.
+  const relacionados = [
+    ...available.filter((e) => e.slug !== ep.slug && e.category === ep.category),
+    ...available.filter((e) => e.slug !== ep.slug && e.category !== ep.category),
+  ].slice(0, 2)
 
   return (
-    <section className="spotlight-bg pt-28 pb-10">
-      <div className="container-page">
-        <Link href="/archivo" className="mb-6 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-cream-200/60 hover:text-gold">
-          <ArrowLeft size={12} /> Volver al archivo
-        </Link>
+    <MuroProvider slug={ep.slug} guest={ep.guest} nombreUsuario={nombreUsuario}>
+      <section className="spotlight-bg pt-24 pb-16">
+        <div className="container-page">
+          <Link
+            href="/archivo"
+            className="mb-5 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-cream-200/60 hover:text-gold"
+          >
+            <ArrowLeft size={12} /> Volver al archivo
+          </Link>
 
-        <div className="grid gap-10 lg:grid-cols-[280px_1fr] xl:grid-cols-[300px_1fr]">
-          <aside className="hidden lg:block">
-            <div className="sticky top-24">
-              <h3 className="title-display text-3xl">EL ARCHIVO</h3>
-              <p className="subtitle-signature mt-1 text-2xl">Historias que quedan.</p>
-              <p className="body-copy mt-4 text-sm text-cream-200/70">Cada historia deja una huella. Este es el lugar donde viven para siempre.</p>
+          {/* Video · ficha del episodio · lo que viene */}
+          <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr] xl:grid-cols-[1.35fr_1fr_230px]">
+            <ReproductorEpisodio
+              youtube={ep.youtube}
+              photo={ep.photo}
+              guest={ep.guest}
+              quote={ep.shortQuote ?? ep.quote}
+            />
 
-              <div className="mt-6 flex gap-2">
-                <button className="rounded-sm border border-gold bg-gold/10 px-3 py-1 text-[10px] uppercase tracking-widest text-gold">Episodios</button>
-                <button className="rounded-sm border border-cream-400/15 px-3 py-1 text-[10px] uppercase tracking-widest text-cream-200/70">Próximos</button>
-              </div>
+            <Ficha ep={ep} />
 
-              <ul className="mt-6 space-y-2">
-                {available.slice(0, 6).map((e) => {
-                  const active = e.slug === ep.slug
-                  return (
-                    <li key={e.id}>
-                      <Link
-                        href={`/episodio/${e.slug}`}
-                        className={`flex items-center gap-3 border p-2 transition ${
-                          active ? 'border-gold/60 bg-gold/5' : 'border-cream-400/10 hover:border-gold/40'
-                        }`}
-                      >
-                        <img src={e.photo!} alt="" className="h-10 w-10 rounded-full object-cover" />
-                        <div className="min-w-0 flex-1">
-                          <div className="text-[10px] uppercase tracking-widest text-cream-200/60">EP. {e.number}</div>
-                          <div className="truncate text-xs font-semibold text-cream-50">{e.guest.toUpperCase()}</div>
-                          <div className="text-[10px] text-cream-200/50">Disponible</div>
-                        </div>
-                        {active && <ChevronRight size={14} className="text-gold" />}
-                      </Link>
-                    </li>
-                  )
-                })}
-
-                {upcoming.slice(0, 3).map((e) => (
-                  <li key={e.id}>
-                    <div className="border border-cream-400/10 p-2 opacity-70">
-                      <div className="text-[10px] uppercase tracking-widest text-cream-200/60">EP. {e.number}</div>
-                      <div className="text-xs font-semibold text-cream-50">MUY PRONTO...</div>
-                      <div className="mt-1 line-clamp-2 text-[10px] italic text-cream-200/60">&ldquo;{e.quote}&rdquo;</div>
-                    </div>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </aside>
-
-          <div>
-            <div className="grid gap-8 md:grid-cols-[auto_1fr] md:items-start">
-              <Polaroid src={ep.photo!} alt={ep.guest} caption={ep.guest} seed={ep.id} size="lg" />
-
-              <div>
-                <div className="mb-3 flex flex-wrap items-center gap-3">
-                  <span className="border border-cream-400/20 px-3 py-1 text-[10px] uppercase tracking-[0.25em] text-cream-100/80">
-                    Episodio {ep.number}
-                  </span>
-                  <div className="hidden md:block ml-auto">
-                    <Stamp className="scale-75 opacity-70" />
-                  </div>
-                </div>
-
-                <h1 className="title-display text-5xl leading-none md:text-6xl">
-                  {ep.guest.toUpperCase()}
-                </h1>
-
-                <div className="mt-4 flex flex-wrap items-center gap-4 text-[11px] uppercase tracking-[0.2em] text-cream-200/60">
-                  {ep.date && <span className="inline-flex items-center gap-1.5"><Calendar size={12} />{formatDate(ep.date)}</span>}
-                  {ep.duration && <span className="inline-flex items-center gap-1.5"><Clock size={12} />{ep.duration} hs</span>}
-                  {ep.location && <span className="inline-flex items-center gap-1.5"><MapPin size={12} />{ep.location}</span>}
-                  <span className="text-gold/80">·  {ep.role}</span>
-                </div>
-
-                <blockquote className="mt-8 border-l-2 border-gold pl-4">
-                  <p className="font-serif text-2xl italic leading-snug text-cream-50 md:text-3xl">
-                    &ldquo;{ep.quote}&rdquo;
-                  </p>
-                </blockquote>
-
-                <div className="mt-8 flex flex-wrap items-center gap-3">
-                  <a href={ep.youtube ?? '#'} target="_blank" rel="noreferrer" className="btn-gold">
-                    <Play size={14} /> Ver episodio completo
-                  </a>
-                  <div className="flex items-center gap-2">
-                    <a href={ep.youtube ?? '#'} target="_blank" rel="noreferrer" aria-label="YouTube"
-                       className="flex h-10 w-10 items-center justify-center rounded-full bg-red-600/90 text-white hover:bg-red-600">
-                      <Youtube size={16} />
-                    </a>
-                    <a href={ep.spotify ?? '#'} target="_blank" rel="noreferrer" aria-label="Spotify"
-                       className="flex h-10 w-10 items-center justify-center rounded-full bg-green-600/90 text-white hover:bg-green-600">
-                      <Music2 size={16} />
-                    </a>
-                    <a href={ep.apple ?? '#'} target="_blank" rel="noreferrer" aria-label="Apple Podcasts"
-                       className="flex h-10 w-10 items-center justify-center rounded-full bg-purple-600/90 text-white hover:bg-purple-600">
-                      <Music2 size={16} />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-16 grid gap-6 md:grid-cols-2 lg:grid-cols-5">
-              <div className="card-panel lg:col-span-2">
-                <p className="eyebrow mb-3">Lo que pasó</p>
-                <p className="body-copy text-base leading-relaxed text-cream-100/90">{ep.summary}</p>
-                <div className="mt-6 font-hand text-2xl text-gold/70">— {ep.guest.split(' ')[0]}</div>
-              </div>
-
-              <div className="card-panel lg:col-span-2">
-                <p className="eyebrow mb-4">Frases que nos quedaron</p>
-                <ul className="space-y-4">
-                  {ep.moments.slice(0, 4).map((m: string, i: number) => (
-                    <motion.li
-                      key={i}
-                      initial={{ opacity: 0, x: -12 }}
-                      whileInView={{ opacity: 1, x: 0 }}
-                      viewport={{ once: true }}
-                      transition={{ delay: i * 0.05 }}
-                      className="font-serif text-base italic text-cream-100/90"
-                    >
-                      <span className="mr-2 text-gold">&ldquo;</span>{m}
-                    </motion.li>
-                  ))}
-                </ul>
-              </div>
-
-              <PremiumGate label="La carta (Archivo Completo)" className="card-panel flex flex-col lg:col-span-1">
-                <div>
-                  <p className="eyebrow mb-3">La carta</p>
-                  <p className="text-xs text-cream-200/70">La carta que le escribimos. Para que la tengas siempre.</p>
-                  <div className="mt-4">
-                    <Envelope label="La carta" sealText={brand.name[0]} />
-                  </div>
-                  <TrackedLink accion="carta" slug={ep.slug} href={`/premium/${ep.slug}/carta.pdf`} className="mt-4 btn-ghost justify-center">
-                    <Download size={12} /> Descargar carta
-                  </TrackedLink>
-                </div>
-              </PremiumGate>
-            </div>
-
-            <div className="mt-6 grid gap-6 md:grid-cols-3">
-              <PremiumGate label="Regalos ocultos (Archivo Completo)" className="card-panel">
-                <div>
-                  <p className="eyebrow mb-3">Regalos ocultos</p>
-                  <p className="text-xs text-cream-200/70">Cada episodio tiene algo especial para vos.</p>
-                  <div className="mt-4 grid grid-cols-2 gap-2">
-                    <div className="aspect-square bg-gradient-to-br from-cream-200/10 to-cream-200/5 flex items-center justify-center text-2xl text-cream-300/60">◱</div>
-                    <div className="aspect-square bg-gradient-to-br from-cream-200/10 to-cream-200/5 flex items-center justify-center text-2xl text-cream-300/60">◱</div>
-                  </div>
-                  <TrackedLink accion="regalos" slug={ep.slug} href={`/premium/${ep.slug}/regalos.zip`} className="mt-4 btn-ghost w-full justify-center">
-                    <Download size={12} /> Descargar contenido
-                  </TrackedLink>
-                </div>
-              </PremiumGate>
-
-              <PremiumGate label="No salió al aire (Archivo Completo)" className="card-panel">
-                <div>
-                  <p className="eyebrow mb-3">Lo que no salió al aire</p>
-                  <p className="text-xs text-cream-200/70">Un momento íntimo después de apagar las cámaras.</p>
-                  <div className="mt-4 aspect-video overflow-hidden rounded-sm bg-ink-700 relative">
-                    <img src={ep.extras?.photos?.[0]} alt="" className="h-full w-full object-cover opacity-70" />
-                    <div className="absolute inset-0 flex items-center justify-center">
-                      <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gold/90 text-ink-900">
-                        <Play size={22} fill="currentColor" />
-                      </div>
-                    </div>
-                  </div>
-                  <TrackedLink accion="audio" slug={ep.slug} href={`/premium/${ep.slug}/no-al-aire.mp4`} className="mt-4 btn-ghost w-full justify-center">
-                    <Play size={12} /> Ver video
-                  </TrackedLink>
-                </div>
-              </PremiumGate>
-
-              <div className="card-panel">
-                <p className="eyebrow mb-3">Detrás del episodio</p>
-                <p className="text-xs text-cream-200/70">Así fue el detrás de escena.</p>
-                <div className="mt-4 grid grid-cols-3 gap-2">
-                  {(ep.extras?.photos ?? []).slice(0, 3).map((src: string, i: number) => (
-                    <div key={i} className="aspect-square overflow-hidden bg-ink-700">
-                      <img src={src} alt="" className="h-full w-full object-cover" />
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="mt-6 grid gap-6 md:grid-cols-2">
-              {ep.extras?.object && (
-                <div className="card-panel">
-                  <p className="eyebrow mb-4">Objetos de su historia</p>
-                  <p className="mb-4 text-xs text-cream-200/70">Cada objeto tiene una historia.</p>
-                  <div className="flex items-start gap-4">
-                    <div className="h-24 w-24 shrink-0 border border-cream-400/20 bg-ink-700 flex items-center justify-center text-cream-300/50 text-xs uppercase tracking-widest">
-                      {ep.extras.object.name.split(' ')[0]}
-                    </div>
-                    <div>
-                      <div className="font-serif text-lg text-cream-50">{ep.extras.object.name}</div>
-                      <p className="mt-2 font-serif italic text-sm text-cream-200/80">
-                        &ldquo;{ep.extras.object.note}&rdquo;
-                      </p>
-                    </div>
-                  </div>
+            <aside className="xl:border-l xl:border-cream-400/10 xl:pl-6">
+              {siguiente && <Siguiente ep={siguiente} />}
+              {relacionados.length > 0 && (
+                <div className={siguiente ? 'mt-8' : ''}>
+                  <p className="eyebrow mb-4">Episodios relacionados</p>
+                  <ul className="space-y-3">
+                    {relacionados.map((e) => (
+                      <li key={e.id}>
+                        <Relacionado ep={e} />
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               )}
+            </aside>
+          </div>
 
-              <div className="card-panel">
-                <p className="eyebrow mb-4">Compartí esta historia</p>
-                <p className="mb-4 text-xs text-cream-200/70">Una historia vale más cuando se comparte.</p>
-                <div className="flex flex-wrap gap-2">
-                  <button onClick={() => share('whatsapp')} className="flex h-10 w-10 items-center justify-center rounded-full bg-green-600/90 text-white hover:bg-green-600" aria-label="WhatsApp">
-                    <Share2 size={16} />
-                  </button>
-                  <button onClick={() => share('instagram')} className="flex h-10 w-10 items-center justify-center rounded-full bg-pink-600/90 text-white hover:bg-pink-600" aria-label="Instagram">
-                    <Instagram size={16} />
-                  </button>
-                  <button onClick={() => share('x')} className="flex h-10 w-10 items-center justify-center rounded-full bg-cream-100/10 text-cream-100 hover:bg-cream-100/20" aria-label="X">
-                    X
-                  </button>
-                  <button onClick={() => share('facebook')} className="flex h-10 w-10 items-center justify-center rounded-full bg-blue-700/90 text-white hover:bg-blue-700" aria-label="Facebook">
-                    <Facebook size={16} />
-                  </button>
-                  <button onClick={() => navigator.clipboard.writeText(window.location.href)} className="flex h-10 w-10 items-center justify-center rounded-full bg-cream-100/10 text-cream-100 hover:bg-cream-100/20" aria-label="Copiar link">
-                    <LinkIcon size={16} />
-                  </button>
-                </div>
+          {/* Lo que pasó · frases · dejá tu mensaje */}
+          <div className="mt-10 grid gap-8 border-t border-cream-400/10 pt-8 md:grid-cols-2 xl:grid-cols-[1fr_1.35fr_270px]">
+            <div>
+              <p className="eyebrow mb-4">Lo que pasó</p>
+              <p className="body-copy text-sm leading-relaxed text-cream-100/85">{ep.summary}</p>
+            </div>
 
-                <div className="mt-6 rounded-sm border border-cream-400/10 bg-ink-900/40 p-3">
-                  <p className="font-serif italic text-sm text-cream-100/90">&ldquo;{ep.quote}&rdquo;</p>
-                  <p className="mt-1 text-[10px] uppercase tracking-widest text-gold/70">— {ep.guest}</p>
-                </div>
+            <div className="md:border-l md:border-cream-400/10 md:pl-8">
+              <p className="eyebrow mb-4">Frases que nos quedaron</p>
+              <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+                {(ep.moments ?? []).slice(0, 6).map((m: string, i: number) => (
+                  <p key={i} className="font-serif text-sm italic leading-relaxed text-cream-100/85">
+                    &ldquo;{m}&rdquo;
+                  </p>
+                ))}
               </div>
             </div>
 
-            <MuroMensajes slug={ep.slug} guest={ep.guest} nombreUsuario={nombreUsuario} />
-
-            <p className="mt-16 text-center font-hand text-2xl text-gold/80">
-              Detrás de cada historia, hay alguien que decidió ser real. Gracias por ser parte de esto. ♡
-            </p>
+            <div className="xl:border-l xl:border-cream-400/10 xl:pl-8">
+              <DejaTuMensaje />
+            </div>
           </div>
+
+          {/* La carta · regalos · objetos */}
+          <div
+            id="carta"
+            className="mt-10 grid scroll-mt-24 gap-6 border-t border-cream-400/10 pt-8 md:grid-cols-3"
+          >
+            <PremiumGate label="La carta (Archivo Completo)">
+              <div className="flex h-full flex-col">
+                <p className="eyebrow mb-4">La carta</p>
+                {/* Acotado para que el sobre no estire la fila entera: las
+                    tres columnas tienen que leerse como pares. */}
+                <Envelope label="La carta" sealText={brand.name[0]} className="max-w-[190px]" />
+                <p className="mt-5 text-xs text-cream-200/70">
+                  La carta completa de {ep.guest.split(' ')[0]}.
+                </p>
+                <TrackedLink
+                  accion="carta"
+                  slug={ep.slug}
+                  href={`/premium/${ep.slug}/carta.pdf`}
+                  className="btn-ghost mt-auto w-full justify-center"
+                >
+                  Leer carta <ArrowRight size={12} />
+                </TrackedLink>
+              </div>
+            </PremiumGate>
+
+            <PremiumGate
+              label="Regalos ocultos (Archivo Completo)"
+              className="md:border-l md:border-cream-400/10 md:pl-8"
+            >
+              <div className="flex h-full flex-col">
+                <p className="eyebrow mb-4">Regalos ocultos</p>
+                <p className="text-xs leading-relaxed text-cream-200/70">
+                  Desbloqueá el archivo completo y accedé a los regalos ocultos, audios inéditos y
+                  más contenido de este episodio.
+                </p>
+                <TrackedLink
+                  accion="regalos"
+                  slug={ep.slug}
+                  href={`/premium/${ep.slug}/regalos.zip`}
+                  className="btn-ghost mt-auto w-full justify-center"
+                >
+                  Desbloquear
+                </TrackedLink>
+              </div>
+            </PremiumGate>
+
+            {ep.extras?.object && (
+              <div className="flex h-full flex-col md:border-l md:border-cream-400/10 md:pl-8">
+                <p className="eyebrow mb-4">Objetos de su historia</p>
+                <div className="flex aspect-[4/3] max-w-[190px] items-center justify-center border border-cream-400/15 bg-ink-700 px-3 text-center text-xs uppercase tracking-widest text-cream-300/50">
+                  {ep.extras.object.name}
+                </div>
+                <p className="mt-5 font-serif text-sm italic leading-relaxed text-cream-200/80">
+                  &ldquo;{ep.extras.object.note}&rdquo;
+                </p>
+              </div>
+            )}
+          </div>
+
+          <LoQueQuedo />
+        </div>
+      </section>
+    </MuroProvider>
+  )
+}
+
+function Ficha({ ep }: { ep: any }) {
+  return (
+    <div>
+      <p className="text-[11px] uppercase tracking-[0.3em] text-cream-200/60">Ep. {ep.number}</p>
+
+      <h1 className="mt-2 font-serif text-5xl leading-[0.95] text-cream-50 md:text-6xl">
+        {ep.guest}
+      </h1>
+
+      <blockquote className="mt-5">
+        <p className="font-serif text-xl italic leading-snug text-cream-100/90 md:text-2xl">
+          &ldquo;{ep.quote}&rdquo;
+        </p>
+      </blockquote>
+
+      {/* Una línea corta, no el relato completo: ese vive abajo, en "Lo que
+          pasó". Si se repitiera el mismo texto en los dos lugares, la página
+          se leería como si tartamudeara. `intro` es opcional y se va a poder
+          cargar por episodio; hasta entonces se usa la primera frase. */}
+      <p className="body-copy mt-5 text-sm leading-relaxed text-cream-200/70">
+        {ep.intro ?? primeraFrase(ep.summary)}
+      </p>
+
+      <div className="mt-7 flex flex-wrap items-center gap-3">
+        <a
+          href={ep.youtube ?? '#'}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-sm bg-cream-50 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-ink-900 transition hover:bg-white"
+        >
+          <Play size={14} fill="currentColor" /> Ver episodio
+        </a>
+        <a
+          href={ep.spotify ?? '#'}
+          target="_blank"
+          rel="noreferrer"
+          className="inline-flex items-center gap-2 rounded-sm border border-cream-400/25 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-cream-100 transition hover:border-gold hover:text-gold"
+        >
+          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[11px] text-white">
+            ♪
+          </span>
+          Escuchar en Spotify
+        </a>
+      </div>
+
+      <Acciones ep={ep} />
+    </div>
+  )
+}
+
+/**
+ * La fila de acciones bajo los botones principales.
+ *
+ * Del diseño falta "Descargar": no hay archivo del episodio para bajar, el
+ * video lo sirve YouTube. Antes que un botón que no hace nada, no se muestra.
+ */
+function Acciones({ ep }: { ep: any }) {
+  const [guardado, setGuardado] = useState(false)
+  const [copiado, setCopiado] = useState(false)
+
+  useEffect(() => {
+    try {
+      const xs = JSON.parse(localStorage.getItem(GUARDADOS) ?? '[]')
+      setGuardado(Array.isArray(xs) && xs.includes(ep.slug))
+    } catch {
+      /* sin storage no se puede recordar; el botón igual funciona en la sesión */
+    }
+  }, [ep.slug])
+
+  const alternarGuardado = () => {
+    setGuardado((antes) => {
+      const ahora = !antes
+      try {
+        const xs: string[] = JSON.parse(localStorage.getItem(GUARDADOS) ?? '[]')
+        const lista = ahora ? [...new Set([...xs, ep.slug])] : xs.filter((s) => s !== ep.slug)
+        localStorage.setItem(GUARDADOS, JSON.stringify(lista))
+      } catch {
+        /* idem */
+      }
+      return ahora
+    })
+  }
+
+  const compartir = async () => {
+    const url = window.location.href
+    const texto = `"${ep.quote}" — ${ep.guest} · ${brand.name}`
+    // El menú nativo es lo que la gente espera en el teléfono; en escritorio
+    // casi nunca existe, y ahí copiar el link es más útil que abrir una red
+    // puntual elegida por nosotros.
+    if (navigator.share) {
+      try {
+        await navigator.share({ title: `${ep.guest} · ${brand.name}`, text: texto, url })
+        return
+      } catch {
+        /* si lo cancelan, cae a copiar */
+      }
+    }
+    try {
+      await navigator.clipboard.writeText(url)
+      setCopiado(true)
+      setTimeout(() => setCopiado(false), 2000)
+    } catch {
+      /* sin permiso de portapapeles no hay mucho más que hacer */
+    }
+  }
+
+  const base =
+    'inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-cream-200/60 transition hover:text-gold'
+
+  return (
+    <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-3">
+      <button onClick={alternarGuardado} className={base} aria-pressed={guardado}>
+        {guardado ? <BookmarkCheck size={13} className="text-gold" /> : <Bookmark size={13} />}
+        {guardado ? 'Guardado' : 'Guardar'}
+      </button>
+
+      <button onClick={compartir} className={base}>
+        {copiado ? <Check size={13} className="text-gold" /> : <Share2 size={13} />}
+        {copiado ? 'Link copiado' : 'Compartir'}
+      </button>
+
+      <a href="#muro" className={base}>
+        <MessageSquare size={13} /> Los mensajes
+      </a>
+
+      <a href="#carta" className={base}>
+        <Mail size={13} /> Carta del invitado
+      </a>
+    </div>
+  )
+}
+
+function Siguiente({ ep }: { ep: any }) {
+  const disponible = ep.status === 'available'
+
+  return (
+    <div>
+      <p className="eyebrow mb-4">Siguiente episodio</p>
+      <div className="flex gap-3">
+        <div className="h-16 w-16 shrink-0 overflow-hidden bg-ink-700">
+          {ep.photo && (
+            <img
+              src={ep.photo}
+              alt=""
+              className={`h-full w-full object-cover ${disponible ? '' : 'opacity-30 grayscale'}`}
+              loading="lazy"
+            />
+          )}
+        </div>
+        <div className="min-w-0">
+          <p className="text-[10px] uppercase tracking-widest text-cream-200/60">Ep. {ep.number}</p>
+          <p className="mt-0.5 truncate text-xs text-cream-50">
+            {disponible ? ep.guest : 'Muy pronto.'}
+          </p>
         </div>
       </div>
-    </section>
+
+      {disponible ? (
+        <Link href={`/episodio/${ep.slug}`} className="btn-ghost mt-4 w-full justify-center">
+          Ver episodio <ArrowRight size={12} />
+        </Link>
+      ) : (
+        <p className="mt-4 border border-cream-400/15 px-3 py-2.5 text-center text-[10px] uppercase tracking-widest text-cream-200/50">
+          Muy pronto
+        </p>
+      )}
+    </div>
+  )
+}
+
+function Relacionado({ ep }: { ep: any }) {
+  return (
+    <Link
+      href={`/episodio/${ep.slug}`}
+      className="group flex items-center gap-3 transition hover:opacity-90"
+    >
+      <div className="h-12 w-12 shrink-0 overflow-hidden bg-ink-700">
+        {ep.photo && (
+          <img src={ep.photo} alt="" className="h-full w-full object-cover" loading="lazy" />
+        )}
+      </div>
+      <div className="min-w-0 flex-1">
+        <p className="text-[10px] uppercase tracking-widest text-cream-200/60">Ep. {ep.number}</p>
+        <p className="truncate text-xs text-cream-50">{ep.guest}</p>
+      </div>
+      <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-cream-400/30 text-cream-100 transition group-hover:border-gold group-hover:text-gold">
+        <Play size={11} fill="currentColor" />
+      </span>
+    </Link>
   )
 }
