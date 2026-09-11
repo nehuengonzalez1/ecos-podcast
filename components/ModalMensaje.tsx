@@ -138,44 +138,56 @@ export function ModalMensaje({
           <X size={20} />
         </button>
 
-        <div className="grid md:grid-cols-[36%_1fr]">
-          {/* La foto de la nota. Decorativa: en pantallas chicas se va, para
-              que el formulario no quede empujado abajo de todo. */}
-          <div className="relative hidden bg-ink-900 md:block">
-            <img
-              src="/imagenes/mensaje.jpg"
-              alt=""
-              aria-hidden="true"
-              className="absolute inset-0 h-full w-full object-cover"
-            />
+        {estado === 'listo' ? (
+          <div className="p-7">
+            <Confirmacion nombrePila={nombrePila} onCerrar={onCerrar} />
           </div>
-
-          <div className="p-6 sm:p-7">
-            {estado === 'listo' ? (
-              <Confirmacion nombrePila={nombrePila} onCerrar={onCerrar} />
-            ) : (
-              <>
-                <p className="eyebrow mb-2.5">Lo que quedó</p>
-                <h2 id="modal-muro-titulo" className="font-serif text-2xl leading-tight text-cream-50">
+        ) : (
+          <>
+            {/* El encabezado va a todo el ancho, por encima de la imagen, y no
+                encerrado en la columna del formulario: es lo que le da aire a
+                la ventana y deja que la foto ocupe la mitad de abajo. */}
+            <div className="px-6 pb-4 pt-6 sm:px-7">
+              <p className="eyebrow">Lo que quedó</p>
+              <div className="mx-auto mt-2.5 max-w-[420px]">
+                <h2
+                  id="modal-muro-titulo"
+                  className="font-serif text-[26px] leading-tight text-cream-50"
+                >
                   Dejá tu mensaje para {nombrePila}
                 </h2>
-                <p className="body-copy mt-2.5 text-[13px] leading-relaxed text-cream-200/70">
+                <p className="body-copy mt-2 text-[13px] leading-relaxed text-cream-200/70">
                   Si esta historia te resonó, si algo de esta conversación te acompañó, te inspiró
                   o simplemente querés decirle algo, este es el lugar. Tu palabra también forma
                   parte de esta historia.
                 </p>
+              </div>
+            </div>
 
-                <form onSubmit={enviar} className="mt-5 space-y-4">
+            <div className="grid md:grid-cols-[43%_1fr]">
+              {/* La foto de la nota. Decorativa: en pantallas chicas se va,
+                  para que el formulario no quede empujado abajo de todo. */}
+              <div className="relative hidden bg-ink-900 md:block">
+                <img
+                  src="/imagenes/mensaje.jpg"
+                  alt=""
+                  aria-hidden="true"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+              </div>
+
+              <div className="px-6 pb-6 sm:px-7 sm:pb-7 md:pl-6">
+                <form onSubmit={enviar} className="space-y-3">
                   {nombreUsuario ? (
-                    <p className="rounded-sm border border-cream-400/15 bg-ink-900/40 px-3.5 py-3 text-xs text-cream-200/80">
+                    <p className="rounded-sm border border-cream-400/15 bg-ink-900/40 px-3 py-2.5 text-xs text-cream-200/80">
                       Vas a firmar como{' '}
                       <span className="text-cream-50">{nombreUsuario}</span>, el nombre de tu
                       cuenta.
                     </p>
                   ) : (
-                    <div className="grid gap-5 sm:grid-cols-2">
+                    <div className="grid gap-3 sm:grid-cols-2">
                       <div>
-                        <label htmlFor="modal-nombre" className="eyebrow mb-2 block">
+                        <label htmlFor="modal-nombre" className="eyebrow mb-1.5 block">
                           Tu nombre
                         </label>
                         <input
@@ -189,7 +201,7 @@ export function ModalMensaje({
                         />
                       </div>
                       <div>
-                        <label htmlFor="modal-email" className="eyebrow mb-2 block">
+                        <label htmlFor="modal-email" className="eyebrow mb-1.5 block">
                           Tu email
                         </label>
                         <input
@@ -206,7 +218,7 @@ export function ModalMensaje({
                   )}
 
                   <div>
-                    <label htmlFor="modal-mensaje" className="eyebrow mb-2 block">
+                    <label htmlFor="modal-mensaje" className="eyebrow mb-1.5 block">
                       Tu mensaje
                     </label>
                     <textarea
@@ -214,7 +226,7 @@ export function ModalMensaje({
                       id="modal-mensaje"
                       name="mensaje"
                       required
-                      rows={4}
+                      rows={3}
                       minLength={MINIMO_MENSAJE}
                       maxLength={LIMITES.mensaje}
                       onChange={(e) => setLargo(e.target.value.length)}
@@ -226,7 +238,7 @@ export function ModalMensaje({
                     </p>
                   </div>
 
-                  <fieldset className="space-y-2">
+                  <fieldset className="space-y-1.5">
                     <legend className="sr-only">Cómo querés aparecer</legend>
                     <Opcion
                       nombre="firma"
@@ -275,10 +287,10 @@ export function ModalMensaje({
                     </p>
                   )}
                 </form>
-              </>
-            )}
-          </div>
-        </div>
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   )
