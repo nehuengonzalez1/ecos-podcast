@@ -9,10 +9,22 @@ import { brand } from '@/lib/config/brand'
 import { Envelope } from '@/components/Envelope'
 import { PremiumGate } from '@/components/PremiumGate'
 import { TrackedLink } from '@/components/TrackedLink'
+import { IconoSpotify } from '@/components/IconoSpotify'
 import { ReproductorEpisodio } from '@/components/ReproductorEpisodio'
 import { MuroProvider, DejaTuMensaje, LoQueQuedo } from '@/components/Muro'
 
 const GUARDADOS = 'episodios:guardados'
+
+/**
+ * Los dos botones principales comparten forma y tamaño; solo cambia el
+ * relleno. Salen de la misma constante a proposito: cuando cada uno tenia
+ * sus clases sueltas, el borde de uno le sumaba dos pixeles de alto y
+ * quedaban desparejos sin que se notara de donde venia.
+ */
+const BOTON =
+  'inline-flex h-10 items-center gap-2 rounded-sm border px-4 text-[11px] font-semibold uppercase tracking-[0.1em] transition'
+const BOTON_LLENO = 'border-cream-50 bg-cream-50 text-ink-900 hover:border-white hover:bg-white'
+const BOTON_BORDE = 'border-cream-400/25 text-cream-100 hover:border-gold hover:text-gold'
 
 /** Primera oración de un texto, para usar de bajada sin repetir el resumen. */
 function primeraFrase(texto?: string | null): string {
@@ -93,9 +105,18 @@ export function EpisodeView({
 
             <div className="md:border-l md:border-cream-400/10 md:pl-6">
               <p className="eyebrow mb-3">Frases que nos quedaron</p>
-              <div className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+              {/* Columnas de texto, no grilla. En una grilla las filas se
+                  alinean entre columnas: una frase de un renglon al lado de
+                  una de dos queda con un hueco debajo, y el bloque se lee
+                  como piezas sueltas en vez de una lista pareja. Fluyendo por
+                  columnas cada frase ocupa solo su alto y el ritmo entre
+                  todas es el mismo. */}
+              <div className="columns-1 gap-x-6 sm:columns-2">
                 {(ep.moments ?? []).slice(0, 6).map((m: string, i: number) => (
-                  <p key={i} className="font-serif text-sm italic leading-relaxed text-cream-100/85">
+                  <p
+                    key={i}
+                    className="mb-2.5 break-inside-avoid font-serif text-[13px] italic leading-snug text-cream-100/85"
+                  >
                     &ldquo;{m}&rdquo;
                   </p>
                 ))}
@@ -197,24 +218,11 @@ function Ficha({ ep }: { ep: any }) {
       </p>
 
       <div className="mt-5 flex flex-wrap items-center gap-2.5">
-        <a
-          href={ep.youtube ?? '#'}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-sm bg-cream-50 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-900 transition hover:bg-white"
-        >
+        <a href={ep.youtube ?? '#'} target="_blank" rel="noreferrer" className={`${BOTON} ${BOTON_LLENO}`}>
           <Play size={14} fill="currentColor" /> Ver episodio
         </a>
-        <a
-          href={ep.spotify ?? '#'}
-          target="_blank"
-          rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-sm border border-cream-400/25 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-cream-100 transition hover:border-gold hover:text-gold"
-        >
-          <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[11px] text-white">
-            ♪
-          </span>
-          Escuchar en Spotify
+        <a href={ep.spotify ?? '#'} target="_blank" rel="noreferrer" className={`${BOTON} ${BOTON_BORDE}`}>
+          <IconoSpotify className="h-[15px] w-[15px]" /> Escuchar en Spotify
         </a>
       </div>
 
