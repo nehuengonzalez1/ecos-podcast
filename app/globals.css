@@ -29,13 +29,13 @@
   }
   body {
     font-family: 'Inter', system-ui, sans-serif;
-    background: #0a0806;
+    background: #0a0a0a;
     color: #f5e9d3;
     overflow-x: hidden;
   }
   ::selection {
     background: #ff8000;
-    color: #0a0806;
+    color: #0a0a0a;
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: 'Cormorant Garamond', serif;
@@ -90,11 +90,14 @@
   mix-blend-mode: overlay;
 }
 
+/* Fondo de pagina: negro plano.
+   Antes tenia un halo naranja radial arriba. Se saco a proposito: teñia de
+   naranja el tercio superior de todas las pantallas y competia con el dorado
+   de la marca, que es lo unico que deberia dar color. El nombre de la clase
+   se conserva porque la usan trece paginas; lo que cambio es que ya no hay
+   ningun spotlight. */
 .spotlight-bg {
-  background:
-    radial-gradient(ellipse at 50% 25%, rgba(255,128,0,0.16) 0%, rgba(10,8,6,0) 55%),
-    radial-gradient(ellipse at 50% 100%, rgba(0,0,0,0.9) 0%, rgba(10,8,6,0) 60%),
-    #0a0806;
+  background: #0a0a0a;
 }
 
 .polaroid-tilt {
@@ -123,7 +126,7 @@
 /* Clerk styling to match brand */
 .cl-formButtonPrimary {
   background: #ff8000 !important;
-  color: #0a0806 !important;
+  color: #0a0a0a !important;
   font-family: 'Inter', sans-serif !important;
   font-weight: 500 !important;
 }

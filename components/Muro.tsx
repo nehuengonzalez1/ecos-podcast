@@ -161,8 +161,8 @@ export function DejaTuMensaje() {
 
   return (
     <div>
-      <p className="eyebrow mb-3">Dejá tu mensaje</p>
-      <p className="body-copy text-sm leading-relaxed text-cream-200/70">
+      <p className="eyebrow mb-2.5">Dejá tu mensaje</p>
+      <p className="body-copy text-[13px] leading-relaxed text-cream-200/70">
         Si esta historia te resonó, podés dejarle
         <br className="hidden sm:block" /> un mensaje a {nombrePila}.
       </p>
@@ -170,7 +170,7 @@ export function DejaTuMensaje() {
       <button
         onClick={abrirModal}
         disabled={!activo}
-        className="mt-5 flex w-full items-center justify-center gap-2 rounded-sm bg-cream-50 px-5 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-4 flex w-full items-center justify-center gap-2 rounded-sm bg-cream-50 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
       >
         Dejar un mensaje <ArrowRight size={14} />
       </button>
@@ -193,7 +193,7 @@ export function LoQueQuedo() {
   const visibles = verTodos ? mensajes : mensajes.slice(0, VISIBLES_AL_INICIO)
 
   return (
-    <section id="muro" className="mt-12 scroll-mt-24 border-t border-cream-400/10 pt-8">
+    <section id="muro" className="mt-8 scroll-mt-24 border-t border-cream-400/10 pt-6">
       <div className="flex flex-wrap items-baseline justify-between gap-3">
         <div className="flex flex-wrap items-baseline gap-4">
           <h2 className="text-sm uppercase tracking-[0.25em] text-gold">Lo que quedó</h2>
@@ -211,7 +211,7 @@ export function LoQueQuedo() {
         )}
       </div>
 
-      <div className="mt-6">
+      <div className="mt-5">
         {cargando ? (
           <p className="text-sm text-cream-400/70">Cargando mensajes…</p>
         ) : !activo ? (
@@ -221,7 +221,7 @@ export function LoQueQuedo() {
             Todavía no hay mensajes acá. Podés ser la primera persona en dejarle uno a {nombrePila}.
           </p>
         ) : (
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             {visibles.map((m, i) => (
               <Tarjeta
                 key={m.id}
@@ -255,13 +255,13 @@ function Tarjeta({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: '-40px' }}
       transition={{ delay: Math.min(orden, 6) * 0.05 }}
-      className="flex flex-col justify-between border border-cream-400/10 bg-ink-800/50 p-5"
+      className="flex flex-col justify-between border border-cream-400/10 bg-ink-800/50 p-4"
     >
       <p className="whitespace-pre-wrap font-serif text-sm italic leading-relaxed text-cream-100/85">
         &ldquo;{m.mensaje}&rdquo;
       </p>
 
-      <div className="mt-5 flex items-end justify-between gap-3">
+      <div className="mt-4 flex items-end justify-between gap-3">
         <div className="min-w-0">
           <p className="truncate text-xs text-cream-50">{m.nombre}</p>
           <p className="mt-0.5 text-[11px] text-cream-400/60">{cuando(m.at)}</p>

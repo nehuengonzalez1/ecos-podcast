@@ -28,7 +28,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#0a0806',
+  themeColor: '#0a0a0a',
   width: 'device-width',
   initialScale: 1,
 }
@@ -71,8 +71,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         baseTheme: dark,
         variables: {
           colorPrimary: '#ff8000',
-          colorBackground: '#100d0a',
-          colorInputBackground: '#0a0806',
+          colorBackground: '#121212',
+          colorInputBackground: '#0a0a0a',
           colorInputText: '#f5e9d3',
           colorText: '#f5e9d3',
           colorTextSecondary: '#c7b58f',

@@ -47,17 +47,17 @@ export function EpisodeView({
 
   return (
     <MuroProvider slug={ep.slug} guest={ep.guest} nombreUsuario={nombreUsuario}>
-      <section className="spotlight-bg pt-24 pb-16">
+      <section className="spotlight-bg pt-20 pb-12">
         <div className="container-page">
           <Link
             href="/archivo"
-            className="mb-5 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-cream-200/60 hover:text-gold"
+            className="mb-4 inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-cream-200/60 hover:text-gold"
           >
             <ArrowLeft size={12} /> Volver al archivo
           </Link>
 
           {/* Video · ficha del episodio · lo que viene */}
-          <div className="grid gap-8 lg:grid-cols-[1.3fr_1fr] xl:grid-cols-[1.35fr_1fr_230px]">
+          <div className="grid gap-6 lg:grid-cols-[1.25fr_1fr] xl:grid-cols-[1.15fr_1.1fr_210px]">
             <ReproductorEpisodio
               youtube={ep.youtube}
               photo={ep.photo}
@@ -67,11 +67,11 @@ export function EpisodeView({
 
             <Ficha ep={ep} />
 
-            <aside className="xl:border-l xl:border-cream-400/10 xl:pl-6">
+            <aside className="xl:border-l xl:border-cream-400/10 xl:pl-5">
               {siguiente && <Siguiente ep={siguiente} />}
               {relacionados.length > 0 && (
                 <div className={siguiente ? 'mt-8' : ''}>
-                  <p className="eyebrow mb-4">Episodios relacionados</p>
+                  <p className="eyebrow mb-3">Episodios relacionados</p>
                   <ul className="space-y-3">
                     {relacionados.map((e) => (
                       <li key={e.id}>
@@ -85,15 +85,15 @@ export function EpisodeView({
           </div>
 
           {/* Lo que pasó · frases · dejá tu mensaje */}
-          <div className="mt-10 grid gap-8 border-t border-cream-400/10 pt-8 md:grid-cols-2 xl:grid-cols-[1fr_1.35fr_270px]">
+          <div className="mt-8 grid gap-6 border-t border-cream-400/10 pt-6 md:grid-cols-2 xl:grid-cols-[1fr_1.3fr_250px]">
             <div>
-              <p className="eyebrow mb-4">Lo que pasó</p>
+              <p className="eyebrow mb-3">Lo que pasó</p>
               <p className="body-copy text-sm leading-relaxed text-cream-100/85">{ep.summary}</p>
             </div>
 
-            <div className="md:border-l md:border-cream-400/10 md:pl-8">
-              <p className="eyebrow mb-4">Frases que nos quedaron</p>
-              <div className="grid gap-x-8 gap-y-4 sm:grid-cols-2">
+            <div className="md:border-l md:border-cream-400/10 md:pl-6">
+              <p className="eyebrow mb-3">Frases que nos quedaron</p>
+              <div className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
                 {(ep.moments ?? []).slice(0, 6).map((m: string, i: number) => (
                   <p key={i} className="font-serif text-sm italic leading-relaxed text-cream-100/85">
                     &ldquo;{m}&rdquo;
@@ -102,7 +102,7 @@ export function EpisodeView({
               </div>
             </div>
 
-            <div className="xl:border-l xl:border-cream-400/10 xl:pl-8">
+            <div className="xl:border-l xl:border-cream-400/10 xl:pl-6">
               <DejaTuMensaje />
             </div>
           </div>
@@ -110,15 +110,15 @@ export function EpisodeView({
           {/* La carta · regalos · objetos */}
           <div
             id="carta"
-            className="mt-10 grid scroll-mt-24 gap-6 border-t border-cream-400/10 pt-8 md:grid-cols-3"
+            className="mt-8 grid scroll-mt-24 gap-6 border-t border-cream-400/10 pt-6 md:grid-cols-3"
           >
             <PremiumGate label="La carta (Archivo Completo)">
               <div className="flex h-full flex-col">
-                <p className="eyebrow mb-4">La carta</p>
+                <p className="eyebrow mb-3">La carta</p>
                 {/* Acotado para que el sobre no estire la fila entera: las
                     tres columnas tienen que leerse como pares. */}
                 <Envelope label="La carta" sealText={brand.name[0]} className="max-w-[190px]" />
-                <p className="mt-5 text-xs text-cream-200/70">
+                <p className="mt-4 text-xs text-cream-200/70">
                   La carta completa de {ep.guest.split(' ')[0]}.
                 </p>
                 <TrackedLink
@@ -134,10 +134,10 @@ export function EpisodeView({
 
             <PremiumGate
               label="Regalos ocultos (Archivo Completo)"
-              className="md:border-l md:border-cream-400/10 md:pl-8"
+              className="md:border-l md:border-cream-400/10 md:pl-6"
             >
               <div className="flex h-full flex-col">
-                <p className="eyebrow mb-4">Regalos ocultos</p>
+                <p className="eyebrow mb-3">Regalos ocultos</p>
                 <p className="text-xs leading-relaxed text-cream-200/70">
                   Desbloqueá el archivo completo y accedé a los regalos ocultos, audios inéditos y
                   más contenido de este episodio.
@@ -154,12 +154,12 @@ export function EpisodeView({
             </PremiumGate>
 
             {ep.extras?.object && (
-              <div className="flex h-full flex-col md:border-l md:border-cream-400/10 md:pl-8">
-                <p className="eyebrow mb-4">Objetos de su historia</p>
+              <div className="flex h-full flex-col md:border-l md:border-cream-400/10 md:pl-6">
+                <p className="eyebrow mb-3">Objetos de su historia</p>
                 <div className="flex aspect-[4/3] max-w-[190px] items-center justify-center border border-cream-400/15 bg-ink-700 px-3 text-center text-xs uppercase tracking-widest text-cream-300/50">
                   {ep.extras.object.name}
                 </div>
-                <p className="mt-5 font-serif text-sm italic leading-relaxed text-cream-200/80">
+                <p className="mt-4 font-serif text-sm italic leading-relaxed text-cream-200/80">
                   &ldquo;{ep.extras.object.note}&rdquo;
                 </p>
               </div>
@@ -178,12 +178,12 @@ function Ficha({ ep }: { ep: any }) {
     <div>
       <p className="text-[11px] uppercase tracking-[0.3em] text-cream-200/60">Ep. {ep.number}</p>
 
-      <h1 className="mt-2 font-serif text-5xl leading-[0.95] text-cream-50 md:text-6xl">
+      <h1 className="mt-1.5 font-serif text-4xl leading-[0.95] text-cream-50 md:text-5xl">
         {ep.guest}
       </h1>
 
-      <blockquote className="mt-5">
-        <p className="font-serif text-xl italic leading-snug text-cream-100/90 md:text-2xl">
+      <blockquote className="mt-4">
+        <p className="font-serif text-lg italic leading-snug text-cream-100/90 md:text-xl">
           &ldquo;{ep.quote}&rdquo;
         </p>
       </blockquote>
@@ -192,16 +192,16 @@ function Ficha({ ep }: { ep: any }) {
           pasó". Si se repitiera el mismo texto en los dos lugares, la página
           se leería como si tartamudeara. `intro` es opcional y se va a poder
           cargar por episodio; hasta entonces se usa la primera frase. */}
-      <p className="body-copy mt-5 text-sm leading-relaxed text-cream-200/70">
+      <p className="body-copy mt-4 text-[13px] leading-relaxed text-cream-200/70">
         {ep.intro ?? primeraFrase(ep.summary)}
       </p>
 
-      <div className="mt-7 flex flex-wrap items-center gap-3">
+      <div className="mt-5 flex flex-wrap items-center gap-2.5">
         <a
           href={ep.youtube ?? '#'}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-sm bg-cream-50 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-ink-900 transition hover:bg-white"
+          className="inline-flex items-center gap-2 rounded-sm bg-cream-50 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-ink-900 transition hover:bg-white"
         >
           <Play size={14} fill="currentColor" /> Ver episodio
         </a>
@@ -209,7 +209,7 @@ function Ficha({ ep }: { ep: any }) {
           href={ep.spotify ?? '#'}
           target="_blank"
           rel="noreferrer"
-          className="inline-flex items-center gap-2 rounded-sm border border-cream-400/25 px-6 py-3 text-xs font-semibold uppercase tracking-[0.18em] text-cream-100 transition hover:border-gold hover:text-gold"
+          className="inline-flex items-center gap-2 rounded-sm border border-cream-400/25 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.1em] text-cream-100 transition hover:border-gold hover:text-gold"
         >
           <span className="flex h-5 w-5 items-center justify-center rounded-full bg-green-600 text-[11px] text-white">
             ♪
@@ -280,26 +280,26 @@ function Acciones({ ep }: { ep: any }) {
   }
 
   const base =
-    'inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.18em] text-cream-200/60 transition hover:text-gold'
+    'inline-flex items-center gap-1.5 text-[10px] uppercase tracking-[0.06em] text-cream-200/60 transition hover:text-gold'
 
   return (
-    <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-3">
+    <div className="mt-4 flex flex-wrap items-center gap-x-4 gap-y-2">
       <button onClick={alternarGuardado} className={base} aria-pressed={guardado}>
-        {guardado ? <BookmarkCheck size={13} className="text-gold" /> : <Bookmark size={13} />}
+        {guardado ? <BookmarkCheck size={12} className="text-gold" /> : <Bookmark size={12} />}
         {guardado ? 'Guardado' : 'Guardar'}
       </button>
 
       <button onClick={compartir} className={base}>
-        {copiado ? <Check size={13} className="text-gold" /> : <Share2 size={13} />}
+        {copiado ? <Check size={12} className="text-gold" /> : <Share2 size={12} />}
         {copiado ? 'Link copiado' : 'Compartir'}
       </button>
 
       <a href="#muro" className={base}>
-        <MessageSquare size={13} /> Los mensajes
+        <MessageSquare size={12} /> Mensajes
       </a>
 
       <a href="#carta" className={base}>
-        <Mail size={13} /> Carta del invitado
+        <Mail size={12} /> Carta del invitado
       </a>
     </div>
   )
@@ -310,7 +310,7 @@ function Siguiente({ ep }: { ep: any }) {
 
   return (
     <div>
-      <p className="eyebrow mb-4">Siguiente episodio</p>
+      <p className="eyebrow mb-3">Siguiente episodio</p>
       <div className="flex gap-3">
         <div className="h-16 w-16 shrink-0 overflow-hidden bg-ink-700">
           {ep.photo && (

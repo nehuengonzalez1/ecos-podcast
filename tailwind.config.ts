@@ -9,11 +9,11 @@ export default {
     extend: {
       colors: {
         ink: {
-          900: '#0a0806',
-          800: '#100d0a',
-          700: '#161210',
-          600: '#1e1815',
-          500: '#2a221d',
+          900: '#0a0a0a',
+          800: '#121212',
+          700: '#171717',
+          600: '#1f1f1f',
+          500: '#2a2a2a',
         },
         cream: {
           50: '#faf3e3',
@@ -39,8 +39,6 @@ export default {
         signature: ['"Brother Signature"', 'cursive'],
       },
       backgroundImage: {
-        spotlight:
-          'radial-gradient(ellipse at 50% 20%, rgba(255,128,0,0.18) 0%, rgba(10,8,6,0) 55%)',
         'kraft':
           'linear-gradient(135deg, #8a6f45 0%, #6b5638 45%, #4b3d29 100%)',
       },
