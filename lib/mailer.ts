@@ -1,5 +1,6 @@
 import { Resend } from 'resend'
 import { brand } from '@/lib/config/brand'
+import { appUrl } from '@/lib/app-url'
 
 /**
  * Envío de avisos por email.
@@ -33,9 +34,6 @@ function moderadores(): string[] {
   )
 }
 
-function urlBase(): string {
-  return (process.env.NEXT_PUBLIC_APP_URL ?? '').replace(/\/$/, '')
-}
 
 /**
  * Remitente. Sin dominio propio verificado, Resend solo permite su dominio
@@ -125,7 +123,7 @@ export async function enviarAvisoMuro(m: MensajeMuro, ep: EpisodioRef): Promise<
   const to = moderadores()
   if (!resend || to.length === 0) return false
 
-  const panel = urlBase() ? `${urlBase()}/admin#muro` : ''
+  const panel = `${appUrl()}/admin#muro`
   const html = `
     <div style="font-family:system-ui,sans-serif;background:#0a0806;color:#f5e9d3;padding:24px">
       <p style="color:#ff8000;font-size:11px;letter-spacing:3px;text-transform:uppercase;margin:0 0 8px">
@@ -138,11 +136,7 @@ export async function enviarAvisoMuro(m: MensajeMuro, ep: EpisodioRef): Promise<
       <div style="border-left:2px solid #ff8000;padding-left:14px;margin-bottom:24px">
         <p style="white-space:pre-wrap;line-height:1.6;margin:0">${escapar(m.mensaje)}</p>
       </div>
-      ${
-        panel
-          ? `<a href="${panel}" style="display:inline-block;border:1px solid #ff8000;color:#ff8000;padding:10px 18px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase">Moderar en el panel</a>`
-          : '<p style="color:#8f8168;font-size:12px">Entrá al panel para aprobarlo o descartarlo.</p>'
-      }
+      <a href="${panel}" style="display:inline-block;border:1px solid #ff8000;color:#ff8000;padding:10px 18px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase">Moderar en el panel</a>
     </div>`
 
   try {
@@ -172,7 +166,7 @@ export async function enviarMensajeAlProtagonista(
 ): Promise<boolean> {
   if (!resend || !ep.guestEmail) return false
 
-  const url = urlBase() ? `${urlBase()}/episodio/${ep.slug}` : ''
+  const url = `${appUrl()}/episodio/${ep.slug}`
   const html = `
     <div style="font-family:system-ui,sans-serif;background:#0a0806;color:#f5e9d3;padding:28px">
       <p style="color:#ff8000;font-size:11px;letter-spacing:3px;text-transform:uppercase;margin:0 0 14px">
@@ -192,11 +186,7 @@ export async function enviarMensajeAlProtagonista(
         </p>
       </div>
 
-      ${
-        url
-          ? `<a href="${url}#muro" style="display:inline-block;border:1px solid #ff8000;color:#ff8000;padding:10px 18px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase">Ver el muro de tu episodio</a>`
-          : ''
-      }
+      <a href="${url}#muro" style="display:inline-block;border:1px solid #ff8000;color:#ff8000;padding:10px 18px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase">Ver el muro de tu episodio</a>
 
       <p style="color:#8f8168;font-size:12px;line-height:1.6;margin:24px 0 0">
         Gracias por haber contado tu historia. Esto es lo que dejó.

@@ -1,5 +1,6 @@
 import { MercadoPagoConfig, PreApproval } from 'mercadopago'
 import { brand } from '@/lib/config/brand'
+import { appUrl } from '@/lib/app-url'
 
 // Strip BOM/whitespace defensively — Windows pipelines can inject U+FEFF into env values.
 const token = process.env.MP_ACCESS_TOKEN?.replace(/^﻿/, '').trim()
@@ -8,12 +9,9 @@ const client = token ? new MercadoPagoConfig({ accessToken: token }) : null
 export const mpClient = client
 export const preapproval = client ? new PreApproval(client) : null
 
-export function getAppUrl(): string {
-  return (
-    process.env.NEXT_PUBLIC_APP_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : 'http://localhost:3000')
-  )
-}
+// La resolucion de la URL publica se mudo a lib/app-url.ts, para que el
+// back_url del checkout y los links de los mails salgan siempre del mismo
+// lugar. Ver el porque ahi.
 
 export function getPriceArs(): number {
   const v = Number(process.env.NEXT_PUBLIC_SUBSCRIPTION_PRICE_ARS ?? '1500')
@@ -26,14 +24,14 @@ export function getPriceArs(): number {
  */
 export async function createPreapproval(payerEmail: string, userId: string) {
   if (!preapproval) throw new Error('MP not configured (missing MP_ACCESS_TOKEN)')
-  const appUrl = getAppUrl()
+  const url = appUrl()
   const amount = getPriceArs()
   const res = await preapproval.create({
     body: {
       reason: `${brand.name} · Archivo completo (mensual)`,
       external_reference: userId,
       payer_email: payerEmail,
-      back_url: `${appUrl}/cuenta?mp=return`,
+      back_url: `${url}/cuenta?mp=return`,
       auto_recurring: {
         frequency: 1,
         frequency_type: 'months',
