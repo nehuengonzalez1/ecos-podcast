@@ -13,6 +13,7 @@ import { nombreParaHablarle } from '@/lib/utils'
 import { IconoSpotify } from '@/components/IconoSpotify'
 import { ReproductorEpisodio } from '@/components/ReproductorEpisodio'
 import { ModalCarta } from '@/components/ModalCarta'
+import { ModalRegalo } from '@/components/ModalRegalo'
 import { MuroProvider, DejaTuMensaje, LoQueQuedo } from '@/components/Muro'
 
 const GUARDADOS = 'episodios:guardados'
@@ -28,11 +29,15 @@ const GUARDADOS = 'episodios:guardados'
 const CARTA_POR_DEFECTO = '/imagenes/carta.jpg'
 
 /**
- * Foto del regalo por defecto. Misma idea que la de la carta: la caja de
- * LQLVE sirve para cualquier episodio, y `regalo.imagen` la pisa cuando un
- * episodio tenga la foto de su regalo puntual.
+ * Foto del regalo por defecto: la carta escrita por uno mismo a los diez
+ * años. Es la única de las cuatro que sirve para cualquier invitado; las
+ * otras tres (Cromañón, Malvinas, autismo) son de una historia puntual y se
+ * asignan por episodio con `regalo.imagen`, no se ponen de comodín.
+ *
+ * Está recortada contra transparencia, que es lo que le permite flotar en el
+ * visor sin quedar como un rectángulo pegado sobre la página.
  */
-const REGALO_POR_DEFECTO = '/imagenes/regalo.jpg'
+const REGALO_POR_DEFECTO = '/imagenes/regalos/emprendedor.webp'
 
 /**
  * Texto de la carta cuando el episodio todavía no tiene el suyo.
@@ -92,6 +97,7 @@ export function EpisodeView({
   ].slice(0, 2)
 
   const [cartaAbierta, setCartaAbierta] = useState(false)
+  const [regaloAbierto, setRegaloAbierto] = useState(false)
 
   return (
     <MuroProvider slug={ep.slug} guest={ep.guest} nombreUsuario={nombreUsuario}>
@@ -205,7 +211,7 @@ export function EpisodeView({
             </div>
 
             <div className="flex h-full flex-col xl:border-l xl:border-cream-400/10 xl:pl-6">
-              <RegaloDelEpisodio ep={ep} />
+              <RegaloDelEpisodio ep={ep} onAbrir={() => setRegaloAbierto(true)} />
             </div>
           </div>
 
@@ -218,6 +224,14 @@ export function EpisodeView({
         onCerrar={() => setCartaAbierta(false)}
         guest={ep.guest}
         texto={ep.carta?.texto ?? CARTA_POR_DEFECTO_TEXTO}
+      />
+
+      <ModalRegalo
+        abierto={regaloAbierto}
+        onCerrar={() => setRegaloAbierto(false)}
+        imagen={ep.regalo?.imagen ?? REGALO_POR_DEFECTO}
+        guest={ep.guest}
+        nota={ep.regalo?.nota}
       />
     </MuroProvider>
   )
@@ -311,7 +325,7 @@ function Corte({ corte, guest }: { corte: any; guest: string }) {
  * tiene ningún episodio: se carga desde el panel de contenido. Sin datos, el
  * bloque dice que viene en camino en vez de quedar vacío y descolgar la fila.
  */
-function RegaloDelEpisodio({ ep }: { ep: any }) {
+function RegaloDelEpisodio({ ep, onAbrir }: { ep: any; onAbrir: () => void }) {
   const nombrePila = nombreParaHablarle(ep.guest)
   const nota =
     ep.regalo?.nota ??
@@ -340,14 +354,22 @@ function RegaloDelEpisodio({ ep }: { ep: any }) {
         <p className="text-xs leading-relaxed text-cream-200/80">{nota}</p>
       </div>
 
-      <TrackedLink
-        accion="regalos"
-        slug={ep.slug}
-        href={`/premium/${ep.slug}/regalo`}
+      <button
+        onClick={() => {
+          // Se sigue registrando el uso, igual que cuando esto era un enlace:
+          // es la señal que distingue mirar la miniatura de abrir el regalo.
+          fetch('/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ accion: 'regalos', slug: ep.slug }),
+            keepalive: true,
+          }).catch(() => {})
+          onAbrir()
+        }}
         className="btn-ghost mt-auto w-full justify-center"
       >
         Ver el regalo <ArrowRight size={12} />
-      </TrackedLink>
+      </button>
     </>
   )
 }
