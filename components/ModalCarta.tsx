@@ -24,10 +24,10 @@ import { X } from 'lucide-react'
  * atado a la imagen, el texto la acompaña en cualquier tamaño. Los valores
  * salen de medir el área escrita de la foto.
  */
-const AREA_TEXTO = { left: '12.5%', right: '30%', top: '26.5%' }
+const AREA_TEXTO = { left: '13%', right: '34%', top: '23.5%', bottom: '26%' }
 
 /** Proporción del papel, para reservarle el alto exacto y que no salte al cargar. */
-const PROPORCION_PAPEL = 760 / 945
+const PROPORCION_PAPEL = 900 / 1208
 
 export function ModalCarta({
   abierto,
@@ -87,7 +87,7 @@ export function ModalCarta({
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-carta-titulo"
-          className="relative w-full max-w-[620px]"
+          className="relative w-full max-w-[560px]"
           style={{ aspectRatio: String(PROPORCION_PAPEL) }}
         >
           <img
@@ -99,7 +99,7 @@ export function ModalCarta({
 
           <div
             className="absolute overflow-y-auto"
-            style={{ ...AREA_TEXTO, bottom: '27%' }}
+            style={AREA_TEXTO}
           >
             <h2
               id="modal-carta-titulo"
