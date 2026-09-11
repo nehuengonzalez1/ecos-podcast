@@ -25,10 +25,27 @@ import { nombreParaHablarle } from '@/lib/utils'
  * atado a la imagen, el texto la acompaña en cualquier tamaño. Los valores
  * salen de medir el área escrita de la foto.
  */
-const AREA_TEXTO = { left: '13%', right: '34%', top: '23.5%', bottom: '26%' }
+const AREA_TEXTO = { left: '11.5%', right: '33%', top: '29%', bottom: '22%' }
 
 /** Proporción del papel, para reservarle el alto exacto y que no salte al cargar. */
-const PROPORCION_PAPEL = 900 / 1208
+const PROPORCION_PAPEL = 900 / 1305
+
+/**
+ * Ancho del papel en pantalla. El alto sale solo, de la proporción.
+ *
+ * Se fija el ancho y no el alto porque el contenedor tiene que respetar la
+ * proporción siempre: el texto se posiciona en porcentajes del contenedor, y
+ * si este deja de coincidir con la foto, `object-contain` centra la imagen
+ * dejando aire y el texto queda corrido sobre el papel. Pasaba en el
+ * teléfono, donde el ancho disponible es menor que el que pide el alto: la
+ * carta se veía con el saludo montado sobre la polaroid.
+ *
+ * Los tres topes: el espacio real que hay, el que deja la altura de la
+ * ventana, y el tamaño natural de la foto. Con dvh en vez de vh para que la
+ * barra del navegador del teléfono, que aparece y desaparece al hacer
+ * scroll, no le recorte el pie a la carta.
+ */
+const ANCHO_PAPEL = `min(100%, calc((100dvh - 3rem) * ${PROPORCION_PAPEL}), 566px)`
 
 export function ModalCarta({
   abierto,
@@ -88,23 +105,26 @@ export function ModalCarta({
           role="dialog"
           aria-modal="true"
           aria-labelledby="modal-carta-titulo"
-          className="relative w-full max-w-[560px]"
-          style={{ aspectRatio: String(PROPORCION_PAPEL) }}
+          className="relative"
+          style={{ aspectRatio: String(PROPORCION_PAPEL), width: ANCHO_PAPEL }}
         >
           <img
-            src="/imagenes/carta-papel.jpg"
+            src="/imagenes/carta-papel.webp"
             alt=""
             aria-hidden="true"
             className="absolute inset-0 h-full w-full object-contain"
           />
 
-          <div
-            className="absolute overflow-y-auto"
-            style={AREA_TEXTO}
-          >
+          {/* El texto se mide contra el papel, no contra la ventana: cqw es
+              un porcentaje del ancho de este contenedor. Asi la tinta escala
+              junto con la hoja, como en una foto que se agranda. Atado a la
+              ventana (vw), al achicarse el papel en una pantalla baja el
+              texto se quedaba grande, desbordaba y aparecia una barra de
+              scroll dentro de la carta. */}
+          <div className="absolute overflow-y-auto" style={{ ...AREA_TEXTO, containerType: 'inline-size' }}>
             <h2
               id="modal-carta-titulo"
-              className="font-serif text-[clamp(15px,2.6vw,19px)] text-ink-900"
+              className="font-serif text-[5.7cqw] text-ink-900"
             >
               {nombreParaHablarle(guest)},
             </h2>
@@ -113,7 +133,7 @@ export function ModalCarta({
               {parrafos.map((p, i) => (
                 <p
                   key={i}
-                  className="whitespace-pre-line font-serif text-[clamp(13px,2.3vw,17px)] leading-[1.45] text-ink-900/90"
+                  className="whitespace-pre-line font-serif text-[4.45cqw] leading-[1.45] text-ink-900/90"
                 >
                   {p}
                 </p>
