@@ -1,6 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
-import data from '@/data/episodes.json'
+import { cargarEpisodio, cargarEpisodios } from '@/lib/episodios'
 import { brand } from '@/lib/config/brand'
 import { EpisodeView } from './EpisodeView'
 import { TrackView } from '@/components/TrackView'
@@ -15,7 +15,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const ep = data.episodes.find((e) => e.slug === slug)
+  const ep = await cargarEpisodio(slug)
   if (!ep) return { title: `Episodio · ${brand.name}` }
   return {
     title: `${ep.guest} · Episodio ${ep.number} · ${brand.name}`,
@@ -29,11 +29,15 @@ export default async function EpisodePage({
   params: Promise<{ slug: string }>
 }) {
   const { slug } = await params
-  const ep = data.episodes.find((e) => e.slug === slug)
+  // Una sola lectura para todo: el episodio y los que lo rodean salen del
+  // mismo catalogo ya editado, asi la ficha y la barra lateral no pueden
+  // mostrar versiones distintas del mismo episodio.
+  const episodios = await cargarEpisodios()
+  const ep = episodios.find((e) => e.slug === slug)
   if (!ep || ep.status !== 'available') notFound()
 
-  const availableEpisodes = data.episodes.filter((e) => e.status === 'available')
-  const upcomingEpisodes = data.episodes.filter((e) => e.status === 'coming-soon')
+  const availableEpisodes = episodios.filter((e) => e.status === 'available')
+  const upcomingEpisodes = episodios.filter((e) => e.status === 'coming-soon')
 
   // Si la persona tiene sesion iniciada, el muro ya sabe como se llama y no
   // se lo vuelve a preguntar. Se resuelve aca, en el servidor, porque la
