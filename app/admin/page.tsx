@@ -112,6 +112,23 @@ export default async function AdminPage() {
           </p>
         )}
 
+        <div className="mt-12 scroll-mt-24" id="contenido">
+          <h2 className="title-display text-2xl">Contenido de los episodios</h2>
+          <p className="mt-2 max-w-2xl text-sm text-cream-200/70">
+            Lo que se edita acá se guarda aparte y se le superpone al archivo del proyecto,
+            porque en Vercel los archivos no se pueden reescribir. El punto dorado marca los
+            campos editados; vaciar uno lo devuelve a su valor original.
+          </p>
+          <div className="mt-5">
+            <EpisodiosEditor
+              base={episodiosDelArchivo()}
+              overrides={overrides}
+              blobActivo={blobActivo}
+              baseActiva={CONTENIDO_ACTIVO}
+            />
+          </div>
+        </div>
+
         <div className="mt-12 scroll-mt-24" id="muro">
           <div className="flex flex-wrap items-baseline gap-3">
             <h2 className="title-display text-2xl">Muro · a moderar</h2>
