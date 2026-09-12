@@ -11,9 +11,7 @@ import { SuscriptoresTabla } from './SuscriptoresTabla'
 import { ResyncButton } from './ResyncButton'
 import { Evolucion } from './Evolucion'
 import { MuroModeracion, type ItemModeracion } from './MuroModeracion'
-import { EpisodiosEditor } from './EpisodiosEditor'
-import { episodiosDelArchivo } from '@/lib/episodios'
-import { todosLosOverrides, CONTENIDO_ACTIVO } from '@/lib/contenido'
+import { NavPanel } from './NavPanel'
 
 export const metadata = { title: `Panel · ${brand.name}` }
 export const dynamic = 'force-dynamic'
@@ -34,18 +32,13 @@ export default async function AdminPage() {
   const ok = await isAdmin()
   if (!ok) redirect('/')
 
-  const [subs, contact, porEpisodio, totales, pendientes, overrides] = await Promise.all([
+  const [subs, contact, porEpisodio, totales, pendientes] = await Promise.all([
     cargarSuscriptores(),
     loadContact(),
     statsPorEpisodio(),
     totalesPorAccion(),
     mensajesPendientes(),
-    todosLosOverrides(),
   ])
-
-  // El token de Blob es de servidor, asi que si el store esta creado se
-  // decide aca y baja al editor como un booleano.
-  const blobActivo = !!process.env.BLOB_READ_WRITE_TOKEN
   const m = await calcularMetricas(subs)
 
   // El nombre del invitado se resuelve acá, en el servidor, para que la cola
@@ -61,7 +54,9 @@ export default async function AdminPage() {
     <section className="spotlight-bg pt-32 pb-24 min-h-[80vh]">
       <div className="container-page">
         <p className="eyebrow mb-4">Admin</p>
-        <h1 className="title-display text-5xl">Panel {brand.name}</h1>
+        <h1 className="title-display text-5xl">Métricas</h1>
+
+        <NavPanel />
 
         {/* Sin esto, un Redis mal conectado se ve igual que "todavia no hay
             datos": los contadores muestran 0 y nada avisa del problema. */}
@@ -111,23 +106,6 @@ export default async function AdminPage() {
             quedaron guardadas y no se pueden reconstruir. De acá en adelante sí.
           </p>
         )}
-
-        <div className="mt-12 scroll-mt-24" id="contenido">
-          <h2 className="title-display text-2xl">Contenido de los episodios</h2>
-          <p className="mt-2 max-w-2xl text-sm text-cream-200/70">
-            Lo que se edita acá se guarda aparte y se le superpone al archivo del proyecto,
-            porque en Vercel los archivos no se pueden reescribir. El punto dorado marca los
-            campos editados; vaciar uno lo devuelve a su valor original.
-          </p>
-          <div className="mt-5">
-            <EpisodiosEditor
-              base={episodiosDelArchivo()}
-              overrides={overrides}
-              blobActivo={blobActivo}
-              baseActiva={CONTENIDO_ACTIVO}
-            />
-          </div>
-        </div>
 
         <div className="mt-12 scroll-mt-24" id="muro">
           <div className="flex flex-wrap items-baseline gap-3">
