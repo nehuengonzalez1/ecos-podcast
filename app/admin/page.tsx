@@ -5,6 +5,7 @@ import { brand } from '@/lib/config/brand'
 import { cargarSuscriptores, calcularMetricas } from '@/lib/admin-data'
 import { statsPorEpisodio, totalesPorAccion, ACCIONES } from '@/lib/analytics'
 import { mensajesPendientes, AUTO_APROBAR } from '@/lib/muro'
+import { estadoMailer } from '@/lib/mailer'
 import { cargarEpisodios } from '@/lib/episodios'
 import { SuscriptoresTabla } from './SuscriptoresTabla'
 import { ResyncButton } from './ResyncButton'
@@ -77,6 +78,41 @@ export default async function AdminPage() {
             <>Base de datos NO conectada — las suscripciones y los mensajes no se están guardando</>
           )}
         </div>
+
+        {/* El mailer se apaga solo si falta la clave, y hasta ahora eso no
+            se veia en ningun lado: los avisos del muro dejaban de llegar
+            sin que nada lo dijera. Tambien avisa el caso de clave puesta
+            pero sin destinatarios, que desde afuera se ve igual. */}
+        {(() => {
+          const mail = estadoMailer()
+          const ok = mail.activo && mail.destinatarios > 0
+          return (
+            <div
+              className={`mt-3 inline-flex items-center gap-2 rounded-sm border px-3 py-2 text-xs ${
+                ok
+                  ? 'border-gold/40 bg-gold/5 text-cream-200/90'
+                  : 'border-red-400/50 bg-red-400/5 text-red-300'
+              }`}
+            >
+              <span className={`h-2 w-2 rounded-full ${ok ? 'bg-gold' : 'bg-red-400'}`} />
+              {!mail.activo ? (
+                <>
+                  Avisos por email APAGADOS — falta <code>RESEND_API_KEY</code>. Los mensajes del
+                  muro se siguen guardando y se moderan desde acá.
+                </>
+              ) : mail.destinatarios === 0 ? (
+                <>
+                  Hay clave de email pero NO hay a quién avisarle — cargá <code>ADMIN_EMAILS</code>
+                </>
+              ) : (
+                <>
+                  Avisos por email activos · {mail.destinatarios}
+                  {mail.destinatarios === 1 ? ' destinatario' : ' destinatarios'}
+                </>
+              )}
+            </div>
+          )
+        })()}
 
         <div className="mt-6">
           <ResyncButton />

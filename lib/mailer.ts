@@ -43,6 +43,21 @@ function remitente(): string {
   return process.env.RESEND_FROM ?? `${brand.name} <onboarding@resend.dev>`
 }
 
+/**
+ * Estado de la integracion, para que el panel lo muestre.
+ *
+ * No alcanza con saber si hay clave: con la clave puesta pero sin
+ * destinatarios el envio se saltea igual, y desde afuera se ve identico
+ * (no llega ningun mail). Por eso devuelve las dos cosas.
+ */
+export function estadoMailer() {
+  return {
+    activo: MAILER_ACTIVE,
+    destinatarios: moderadores().length,
+    remitente: remitente(),
+  }
+}
+
 export type MensajeContacto = {
   nombre: string
   email: string
