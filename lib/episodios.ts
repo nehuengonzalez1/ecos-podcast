@@ -6,6 +6,7 @@ import {
   todosLosOverrides,
   episodiosNuevos,
   episodiosOcultos,
+  categoriasGuardadas,
 } from '@/lib/contenido'
 
 /**
@@ -73,9 +74,20 @@ export async function esEpisodioPublicado(slug: string): Promise<boolean> {
   return !!ep && ep.status === 'available'
 }
 
-/** Las categorias del catalogo, para los filtros del archivo. */
-export function categorias(): string[] {
-  return (data.categories as string[]) ?? []
+/**
+ * Las categorias con las que se filtra el archivo.
+ *
+ * Sin "Todos": ese no es una categoria sino el filtro que las apaga a todas,
+ * y lo agrega la pagina. En el archivo del proyecto venia mezclado con las
+ * demas, lo que obligaba a acordarse de no borrarlo al editar la lista.
+ */
+export function categoriasDelArchivo(): string[] {
+  return ((data.categories as string[]) ?? []).filter((c) => c !== 'Todos')
+}
+
+/** Las categorias en uso: las editadas en el panel, o las del archivo. */
+export async function categorias(): Promise<string[]> {
+  return (await categoriasGuardadas()) ?? categoriasDelArchivo()
 }
 
 /** Todos los episodios, con las ediciones del panel aplicadas. */

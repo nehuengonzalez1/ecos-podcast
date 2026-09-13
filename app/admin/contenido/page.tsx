@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { isAdmin } from '@/lib/admin'
 import { brand } from '@/lib/config/brand'
-import { episodiosDelArchivo } from '@/lib/episodios'
+import { episodiosDelArchivo, categorias } from '@/lib/episodios'
 import {
   todosLosOverrides,
   episodiosNuevos,
@@ -10,6 +10,7 @@ import {
 } from '@/lib/contenido'
 import { EpisodiosEditor } from '../EpisodiosEditor'
 import { NavPanel } from '../NavPanel'
+import { CategoriasEditor } from '../CategoriasEditor'
 
 export const metadata = { title: `Contenido · ${brand.name}` }
 export const dynamic = 'force-dynamic'
@@ -26,10 +27,11 @@ export default async function ContenidoPage() {
 
   // La lista del editor es el archivo mas los creados desde acá. Los nuevos
   // van primero, que es donde se los busca después de crearlos.
-  const [overrides, nuevos, ocultos] = await Promise.all([
+  const [overrides, nuevos, ocultos, cats] = await Promise.all([
     todosLosOverrides(),
     episodiosNuevos(),
     episodiosOcultos(),
+    categorias(),
   ])
   const base = [...nuevos, ...episodiosDelArchivo()]
 
@@ -58,6 +60,10 @@ export default async function ContenidoPage() {
             que pegar la URL de las imágenes.
           </p>
         )}
+
+        <div className="mt-6">
+          <CategoriasEditor iniciales={cats} activo={CONTENIDO_ACTIVO} />
+        </div>
 
         <div className="mt-6">
           <EpisodiosEditor

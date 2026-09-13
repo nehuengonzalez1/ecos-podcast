@@ -15,6 +15,7 @@ export type Episode = {
   photo: string | null
   status: 'available' | 'coming-soon'
   hint?: string | null
+  category?: string | null
 }
 
 type Props = {
@@ -67,9 +68,14 @@ export function EpisodeCard({ episode, variant = 'archive', index = 0 }: Props) 
             <div className="absolute left-3 top-3 rounded-sm border border-cream-400/15 bg-ink-900/60 px-2 py-0.5 text-[10px] uppercase tracking-widest text-cream-100/80 backdrop-blur">
               EP. {episode.number}
             </div>
-            {variant === 'archive' && (
+            {/* La categoría del episodio, no una palabra fija. Antes decía
+                "Historia" en todas las tarjetas, que no distinguía nada y
+                encima chocaba con la categoría "Historia real". Si el
+                episodio no tiene categoría cargada, no se muestra el
+                cartelito: mejor nada que una etiqueta vacía. */}
+            {variant === 'archive' && episode.category && (
               <div className="absolute bottom-3 right-3 flex items-center gap-1.5 rounded-sm border border-gold/40 bg-ink-900/60 px-2 py-1 text-[10px] text-gold/90 backdrop-blur">
-                <FileText size={12} /> Historia
+                <FileText size={12} /> {episode.category}
               </div>
             )}
           </div>

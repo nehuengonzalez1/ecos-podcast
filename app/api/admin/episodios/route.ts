@@ -10,6 +10,7 @@ import {
   borrarEpisodio,
   ocultarEpisodio,
   mostrarEpisodio,
+  guardarCategorias,
   type Override,
 } from '@/lib/contenido'
 
@@ -55,6 +56,16 @@ export async function POST(req: Request) {
       })
       if (!creado) return NextResponse.json({ error: 'no-se-pudo-crear' }, { status: 503 })
       return NextResponse.json({ ok: true, slug: creado.slug })
+    }
+
+    // Las categorias no cuelgan de ningun episodio, asi que se resuelven
+    // antes de exigir un slug.
+    if (body?.accion === 'categorias') {
+      if (!Array.isArray(body?.lista)) {
+        return NextResponse.json({ error: 'lista-invalida' }, { status: 400 })
+      }
+      const guardadas = await guardarCategorias(body.lista)
+      return NextResponse.json({ ok: true, categorias: guardadas })
     }
 
     const slug = String(body?.slug ?? '')

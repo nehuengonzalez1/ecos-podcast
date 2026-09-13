@@ -14,6 +14,9 @@ export const metadata: Metadata = { title: `El Archivo · ${brand.name}` }
 export const dynamic = 'force-dynamic'
 
 export default async function ArchivePage() {
-  const episodios = await cargarEpisodios()
-  return <ArchivoClient episodios={episodios as any} categorias={categorias()} />
+  const [episodios, cats] = await Promise.all([cargarEpisodios(), categorias()])
+  // "Todos" lo pone la página, no los datos: es el filtro que apaga a las
+  // demás, no una categoría, y mezclado con ellas obligaba a acordarse de no
+  // borrarlo al editar la lista.
+  return <ArchivoClient episodios={episodios as any} categorias={['Todos', ...cats]} />
 }

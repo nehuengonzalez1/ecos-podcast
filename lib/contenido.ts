@@ -245,6 +245,41 @@ export async function borrarEpisodio(slug: string): Promise<boolean> {
 }
 
 /**
+ * Las categorias que se usan para filtrar el archivo.
+ *
+ * "Todos" no esta en esta lista y no se puede editar: no es una categoria
+ * sino el filtro que las apaga a todas. Lo pone la pagina del archivo.
+ *
+ * Cambiar una categoria aca no reetiqueta los episodios que la tenian: la
+ * categoria de cada episodio es un texto suyo, y se corrige en su ficha. Es
+ * a proposito -- renombrar en cascada podria tocar episodios que no se
+ * querian tocar.
+ */
+const CLAVE_CATEGORIAS = 'contenido:categorias'
+
+export async function categoriasGuardadas(): Promise<string[] | null> {
+  if (!kv) return null
+  try {
+    return (await kv.get<string[]>(CLAVE_CATEGORIAS)) ?? null
+  } catch {
+    return null
+  }
+}
+
+export async function guardarCategorias(lista: string[]): Promise<string[] | null> {
+  if (!kv) return null
+  // Se limpian los vacios y los repetidos: una categoria en blanco seria un
+  // boton sin texto, y una repetida, dos botones identicos.
+  const limpias: string[] = []
+  for (const c of lista) {
+    const t = String(c ?? '').trim().slice(0, 40)
+    if (t && !limpias.some((x) => x.toLowerCase() === t.toLowerCase())) limpias.push(t)
+  }
+  await kv.set(CLAVE_CATEGORIAS, limpias)
+  return limpias
+}
+
+/**
  * Episodios del archivo que se sacaron del sitio.
  *
  * Los del archivo no se pueden borrar de verdad porque viven dentro del build,
