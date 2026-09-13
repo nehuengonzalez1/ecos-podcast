@@ -1,5 +1,5 @@
 import { kv } from '@/lib/kv'
-import { slugify } from '@/lib/utils'
+import { slugify, hoyEnArgentina } from '@/lib/utils'
 
 /**
  * Ediciones de contenido hechas desde el panel.
@@ -216,7 +216,7 @@ export async function crearEpisodio(
     role: '',
     category: '',
     quote: '',
-    date: new Date().toISOString().slice(0, 10),
+    date: hoyEnArgentina(),
     duration: '',
     location: '',
     photo: '',

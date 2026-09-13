@@ -33,6 +33,33 @@ export function nombreParaHablarle(nombre: string): string {
   return partes[0]
 }
 
+/**
+ * La zona del proyecto. El sitio se hace desde Buenos Aires y sus fechas son
+ * las de acá, no las del servidor: Vercel corre en UTC.
+ */
+export const ZONA = 'America/Argentina/Buenos_Aires'
+
+/**
+ * La fecha de hoy en Buenos Aires, como AAAA-MM-DD.
+ *
+ * Antes salia de `new Date().toISOString()`, que da la fecha en UTC. Con tres
+ * horas de diferencia, todo lo que se creara despues de las nueve de la noche
+ * quedaba fechado al dia siguiente.
+ *
+ * Se resuelve por zona horaria y no restando tres horas a mano: si alguna vez
+ * cambia la regla del huso, esto sigue dando bien sin que haya que tocarlo.
+ */
+export function hoyEnArgentina(): string {
+  // 'en-CA' es el truco conocido para que Intl formatee como AAAA-MM-DD, que
+  // es exactamente como guarda la fecha el campo del episodio.
+  return new Intl.DateTimeFormat('en-CA', {
+    timeZone: ZONA,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(new Date())
+}
+
 export function slugify(s: string): string {
   return s
     .toLowerCase()
