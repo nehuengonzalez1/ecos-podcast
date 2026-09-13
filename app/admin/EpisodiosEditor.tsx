@@ -16,9 +16,18 @@ import { CampoImagen } from './CampoImagen'
  * Es lo que hace que se pueda deshacer una edición sin un botón aparte.
  */
 
+/**
+ * Los dos estados posibles de un capitulo, y lo unico que decide si se puede
+ * ver o no.
+ *
+ * Las etiquetas son las mismas palabras que usa el sitio -- "Disponibles" y
+ * "Proximamente" en el archivo, "Proximamente" en la tarjeta --, no sinonimos.
+ * Antes el panel decia "Publicado" y "Muy pronto": obligaba a traducir
+ * mentalmente entre lo que se elige aca y lo que despues aparece en pantalla.
+ */
 const ESTADOS = [
-  { valor: 'available', texto: 'Publicado' },
-  { valor: 'coming-soon', texto: 'Muy pronto' },
+  { valor: 'available', texto: 'Disponible' },
+  { valor: 'coming-soon', texto: 'Próximamente' },
 ]
 
 type Props = {

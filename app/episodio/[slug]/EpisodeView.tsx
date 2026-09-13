@@ -106,7 +106,7 @@ export function EpisodeView({
   nombreUsuario: string | null
 }) {
   // El siguiente puede estar todavía sin publicar: en ese caso se muestra
-  // igual, en modo "muy pronto", que es parte de lo que sostiene el interés.
+  // igual, como próximo, que es parte de lo que sostiene el interés.
   const numero = Number(ep.number)
   const siguiente = [...available, ...upcoming].find((e) => Number(e.number) === numero + 1) ?? null
 
@@ -612,7 +612,7 @@ function Siguiente({ ep }: { ep: any }) {
         <div className="min-w-0">
           <p className="text-[10px] uppercase tracking-widest text-cream-200/60">Ep. {ep.number}</p>
           <p className="mt-0.5 truncate text-xs text-cream-50">
-            {disponible ? ep.guest : 'Muy pronto.'}
+            {disponible ? ep.guest : 'Próximamente'}
           </p>
         </div>
       </div>
@@ -623,7 +623,7 @@ function Siguiente({ ep }: { ep: any }) {
         </Link>
       ) : (
         <p className="mt-4 border border-cream-400/15 px-3 py-2.5 text-center text-[10px] uppercase tracking-widest text-cream-200/50">
-          Muy pronto
+          Próximamente
         </p>
       )}
     </div>
