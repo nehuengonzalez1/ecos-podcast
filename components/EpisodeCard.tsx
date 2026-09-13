@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { Lock, FileText } from 'lucide-react'
+import { Lock, Infinity as Infinito } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 
@@ -68,16 +68,21 @@ export function EpisodeCard({ episode, variant = 'archive', index = 0 }: Props) 
             <div className="absolute left-3 top-3 rounded-sm border border-cream-400/15 bg-ink-900/60 px-2 py-0.5 text-[10px] uppercase tracking-widest text-cream-100/80 backdrop-blur">
               EP. {episode.number}
             </div>
-            {/* El rol del invitado. Antes decía "Historia" en todas las
-                tarjetas, que no distinguía nada.
+            {/* El rol del invitado. Antes decia "Historia" en todas las
+                tarjetas, que no distinguia nada.
 
-                Sin rol cargado no se dibuja el cartelito: mejor nada que una
-                etiqueta vacía. Y con `truncate` más un ancho máximo, un rol
-                largo se corta en vez de estirar el cartelito sobre la foto. */}
+                Sin caja ni borde: la franja se funde con el degradado del
+                pie de la foto, asi el rol se apoya sobre la imagen en vez
+                de taparla con un cartelito.
+
+                Sin rol cargado no se dibuja nada, y con `truncate` un rol
+                largo se corta en vez de empujar al resto. */}
             {variant === 'archive' && episode.role && (
-              <div className="absolute bottom-3 right-3 flex max-w-[calc(100%-1.5rem)] items-center gap-1.5 rounded-sm border border-gold/40 bg-ink-900/60 px-2 py-1 text-[10px] text-gold/90 backdrop-blur">
-                <FileText size={12} className="shrink-0" />
-                <span className="truncate">{episode.role}</span>
+              <div className="absolute inset-x-0 bottom-0 flex items-center gap-2 bg-gradient-to-t from-ink-900 via-ink-900/75 to-transparent px-4 pb-3 pt-10">
+                <Infinito size={15} strokeWidth={1.5} className="shrink-0 text-gold/70" />
+                <span className="truncate text-[10px] uppercase tracking-[0.2em] text-gold/85">
+                  {episode.role}
+                </span>
               </div>
             )}
           </div>
