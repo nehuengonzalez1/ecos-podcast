@@ -5,8 +5,7 @@ import { brand } from '@/lib/config/brand'
 import { cargarSuscriptores, calcularMetricas } from '@/lib/admin-data'
 import { statsPorEpisodio, totalesPorAccion, ACCIONES } from '@/lib/analytics'
 import { mensajesPendientes, AUTO_APROBAR } from '@/lib/muro'
-import { buscarEpisodio } from '@/lib/episodios'
-import data from '@/data/episodes.json'
+import { cargarEpisodios } from '@/lib/episodios'
 import { SuscriptoresTabla } from './SuscriptoresTabla'
 import { ResyncButton } from './ResyncButton'
 import { Evolucion } from './Evolucion'
@@ -41,14 +40,18 @@ export default async function AdminPage() {
   ])
   const m = await calcularMetricas(subs)
 
+  // El catálogo se carga una vez y las búsquedas se hacen en memoria. Buscar
+  // de a uno seria una lectura a Redis por mensaje de la cola.
+  const catalogo = await cargarEpisodios()
+  const nombreEpisodio = (slug: string) =>
+    catalogo.find((e) => e.slug === slug)?.guest ?? slug
+
   // El nombre del invitado se resuelve acá, en el servidor, para que la cola
   // muestre a quién le escribieron y no un slug.
   const aModerar: ItemModeracion[] = pendientes.map((msg) => ({
     ...msg,
-    episodio: buscarEpisodio(msg.slug)?.guest ?? msg.slug,
+    episodio: nombreEpisodio(msg.slug),
   }))
-  const nombreEpisodio = (slug: string) =>
-    data.episodes.find((e) => e.slug === slug)?.guest ?? slug
 
   return (
     <section className="spotlight-bg pt-32 pb-24 min-h-[80vh]">

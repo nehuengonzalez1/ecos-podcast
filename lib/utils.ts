@@ -37,7 +37,16 @@ export function slugify(s: string): string {
   return s
     .toLowerCase()
     .normalize('NFD')
-    .replace(/[̀-ͯ]/g, '')
+    // Saca los acentos por propiedad Unicode, no por rango de caracteres.
+    //
+    // Antes el rango estaba escrito con los caracteres literales y en algun
+    // guardado se corrompieron: la expresion dejo de reconocerlos, y "Ibanez"
+    // con tilde y eñe terminaba en "ib-ez" -- la tilde sobrevivia y despues
+    // se convertia en guion. Escribirlo como rango de escapes tampoco sirve,
+    // porque al guardar el archivo vuelven a convertirse en literales.
+    //
+    // Esta forma es solo ASCII, asi que no hay nada que se pueda corromper.
+    .replace(/\p{Diacritic}/gu, '')
     .replace(/[^a-z0-9]+/g, '-')
     .replace(/^-|-$/g, '')
 }

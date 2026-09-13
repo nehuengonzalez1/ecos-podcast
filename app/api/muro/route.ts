@@ -39,7 +39,7 @@ function emailValido(s: string): boolean {
 /** Los mensajes publicados de un episodio. Público: los lee cualquiera. */
 export async function GET(req: Request) {
   const slug = new URL(req.url).searchParams.get('slug') ?? ''
-  if (!esEpisodioPublicado(slug)) {
+  if (!(await esEpisodioPublicado(slug))) {
     return NextResponse.json({ error: 'episodio-desconocido' }, { status: 404 })
   }
   const mensajes = await mensajesAprobados(slug)
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     }
 
     const slug = limpiar(body?.slug, 120)
-    const ep = buscarEpisodio(slug)
+    const ep = await buscarEpisodio(slug)
     if (!ep || ep.status !== 'available') {
       return NextResponse.json({ error: 'episodio-desconocido' }, { status: 404 })
     }

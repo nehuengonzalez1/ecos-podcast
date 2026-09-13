@@ -1,4 +1,5 @@
 import { kv } from '@/lib/kv'
+import { slugify } from '@/lib/utils'
 
 /**
  * Ediciones de contenido hechas desde el panel.
@@ -152,6 +153,97 @@ export async function guardar(slug: string, cambios: Override): Promise<Override
   todos[slug] = nuevo
   await kv.set(CLAVE, todos)
   return nuevo
+}
+
+/**
+ * Episodios creados desde el panel.
+ *
+ * Van aparte de las ediciones porque no son lo mismo: una edicion se apoya
+ * sobre un episodio del archivo, y esto es el episodio entero. Tampoco pueden
+ * ir a data/episodes.json, que en Vercel es de solo lectura.
+ *
+ * El resto del sitio no distingue entre unos y otros: `cargarEpisodios()` los
+ * concatena y quedan todos iguales. La unica diferencia visible es en el
+ * panel, que marca cuales se crearon aca por si alguna vez hay que borrarlos.
+ */
+const CLAVE_NUEVOS = 'contenido:episodios-nuevos'
+
+export async function episodiosNuevos(): Promise<any[]> {
+  if (!kv) return []
+  try {
+    return (await kv.get<any[]>(CLAVE_NUEVOS)) ?? []
+  } catch (e) {
+    console.error('[contenido] no se pudieron leer los episodios nuevos:', e)
+    return []
+  }
+}
+
+/**
+ * Crea un episodio y devuelve su slug.
+ *
+ * Nace como "muy pronto" a proposito: asi aparece en el archivo como proximo
+ * capitulo pero su pagina todavia no se puede abrir, y se puede ir cargando
+ * de a poco sin que nadie vea una ficha a medio llenar. Se publica cambiando
+ * el estado cuando esta listo.
+ *
+ * El slug se arma del nombre y, si ya existe, se le agrega un numero. Tiene
+ * que ser unico contra el archivo *y* contra los creados antes: es la URL del
+ * episodio y la clave con la que el muro guarda sus mensajes, asi que dos
+ * episodios con el mismo slug compartirian los mensajes.
+ */
+export async function crearEpisodio(
+  nombre: string,
+  usados: { slugs: string[]; ids: number[]; numeros: number[] },
+): Promise<{ slug: string } | null> {
+  if (!kv) return null
+
+  const nuevos = await episodiosNuevos()
+  const ocupados = new Set([...usados.slugs, ...nuevos.map((e) => e.slug)])
+
+  const base = slugify(nombre) || 'episodio'
+  let slug = base
+  let n = 2
+  while (ocupados.has(slug)) slug = `${base}-${n++}`
+
+  const maxId = Math.max(0, ...usados.ids, ...nuevos.map((e) => Number(e.id) || 0))
+  const maxNum = Math.max(0, ...usados.numeros, ...nuevos.map((e) => Number(e.number) || 0))
+
+  const ep = {
+    id: maxId + 1,
+    number: String(maxNum + 1),
+    slug,
+    guest: nombre,
+    role: '',
+    category: '',
+    quote: '',
+    date: new Date().toISOString().slice(0, 10),
+    duration: '',
+    location: '',
+    photo: '',
+    status: 'coming-soon',
+    summary: '',
+    moments: [],
+    creadoEnPanel: true,
+  }
+
+  await kv.set(CLAVE_NUEVOS, [...nuevos, ep])
+  return { slug }
+}
+
+/** Borra un episodio creado en el panel. Los del archivo no se tocan. */
+export async function borrarEpisodio(slug: string): Promise<boolean> {
+  if (!kv) return false
+  const nuevos = await episodiosNuevos()
+  await kv.set(
+    CLAVE_NUEVOS,
+    nuevos.filter((e) => e.slug !== slug),
+  )
+  // Se lleva tambien sus ediciones, para no dejarlas colgadas de un episodio
+  // que ya no existe.
+  const todos = await todosLosOverrides()
+  delete todos[slug]
+  await kv.set(CLAVE, todos)
+  return true
 }
 
 /** Borra todas las ediciones de un episodio: vuelve entero al archivo. */

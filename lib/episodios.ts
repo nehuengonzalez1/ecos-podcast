@@ -1,6 +1,6 @@
 import data from '@/data/episodes.json'
 import type { EpisodioRef } from '@/lib/mailer'
-import { aplicar, overrideDe, todosLosOverrides } from '@/lib/contenido'
+import { aplicar, overrideDe, todosLosOverrides, episodiosNuevos } from '@/lib/contenido'
 
 /**
  * Acceso a los episodios.
@@ -29,12 +29,28 @@ export function episodiosDelArchivo(): any[] {
   return episodios
 }
 
-export function buscarEpisodio(slug: string): any | null {
+/**
+ * Busca solo en el archivo. Sirve para saber si un slug es de los originales,
+ * no para validar que un episodio exista: los creados desde el panel no estan
+ * aca.
+ */
+export function buscarEnArchivo(slug: string): any | null {
   return episodios.find((e) => e.slug === slug) ?? null
 }
 
-export function esEpisodioPublicado(slug: string): boolean {
-  const ep = buscarEpisodio(slug)
+/**
+ * Busca en todo el catalogo, incluidos los creados en el panel.
+ *
+ * Es la que tienen que usar las validaciones. Con la version que miraba solo
+ * el archivo, la pagina de un episodio nuevo daba 404 y el muro rechazaba sus
+ * mensajes por "episodio desconocido".
+ */
+export async function buscarEpisodio(slug: string): Promise<any | null> {
+  return (await cargarEpisodios()).find((e) => e.slug === slug) ?? null
+}
+
+export async function esEpisodioPublicado(slug: string): Promise<boolean> {
+  const ep = await buscarEpisodio(slug)
   return !!ep && ep.status === 'available'
 }
 
@@ -45,16 +61,16 @@ export function categorias(): string[] {
 
 /** Todos los episodios, con las ediciones del panel aplicadas. */
 export async function cargarEpisodios(): Promise<any[]> {
-  const overrides = await todosLosOverrides()
-  if (Object.keys(overrides).length === 0) return episodios
-  return episodios.map((e) => aplicar(e, overrides[e.slug] ?? {}))
+  const [overrides, nuevos] = await Promise.all([todosLosOverrides(), episodiosNuevos()])
+  // Los creados en el panel van primero porque son los mas recientes. De ahi
+  // en adelante se tratan igual que los del archivo: nadie mas en el sitio
+  // necesita saber de donde salio cada uno.
+  return [...nuevos, ...episodios].map((e) => aplicar(e, overrides[e.slug] ?? {}))
 }
 
-/** Un episodio, con sus ediciones aplicadas. */
+/** Un episodio, con sus ediciones aplicadas. Incluye los creados en el panel. */
 export async function cargarEpisodio(slug: string): Promise<any | null> {
-  const base = buscarEpisodio(slug)
-  if (!base) return null
-  return aplicar(base, await overrideDe(slug))
+  return buscarEpisodio(slug)
 }
 
 /** Lo que necesita el aviso de moderación para identificar el episodio. */

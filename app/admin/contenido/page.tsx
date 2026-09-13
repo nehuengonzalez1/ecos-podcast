@@ -2,7 +2,7 @@ import { redirect } from 'next/navigation'
 import { isAdmin } from '@/lib/admin'
 import { brand } from '@/lib/config/brand'
 import { episodiosDelArchivo } from '@/lib/episodios'
-import { todosLosOverrides, CONTENIDO_ACTIVO } from '@/lib/contenido'
+import { todosLosOverrides, episodiosNuevos, CONTENIDO_ACTIVO } from '@/lib/contenido'
 import { EpisodiosEditor } from '../EpisodiosEditor'
 import { NavPanel } from '../NavPanel'
 
@@ -19,7 +19,10 @@ export const dynamic = 'force-dynamic'
 export default async function ContenidoPage() {
   if (!(await isAdmin())) redirect('/')
 
-  const overrides = await todosLosOverrides()
+  // La lista del editor es el archivo mas los creados desde acá. Los nuevos
+  // van primero, que es donde se los busca después de crearlos.
+  const [overrides, nuevos] = await Promise.all([todosLosOverrides(), episodiosNuevos()])
+  const base = [...nuevos, ...episodiosDelArchivo()]
 
   // El token de Blob es de servidor: si el store esta creado se decide aca y
   // baja al editor como un booleano.
@@ -48,7 +51,7 @@ export default async function ContenidoPage() {
 
         <div className="mt-6">
           <EpisodiosEditor
-            base={episodiosDelArchivo()}
+            base={base}
             overrides={overrides}
             blobActivo={blobActivo}
             baseActiva={CONTENIDO_ACTIVO}

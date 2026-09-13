@@ -84,6 +84,66 @@ export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva }: Pro
     }
   }
 
+  /**
+   * Crea un episodio nuevo.
+   *
+   * El nombre es lo único que se pide: alcanza para armarle el slug y dejarlo
+   * listo para completar. Nace como "muy pronto", así aparece en el archivo
+   * como próximo capítulo pero su página no se abre hasta que lo publiques.
+   *
+   * Después de crearlo se recarga la página en vez de agregarlo a la lista en
+   * memoria: el slug lo decide el servidor, y recargar es la forma más simple
+   * de que la lista, las ediciones y el episodio abierto queden en el mismo
+   * estado que la base.
+   */
+  const crear = async () => {
+    const nombre = prompt('¿Cómo se llama la persona del episodio?')?.trim()
+    if (!nombre) return
+
+    setGuardando(true)
+    setAviso('')
+    try {
+      const res = await fetch('/api/admin/episodios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ accion: 'crear', nombre }),
+      })
+      const json = await res.json()
+      if (!res.ok) {
+        setAviso(json?.detalle ?? json?.error ?? 'No se pudo crear')
+        setGuardando(false)
+        return
+      }
+      window.location.reload()
+    } catch {
+      setAviso('No se pudo crear. Revisá la conexión.')
+      setGuardando(false)
+    }
+  }
+
+  /** Borrar alcanza solo a los creados acá; los del archivo no se tocan. */
+  const borrar = async () => {
+    if (!confirm(`¿Borrar "${valor('guest')}"? Se va con todo lo que tenga cargado.`)) return
+    setGuardando(true)
+    try {
+      const res = await fetch('/api/admin/episodios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug: slugSel, accion: 'borrar' }),
+      })
+      if (!res.ok) {
+        const json = await res.json().catch(() => ({}))
+        setAviso(json?.error ?? 'No se pudo borrar')
+        setGuardando(false)
+        return
+      }
+      window.location.reload()
+    } catch {
+      setAviso('No se pudo borrar. Revisá la conexión.')
+      setGuardando(false)
+    }
+  }
+
   const restaurar = async () => {
     if (!confirm('¿Descartar todas las ediciones de este episodio y volver al original?')) return
     setGuardando(true)
@@ -110,6 +170,14 @@ export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva }: Pro
     <div className="grid gap-6 lg:grid-cols-[230px_1fr]">
       {/* Lista de episodios */}
       <aside className="lg:border-r lg:border-cream-400/10 lg:pr-5">
+        <button
+          onClick={crear}
+          disabled={guardando || !baseActiva}
+          className="mb-3 flex w-full items-center justify-center gap-2 rounded-sm border border-gold/50 bg-gold/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-gold transition hover:bg-gold/20 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <Plus size={13} /> Nuevo episodio
+        </button>
+
         <ul className="max-h-[70vh] space-y-1 overflow-y-auto pr-1">
           {base.map((e) => {
             const tocado = Object.keys(ediciones[e.slug] ?? {}).length > 0
@@ -152,6 +220,15 @@ export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva }: Pro
               >
                 {aviso}
               </span>
+            )}
+            {epBase.creadoEnPanel && (
+              <button
+                onClick={borrar}
+                disabled={guardando}
+                className="inline-flex items-center gap-1.5 rounded-sm border border-cream-400/20 px-3 py-1.5 text-[10px] uppercase tracking-widest text-cream-200/60 transition hover:border-red-400/50 hover:text-red-300 disabled:opacity-40"
+              >
+                <Trash2 size={12} /> Borrar
+              </button>
             )}
             {Object.keys(override).length > 0 && (
               <button
