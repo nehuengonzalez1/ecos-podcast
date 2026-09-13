@@ -39,9 +39,24 @@ type Props = {
   baseActiva: boolean
   /** Slugs que están fuera del sitio pero siguen visibles en el panel. */
   ocultos: string[]
+  /**
+   * Las categorías disponibles, para elegir de una lista en vez de escribirlas.
+   *
+   * Escribirlas a mano dejaba que la categoría de un episodio se desviara de
+   * los filtros del archivo: una tilde o un plural de más y ese episodio ya
+   * no aparecía bajo ningún filtro.
+   */
+  categorias: string[]
 }
 
-export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva, ocultos }: Props) {
+export function EpisodiosEditor({
+  base,
+  overrides,
+  blobActivo,
+  baseActiva,
+  ocultos,
+  categorias,
+}: Props) {
   const [slugSel, setSlugSel] = useState(base[0]?.slug ?? '')
   const [ediciones, setEdiciones] = useState<Record<string, any>>(overrides)
   const [borrador, setBorrador] = useState<any>(null)
@@ -207,6 +222,17 @@ export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva, ocult
 
   if (!epBase) return null
 
+  /**
+   * La categoría que tiene el episodio cuando ya no figura en la lista.
+   *
+   * Pasa al renombrar o borrar una categoría: el episodio conserva la suya,
+   * porque renombrar no reetiqueta en cascada. Hay que ofrecerla igual en el
+   * desplegable -- si no, el select no podría representar su valor y lo
+   * cambiaría solo al primero de la lista sin que nadie lo pidiera.
+   */
+  const catActual = valor('category')
+  const huerfana = catActual && !categorias.includes(catActual) ? catActual : ''
+
   const momentos: string[] = actual.moments ?? epBase.moments ?? []
   const cortes: any[] = actual.detrasDeEscena ?? epBase.detrasDeEscena ?? []
 
@@ -338,7 +364,27 @@ export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva, ocult
               />
               <Campo etiqueta="Invitado" v={valor('guest')} on={(x) => set('guest', x)} marca={editado('guest')} />
               <Campo etiqueta="Rol" v={valor('role')} on={(x) => set('role', x)} marca={editado('role')} />
-              <Campo etiqueta="Categoría" v={valor('category')} on={(x) => set('category', x)} marca={editado('category')} />
+              <div>
+                <Etiqueta texto="Categoría" marca={editado('category')} />
+                <select
+                  value={valor('category')}
+                  onChange={(e) => set('category', e.target.value)}
+                  className={entrada}
+                >
+                  <option value="">Sin categoría</option>
+                  {categorias.map((c) => (
+                    <option key={c} value={c}>
+                      {c}
+                    </option>
+                  ))}
+                  {/* Un episodio puede tener una categoría que ya no está en
+                      la lista, porque se la renombró o se la borró después.
+                      Se ofrece igual y avisada: sin esta opción el select no
+                      podría representar su valor y lo cambiaría solo, sin que
+                      nadie lo haya pedido. */}
+                  {huerfana && <option value={huerfana}>{huerfana} — ya no está en la lista</option>}
+                </select>
+              </div>
               <div>
                 <Etiqueta texto="Estado" marca={editado('status')} />
                 <select

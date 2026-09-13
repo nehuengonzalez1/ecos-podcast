@@ -72,6 +72,7 @@ export default async function ContenidoPage() {
             blobActivo={blobActivo}
             baseActiva={CONTENIDO_ACTIVO}
             ocultos={ocultos}
+            categorias={cats}
           />
         </div>
       </div>
