@@ -9,10 +9,9 @@ import { slugify, hoyEnArgentina } from '@/lib/utils'
  * editado no reemplaza al archivo, se guarda aparte en Redis y se le
  * superpone al leer.
  *
- * De ahi que se guarde solo lo que cambio y no el episodio entero. Tiene dos
- * consecuencias buenas: un campo que nunca se toco sigue viniendo del
- * archivo, asi que corregirlo ahi sigue funcionando; y borrar la edicion de
- * un campo lo devuelve a su valor original en vez de dejarlo vacio.
+ * De ahi que se guarde solo lo que cambio y no el episodio entero: un campo
+ * que nunca se toco sigue viniendo del archivo, asi que corregirlo ahi sigue
+ * funcionando.
  *
  * Lo que no se puede editar es `id` y `slug`. El slug es la URL del episodio
  * y ademas la clave con la que el muro guarda sus mensajes: cambiarlo
@@ -110,9 +109,18 @@ export function aplicar(base: any, override: Override): any {
 /**
  * Guarda una edicion, fusionandola con lo que ya hubiera.
  *
- * Un campo con cadena vacia se interpreta como "volver al original": se
- * saca del override en vez de guardarse vacio. Es lo que hace que el panel
- * pueda deshacer una edicion sin un boton aparte para eso.
+ * Vacio significa vacio. Si se borra el contenido de un campo, se guarda
+ * vacio y asi queda en el sitio.
+ *
+ * La primera version hacia lo contrario: interpretaba el campo vacio como
+ * "volver al valor del archivo", para poder deshacer una edicion sin un boton
+ * aparte. Parecia practico y era una trampa -- volvia imposible dejar un
+ * campo realmente en blanco. Al borrar la frase corta de un episodio para que
+ * no se viera sobre el video, reaparecia al guardar, sin ninguna explicacion
+ * visible.
+ *
+ * Deshacer sigue estando, pero como una accion que se pide a proposito:
+ * el boton "Volver al original" del episodio.
  */
 export async function guardar(slug: string, cambios: Override): Promise<Override | null> {
   if (!kv) return null
@@ -125,28 +133,15 @@ export async function guardar(slug: string, cambios: Override): Promise<Override
     if (!(campo in cambios)) continue
     const valor = cambios[campo]
 
-    const vacio =
-      valor === null ||
-      valor === undefined ||
-      (typeof valor === 'string' && valor.trim() === '') ||
-      (Array.isArray(valor) && valor.length === 0)
-
-    if (vacio) {
-      delete nuevo[campo]
-      continue
-    }
+    // null y undefined no son "vacio": son "no vino nada". Se ignoran para
+    // que un cuerpo mal armado no borre un campo sin querer.
+    if (valor === null || valor === undefined) continue
 
     if (ANIDADOS.has(campo) && typeof valor === 'object' && !Array.isArray(valor)) {
-      const fusionado = { ...((actual[campo] as object) ?? {}), ...valor }
-      // Dentro del objeto se aplica la misma regla: una cadena vacia saca
-      // esa clave, no la guarda vacia.
-      for (const [k, v] of Object.entries(fusionado)) {
-        if (v === null || v === undefined || (typeof v === 'string' && v.trim() === '')) {
-          delete (fusionado as any)[k]
-        }
-      }
-      if (Object.keys(fusionado).length === 0) delete nuevo[campo]
-      else nuevo[campo] = fusionado
+      // Se fusiona con lo que ya habia: editar el texto de la carta no tiene
+      // que hacer desaparecer su imagen. Las cadenas vacias de adentro se
+      // guardan vacias, igual que en el resto.
+      nuevo[campo] = { ...((actual[campo] as object) ?? {}), ...valor }
       continue
     }
 

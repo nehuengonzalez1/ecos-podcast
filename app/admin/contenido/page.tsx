@@ -48,7 +48,8 @@ export default async function ContenidoPage() {
         <p className="mt-6 max-w-2xl text-sm text-cream-200/70">
           Lo que se edita acá se guarda aparte y se le superpone al archivo del proyecto, porque
           en Vercel los archivos no se pueden reescribir. El punto dorado marca los campos
-          editados; vaciar uno lo devuelve a su valor original.
+          editados. Si vaciás un campo queda vacío en el sitio; para deshacer todo lo editado
+          de un episodio está el botón &laquo;Volver al original&raquo;.
         </p>
 
         {!blobActivo && (

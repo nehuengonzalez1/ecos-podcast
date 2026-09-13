@@ -12,8 +12,8 @@ import { CampoImagen } from './CampoImagen'
  * está editado: sin esa marca no habría forma de saber, mirando el panel, qué
  * viene del archivo y qué se escribió acá.
  *
- * Vaciar un campo no lo deja en blanco: lo devuelve a su valor del archivo.
- * Es lo que hace que se pueda deshacer una edición sin un botón aparte.
+ * Vaciar un campo lo deja vacío, que es lo que uno espera al borrar algo.
+ * Para deshacer las ediciones de un episodio está «Volver al original».
  */
 
 /**
