@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { Check, Plus, RotateCcw, Trash2 } from 'lucide-react'
+import { Check, Eye, EyeOff, Plus, RotateCcw, Trash2 } from 'lucide-react'
 import { CampoImagen } from './CampoImagen'
 
 /**
@@ -28,9 +28,11 @@ type Props = {
   overrides: Record<string, any>
   blobActivo: boolean
   baseActiva: boolean
+  /** Slugs que están fuera del sitio pero siguen visibles en el panel. */
+  ocultos: string[]
 }
 
-export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva }: Props) {
+export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva, ocultos }: Props) {
   const [slugSel, setSlugSel] = useState(base[0]?.slug ?? '')
   const [ediciones, setEdiciones] = useState<Record<string, any>>(overrides)
   const [borrador, setBorrador] = useState<any>(null)
@@ -38,6 +40,8 @@ export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva }: Pro
   const [aviso, setAviso] = useState('')
 
   const epBase = useMemo(() => base.find((e) => e.slug === slugSel), [base, slugSel])
+  const escondidos = useMemo(() => new Set(ocultos), [ocultos])
+  const oculto = escondidos.has(slugSel)
   const override = ediciones[slugSel] ?? {}
 
   // El borrador arranca como copia de lo editado y es lo que se toca en
@@ -121,9 +125,40 @@ export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva }: Pro
     }
   }
 
-  /** Borrar alcanza solo a los creados acá; los del archivo no se tocan. */
+  /** Vuelve a mostrar en el sitio un episodio que se había sacado. */
+  const mostrar = async () => {
+    setGuardando(true)
+    try {
+      const res = await fetch('/api/admin/episodios', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ slug: slugSel, accion: 'mostrar' }),
+      })
+      if (!res.ok) {
+        setAviso('No se pudo recuperar')
+        setGuardando(false)
+        return
+      }
+      window.location.reload()
+    } catch {
+      setAviso('No se pudo recuperar. Revisá la conexión.')
+      setGuardando(false)
+    }
+  }
+
+  /**
+   * Saca el episodio del sitio.
+   *
+   * Los creados en el panel se borran de verdad. Los que vienen del archivo
+   * del proyecto no se pueden borrar, así que se ocultan: desaparecen del
+   * sitio pero siguen en esta lista, apagados, para poder recuperarlos.
+   */
   const borrar = async () => {
-    if (!confirm(`¿Borrar "${valor('guest')}"? Se va con todo lo que tenga cargado.`)) return
+    const delArchivo = !epBase.creadoEnPanel
+    const mensaje = delArchivo
+      ? `¿Sacar "${valor('guest')}" del sitio? Vas a poder recuperarlo desde acá.`
+      : `¿Borrar "${valor('guest')}"? Se va con todo lo que tenga cargado.`
+    if (!confirm(mensaje)) return
     setGuardando(true)
     try {
       const res = await fetch('/api/admin/episodios', {
@@ -192,10 +227,21 @@ export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva }: Pro
                       : 'border-transparent hover:border-cream-400/20'
                   }`}
                 >
-                  <span className="w-6 shrink-0 text-[10px] text-cream-400/60">{e.number}</span>
-                  <span className="min-w-0 flex-1 truncate text-xs text-cream-100">
+                  <span className="w-6 shrink-0 text-[10px] text-cream-400/60">
+                    {ediciones[e.slug]?.number ?? e.number}
+                  </span>
+                  <span
+                    className={`min-w-0 flex-1 truncate text-xs ${
+                      escondidos.has(e.slug) ? 'text-cream-400/40 line-through' : 'text-cream-100'
+                    }`}
+                  >
                     {ediciones[e.slug]?.guest ?? e.guest}
                   </span>
+                  {/* Tachado y con el ojo cerrado: sigue en el panel pero ya
+                      no se ve en el sitio. */}
+                  {escondidos.has(e.slug) && (
+                    <EyeOff size={11} className="shrink-0 text-cream-400/40" />
+                  )}
                   {tocado && <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-gold" />}
                 </button>
               </li>
@@ -221,13 +267,21 @@ export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva }: Pro
                 {aviso}
               </span>
             )}
-            {epBase.creadoEnPanel && (
+            {oculto ? (
+              <button
+                onClick={mostrar}
+                disabled={guardando}
+                className="inline-flex items-center gap-1.5 rounded-sm border border-gold/50 bg-gold/10 px-3 py-1.5 text-[10px] uppercase tracking-widest text-gold transition hover:bg-gold/20 disabled:opacity-40"
+              >
+                <Eye size={12} /> Volver a mostrar
+              </button>
+            ) : (
               <button
                 onClick={borrar}
                 disabled={guardando}
                 className="inline-flex items-center gap-1.5 rounded-sm border border-cream-400/20 px-3 py-1.5 text-[10px] uppercase tracking-widest text-cream-200/60 transition hover:border-red-400/50 hover:text-red-300 disabled:opacity-40"
               >
-                <Trash2 size={12} /> Borrar
+                <Trash2 size={12} /> {epBase.creadoEnPanel ? 'Borrar' : 'Sacar del sitio'}
               </button>
             )}
             {Object.keys(override).length > 0 && (
@@ -255,9 +309,24 @@ export function EpisodiosEditor({ base, overrides, blobActivo, baseActiva }: Pro
           </p>
         )}
 
+        {oculto && (
+          <p className="mb-5 flex items-center gap-2 border border-cream-400/20 bg-ink-900/60 px-3 py-2 text-xs text-cream-200/70">
+            <EyeOff size={13} className="shrink-0" />
+            Este episodio está fuera del sitio: no aparece en el archivo ni en la portada, y su
+            página no abre. Podés seguir editándolo y recuperarlo cuando quieras.
+          </p>
+        )}
+
         <div className="space-y-6">
           <Grupo titulo="La ficha">
             <div className="grid gap-4 sm:grid-cols-2">
+              <Campo
+                etiqueta="Número de capítulo"
+                v={valor('number')}
+                on={(x) => set('number', x)}
+                marca={editado('number')}
+                ayuda="Se asigna solo al crear el episodio. Cambialo si el orden real es otro."
+              />
               <Campo etiqueta="Invitado" v={valor('guest')} on={(x) => set('guest', x)} marca={editado('guest')} />
               <Campo etiqueta="Rol" v={valor('role')} on={(x) => set('role', x)} marca={editado('role')} />
               <Campo etiqueta="Categoría" v={valor('category')} on={(x) => set('category', x)} marca={editado('category')} />

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { isAdmin } from '@/lib/admin'
-import { buscarEpisodio, buscarEnArchivo, episodiosDelArchivo } from '@/lib/episodios'
+import { existeEpisodio, buscarEnArchivo, episodiosDelArchivo } from '@/lib/episodios'
 import {
   CAMPOS_EDITABLES,
   CONTENIDO_ACTIVO,
@@ -8,6 +8,8 @@ import {
   restaurar,
   crearEpisodio,
   borrarEpisodio,
+  ocultarEpisodio,
+  mostrarEpisodio,
   type Override,
 } from '@/lib/contenido'
 
@@ -57,19 +59,30 @@ export async function POST(req: Request) {
 
     const slug = String(body?.slug ?? '')
 
-    if (!(await buscarEpisodio(slug))) {
+    if (!(await existeEpisodio(slug))) {
       return NextResponse.json({ error: 'episodio-desconocido' }, { status: 404 })
     }
 
-    // Borrar solo alcanza a los creados en el panel. Los del archivo del
-    // proyecto no se pueden borrar desde acá: para sacarlos de circulación
-    // está el estado "muy pronto", que es reversible.
+    /**
+     * Borrar saca el episodio del sitio, pero por dos caminos distintos.
+     *
+     * Los creados en el panel se borran de verdad. Los del archivo del
+     * proyecto viven dentro del build y no se pueden tocar, asi que se marcan
+     * como ocultos: para quien visita el sitio desaparecen igual, y en el
+     * panel quedan a la vista para poder recuperarlos.
+     */
     if (body?.accion === 'borrar') {
       if (buscarEnArchivo(slug)) {
-        return NextResponse.json({ error: 'episodio-del-archivo' }, { status: 409 })
+        await ocultarEpisodio(slug)
+        return NextResponse.json({ ok: true, accion: 'ocultar' })
       }
       await borrarEpisodio(slug)
       return NextResponse.json({ ok: true, accion: 'borrar' })
+    }
+
+    if (body?.accion === 'mostrar') {
+      await mostrarEpisodio(slug)
+      return NextResponse.json({ ok: true, accion: 'mostrar' })
     }
 
     if (body?.accion === 'restaurar') {

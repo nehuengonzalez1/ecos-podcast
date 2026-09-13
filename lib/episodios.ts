@@ -1,6 +1,12 @@
 import data from '@/data/episodes.json'
 import type { EpisodioRef } from '@/lib/mailer'
-import { aplicar, overrideDe, todosLosOverrides, episodiosNuevos } from '@/lib/contenido'
+import {
+  aplicar,
+  overrideDe,
+  todosLosOverrides,
+  episodiosNuevos,
+  episodiosOcultos,
+} from '@/lib/contenido'
 
 /**
  * Acceso a los episodios.
@@ -49,6 +55,19 @@ export async function buscarEpisodio(slug: string): Promise<any | null> {
   return (await cargarEpisodios()).find((e) => e.slug === slug) ?? null
 }
 
+/**
+ * Si el slug corresponde a algun episodio, incluidos los ocultos.
+ *
+ * Lo usa el panel para validar. Con `buscarEpisodio` no alcanza: esa filtra
+ * los ocultos, asi que pedir restaurar uno fallaba con "episodio
+ * desconocido" -- justamente el unico que hace falta encontrar para poder
+ * volver a mostrarlo.
+ */
+export async function existeEpisodio(slug: string): Promise<boolean> {
+  if (buscarEnArchivo(slug)) return true
+  return (await episodiosNuevos()).some((e) => e.slug === slug)
+}
+
 export async function esEpisodioPublicado(slug: string): Promise<boolean> {
   const ep = await buscarEpisodio(slug)
   return !!ep && ep.status === 'available'
@@ -61,11 +80,22 @@ export function categorias(): string[] {
 
 /** Todos los episodios, con las ediciones del panel aplicadas. */
 export async function cargarEpisodios(): Promise<any[]> {
-  const [overrides, nuevos] = await Promise.all([todosLosOverrides(), episodiosNuevos()])
+  const [overrides, nuevos, ocultos] = await Promise.all([
+    todosLosOverrides(),
+    episodiosNuevos(),
+    episodiosOcultos(),
+  ])
   // Los creados en el panel van primero porque son los mas recientes. De ahi
   // en adelante se tratan igual que los del archivo: nadie mas en el sitio
   // necesita saber de donde salio cada uno.
-  return [...nuevos, ...episodios].map((e) => aplicar(e, overrides[e.slug] ?? {}))
+  //
+  // Los ocultos se filtran aca, en el unico punto por donde el sitio lee los
+  // episodios: asi no hay forma de que alguno se cuele en una pagina que se
+  // olvido de filtrarlos.
+  const escondidos = new Set(ocultos)
+  return [...nuevos, ...episodios]
+    .filter((e) => !escondidos.has(e.slug))
+    .map((e) => aplicar(e, overrides[e.slug] ?? {}))
 }
 
 /** Un episodio, con sus ediciones aplicadas. Incluye los creados en el panel. */

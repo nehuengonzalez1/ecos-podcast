@@ -38,6 +38,9 @@ const CLAVE = 'contenido:episodios'
 
 /** Campos que el panel puede tocar. El resto se ignora aunque llegue. */
 export const CAMPOS_EDITABLES = [
+  // El numero se asigna solo al crear, pero se puede corregir: el orden real
+  // de los capitulos lo decide quien los publica, no el orden de carga.
+  'number',
   'guest',
   'role',
   'category',
@@ -243,6 +246,45 @@ export async function borrarEpisodio(slug: string): Promise<boolean> {
   const todos = await todosLosOverrides()
   delete todos[slug]
   await kv.set(CLAVE, todos)
+  return true
+}
+
+/**
+ * Episodios del archivo que se sacaron del sitio.
+ *
+ * Los del archivo no se pueden borrar de verdad porque viven dentro del build,
+ * asi que se guardan como ocultos y se filtran al leer. El resultado para
+ * quien visita es el mismo -- no existen --, pero en el panel siguen a la
+ * vista, apagados y con la opcion de recuperarlos.
+ *
+ * Es a proposito que no desaparezcan del panel: un borrado sin vuelta atras
+ * sobre contenido que no se puede recrear desde ahi seria una trampa.
+ */
+const CLAVE_OCULTOS = 'contenido:episodios-ocultos'
+
+export async function episodiosOcultos(): Promise<string[]> {
+  if (!kv) return []
+  try {
+    return (await kv.get<string[]>(CLAVE_OCULTOS)) ?? []
+  } catch {
+    return []
+  }
+}
+
+export async function ocultarEpisodio(slug: string): Promise<boolean> {
+  if (!kv) return false
+  const ocultos = await episodiosOcultos()
+  if (!ocultos.includes(slug)) await kv.set(CLAVE_OCULTOS, [...ocultos, slug])
+  return true
+}
+
+export async function mostrarEpisodio(slug: string): Promise<boolean> {
+  if (!kv) return false
+  const ocultos = await episodiosOcultos()
+  await kv.set(
+    CLAVE_OCULTOS,
+    ocultos.filter((s) => s !== slug),
+  )
   return true
 }
 
