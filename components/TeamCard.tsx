@@ -13,7 +13,14 @@ export function TeamCard({ member, index = 0 }: { member: Member; index?: number
       transition={{ duration: 0.5, delay: index * 0.06 }}
       className="text-center"
     >
-      <div className="mx-auto aspect-square w-40 overflow-hidden border border-cream-400/15 bg-ink-700 sm:w-48">
+      {/* Sin borde: el marco claro recortaba la foto contra el fondo negro en
+          vez de dejarla fundirse con la pagina, que es de lo que vive esta
+          serie de retratos.
+
+          El ancho ya no es fijo sino el de la celda, con un tope para que en
+          pantallas muy anchas no se desproporcione. Asi las fotos crecen con
+          la grilla en vez de quedarse chicas en el medio. */}
+      <div className="mx-auto aspect-square w-full max-w-[17rem] overflow-hidden bg-ink-700">
         <img
           src={member.photo}
           alt={member.name}

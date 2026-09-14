@@ -23,7 +23,10 @@ export default function TeamPage() {
 
       <section className="py-16">
         <div className="container-page">
-          <div className="grid grid-cols-2 gap-10 md:grid-cols-4">
+          {/* Menos separacion en telefono: con dos columnas, cada pixel que
+              se lleva el hueco se lo saca a la foto. Desde sm vuelve a
+              abrirse, que es donde ya sobra ancho. */}
+          <div className="grid grid-cols-2 gap-x-5 gap-y-10 sm:gap-x-10 md:grid-cols-4">
             {team.members.map((m, i) => (
               <TeamCard key={m.name} member={m} index={i} />
             ))}
