@@ -9,8 +9,24 @@ import team from '@/data/team.json'
 export default function TeamPage() {
   return (
     <>
-      <section className="spotlight-bg pt-32 pb-16">
-        <div className="container-page text-center">
+      <section className="relative overflow-hidden pt-32 pb-16">
+        {/* Acá el título va centrado, no pegado a un costado como en la
+            tienda, así que el velo no puede ser un degradado lateral: seria
+            oscuro de un lado y transparente del otro justo debajo del mismo
+            texto. Se vela parejo y se abre arriba y abajo, que es donde la
+            foto se tiene que fundir con el negro de la página. */}
+        <div aria-hidden="true" className="absolute inset-0">
+          <img
+            src="/imagenes/nosotros-cabecera.webp"
+            alt=""
+            className="h-full w-full object-cover object-bottom"
+          />
+          <div className="absolute inset-0 bg-ink-900/60" />
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink-900 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-ink-900 to-transparent" />
+        </div>
+
+        <div className="container-page relative flex min-h-[22rem] flex-col justify-center text-center">
           <p className="eyebrow mb-4">05 · Nosotros</p>
           <h1 className="title-display text-5xl leading-none md:text-7xl">
             equipo de {brand.name}
