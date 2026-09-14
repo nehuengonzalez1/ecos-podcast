@@ -11,8 +11,27 @@ export default function CommunityPage() {
 
   return (
     <>
-      <section className="spotlight-bg pt-32 pb-16">
-        <div className="container-page text-center">
+      <section className="relative overflow-hidden pt-24 pb-10">
+        {/* Velo radial y no parejo: el titulo va centrado pero la escena
+            tiene la gente grabando y las polaroids contra los bordes. */}
+        <div aria-hidden="true" className="absolute inset-0">
+          <img
+            src="/imagenes/comunidad-cabecera.webp"
+            alt=""
+            className="h-full w-full object-cover object-[18%_center] sm:object-center"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 50% 60% at 50% 50%, rgba(10,10,10,0.72) 0%, rgba(10,10,10,0.45) 55%, rgba(10,10,10,0.1) 100%)',
+            }}
+          />
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ink-900 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-ink-900 to-transparent" />
+        </div>
+
+        <div className="container-page relative flex flex-col justify-center py-6 text-center">
           <p className="eyebrow mb-4">La comunidad</p>
           <h1 className="title-display text-4xl leading-tight md:text-5xl">
             Ya somos miles creyendo que<br />
@@ -28,8 +47,21 @@ export default function CommunityPage() {
         </div>
       </section>
 
-      <section className="bg-ink-800/40 py-20">
-        <div className="container-page">
+      {/* La otra mitad de la foto: las cartas, la taza y las polaroids. Es
+          justo lo que promete esta seccion, asi que va detras de ella y no
+          arriba. El velo es mas alto que en la cabecera porque aca hay una
+          lista de beneficios y un precio que tienen que leerse. */}
+      <section className="relative overflow-hidden border-y border-cream-400/10 py-20">
+        <div aria-hidden="true" className="absolute inset-0">
+          <img
+            src="/imagenes/comunidad-cartas.webp"
+            alt=""
+            className="h-full w-full object-cover object-center"
+          />
+          <div className="absolute inset-0 bg-ink-900/82" />
+        </div>
+
+        <div className="container-page relative">
           <SectionHeading
             eyebrow="Archivo completo"
             title={<>Sumate al <span className="italic">Archivo</span></>}
