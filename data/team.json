@@ -4,49 +4,49 @@
       "name": "Agustin Pereira",
       "role": "Director Creativo y Conductor",
       "description": "Mantener la identidad y garantizar la calidad del contenido.",
-      "photo": "https://randomuser.me/api/portraits/men/15.jpg"
+      "photo": "/imagenes/equipo/agustin-pereira.webp"
     },
     {
       "name": "Nehuen Gonzalez",
       "role": "Producción de Desarrollo y Expansión",
       "description": "Impulsar el crecimiento y convertirlo en una marca sólida, sostenible y escalable.",
-      "photo": "https://randomuser.me/api/portraits/men/28.jpg"
+      "photo": "/imagenes/equipo/nehuen-gonzalez.webp"
     },
     {
       "name": "Malena Cipriano",
       "role": "Producción y Organización",
       "description": "Lograr que cada grabación se desarrolle de manera organizada y sin inconvenientes ni fricciones.",
-      "photo": "https://randomuser.me/api/portraits/women/29.jpg"
+      "photo": "/imagenes/equipo/malena-cipriano.webp"
     },
     {
       "name": "Martina Pereira",
       "role": "Coordinación y Operaciones",
       "description": "Garantizar que toda la logística y organización del proyecto funcione correctamente.",
-      "photo": "https://randomuser.me/api/portraits/women/60.jpg"
+      "photo": "/imagenes/equipo/martina-pereira.webp"
     },
     {
       "name": "Sofia Pereira",
       "role": "Contenido Audiovisual y Redes",
       "description": "Mostrar el detrás de escena y mantener activa la comunidad.",
-      "photo": "https://randomuser.me/api/portraits/women/47.jpg"
+      "photo": "/imagenes/equipo/sofia-pereira.webp"
     },
     {
       "name": "Santiago Diaz",
       "role": "Contenido Audiovisual y Analítica",
       "description": "Multiplicar el alcance de cada episodio mediante contenido optimizado y análisis de resultados.",
-      "photo": "https://randomuser.me/api/portraits/men/52.jpg"
+      "photo": "/imagenes/equipo/santiago-diaz.webp"
     },
     {
       "name": "Claudio Cipriano",
       "role": "Co-Conducción y Apoyo Creativo",
       "description": "Aportar una segunda mirada, enriquecer las conversaciones y colaborar con el crecimiento del podcast.",
-      "photo": "https://randomuser.me/api/portraits/men/76.jpg"
+      "photo": "/imagenes/equipo/claudio-cipriano.webp"
     },
     {
       "name": "Natanael Garay",
       "role": "Asesor de Imagen",
       "description": "Vestimenta acorde a cada historia.",
-      "photo": "https://randomuser.me/api/portraits/men/85.jpg"
+      "photo": "/imagenes/equipo/natanael-garay.webp"
     }
   ]
 }
