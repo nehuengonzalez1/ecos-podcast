@@ -1,0 +1,110 @@
+[
+  {
+    "slug": "merch-lqlve",
+    "titulo": "Merch LQLVE",
+    "categoria": "Productos",
+    "resumen": "Remera edición especial.",
+    "imagen": null,
+    "cierra": "2026-09-19T23:59:00-03:00",
+    "ganadores": 1,
+    "lugar": "Buenos Aires, Argentina",
+    "descripcion": [
+      "La remera de edición especial de LQLVE, con el infinito bordado.",
+      "No se vende: es de las que solo se consiguen acá."
+    ],
+    "nota": "Lo que se lleva puesto también cuenta una historia.",
+    "incluye": [
+      { "icono": "regalo", "texto": "Una remera de edición especial, en tu talle." },
+      { "icono": "envio", "texto": "Envío sin cargo a cualquier punto del país." }
+    ],
+    "condiciones": [
+      "Podés participar una sola vez.",
+      "El sorteo es válido en todo el territorio argentino.",
+      "El ganador será contactado por email y/o Instagram.",
+      "El premio es personal e intransferible.",
+      "LQLVE se reserva el derecho de modificar fechas o condiciones en caso de fuerza mayor."
+    ]
+  },
+  {
+    "slug": "vivi-un-episodio",
+    "titulo": "Viví un episodio",
+    "categoria": "Experiencias",
+    "resumen": "Participá por un lugar en la grabación de un episodio de LQLVE.",
+    "imagen": null,
+    "cierra": "2026-09-26T23:59:00-03:00",
+    "ganadores": 1,
+    "lugar": "Buenos Aires, Argentina",
+    "descripcion": [
+      "Esta vez la historia podés vivirla desde adentro.",
+      "Sorteamos un lugar para que seas parte de la grabación de un episodio de LQLVE. Vas a poder presenciar la charla en vivo, conocer el detrás de escena y ser parte de una experiencia única.",
+      "Porque LQLVE también se comparte."
+    ],
+    "nota": "Las mejores historias también se viven fuera de la pantalla.",
+    "incluye": [
+      { "icono": "entrada", "texto": "1 lugar para presenciar la grabación de un episodio de LQLVE." },
+      { "icono": "camara", "texto": "Recorrido por el detrás de escena." },
+      { "icono": "cafe", "texto": "Café y charla previa con el equipo." },
+      { "icono": "foto", "texto": "Posibilidad de una foto al finalizar (el día y la dinámica pueden variar)." }
+    ],
+    "condiciones": [
+      "Podés participar una sola vez.",
+      "El sorteo es válido en todo el territorio argentino.",
+      "El ganador será contactado por email y/o Instagram.",
+      "El premio es personal e intransferible.",
+      "LQLVE se reserva el derecho de modificar fechas o condiciones en caso de fuerza mayor."
+    ]
+  },
+  {
+    "slug": "vino-lqlve",
+    "titulo": "Vino LQLVE",
+    "categoria": "Productos",
+    "resumen": "Botella edición limitada.",
+    "imagen": null,
+    "cierra": "2026-09-22T23:59:00-03:00",
+    "ganadores": 1,
+    "lugar": "Buenos Aires, Argentina",
+    "descripcion": [
+      "Una botella de edición limitada, con etiqueta propia de LQLVE.",
+      "De las que se guardan para una charla larga."
+    ],
+    "nota": "Las mejores charlas empiezan con una botella abierta.",
+    "incluye": [
+      { "icono": "regalo", "texto": "Una botella de edición limitada con etiqueta LQLVE." },
+      { "icono": "envio", "texto": "Envío sin cargo a cualquier punto del país." }
+    ],
+    "condiciones": [
+      "Podés participar una sola vez.",
+      "Solo pueden participar personas mayores de 18 años.",
+      "El sorteo es válido en todo el territorio argentino.",
+      "El ganador será contactado por email y/o Instagram.",
+      "El premio es personal e intransferible.",
+      "LQLVE se reserva el derecho de modificar fechas o condiciones en caso de fuerza mayor."
+    ]
+  },
+  {
+    "slug": "caja-sorpresa",
+    "titulo": "Caja sorpresa",
+    "categoria": "Varios",
+    "resumen": "Merch, libros, vinos y más.",
+    "imagen": null,
+    "cierra": "2026-10-04T23:59:00-03:00",
+    "ganadores": 1,
+    "lugar": "Buenos Aires, Argentina",
+    "descripcion": [
+      "Una caja armada a mano con un poco de todo lo que es LQLVE: merch, libros que nos marcaron, una botella y algunas cosas más.",
+      "Qué trae exactamente no lo decimos. Esa es la idea."
+    ],
+    "nota": "Adentro hay más de lo que se ve.",
+    "incluye": [
+      { "icono": "regalo", "texto": "Una caja LQLVE armada a mano." },
+      { "icono": "envio", "texto": "Envío sin cargo a cualquier punto del país." }
+    ],
+    "condiciones": [
+      "Podés participar una sola vez.",
+      "El sorteo es válido en todo el territorio argentino.",
+      "El ganador será contactado por email y/o Instagram.",
+      "El premio es personal e intransferible.",
+      "LQLVE se reserva el derecho de modificar fechas o condiciones en caso de fuerza mayor."
+    ]
+  }
+]

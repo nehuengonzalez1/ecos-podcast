@@ -12,6 +12,7 @@ import { NavAuth } from './NavAuth'
 const links = [
   { to: '/archivo', label: 'El Archivo' },
   { to: '/nosotros', label: 'Nosotros' },
+  { to: '/sorteos', label: 'Sorteos' },
   { to: '/comunidad', label: 'Comunidad' },
   { to: '/contacto', label: 'Contacto' },
 ]
