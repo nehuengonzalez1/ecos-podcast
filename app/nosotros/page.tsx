@@ -43,7 +43,14 @@ export default function TeamPage() {
           <div className="mx-auto mt-14 grid max-w-4xl gap-10 md:grid-cols-[auto_1fr] md:items-center">
             {/* size="lg" quedaba mas alto que el manifiesto; el max-w lo
                 acota sin pelear con el `w-*` del componente. */}
-            <Polaroid src="https://picsum.photos/seed/team-polaroid/800/1000" alt="Equipo" caption="Equipo" seed={11} size="lg" className="max-w-[340px]" />
+            <Polaroid
+              src="/imagenes/estudio-polaroid.webp"
+              alt="El sillón y el micrófono del estudio de LQLVE, iluminados por un foco"
+              caption="El estudio"
+              seed={11}
+              size="lg"
+              className="max-w-[340px]"
+            />
             <div className="body-copy space-y-4 text-lg text-cream-200/90">
               <p>Lo Que La Vida Esconde nace de una idea simple: todos tenemos una historia que el mundo no ve.</p>
               <p>Vivimos rodeados de apariencias, conclusiones rápidas y conversaciones superficiales.</p>
