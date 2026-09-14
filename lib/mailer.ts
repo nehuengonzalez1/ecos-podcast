@@ -1,4 +1,4 @@
-import { Resend } from 'resend'
+import { Resend, type CreateEmailOptions } from 'resend'
 import { brand } from '@/lib/config/brand'
 import { appUrl } from '@/lib/app-url'
 
@@ -58,6 +58,30 @@ export function estadoMailer() {
   }
 }
 
+/**
+ * Despacha un mail y decide si realmente salio.
+ *
+ * El SDK de Resend no tira excepcion cuando la API rechaza el envio:
+ * devuelve `{ data, error }` con `error` cargado y la promesa resuelta. Con
+ * solo un try/catch, una clave invalida o un remitente no verificado se
+ * veian como exito, el mail no llegaba nunca y no quedaba rastro en los
+ * logs. Por eso se mira `error` ademas de atajar la excepcion, que sigue
+ * siendo posible si se cae la red.
+ */
+async function despachar(payload: CreateEmailOptions, etiqueta: string): Promise<boolean> {
+  try {
+    const { error } = await resend!.emails.send(payload)
+    if (error) {
+      console.error(`[mailer] ${etiqueta} Resend rechazo el envio:`, error.name, error.message)
+      return false
+    }
+    return true
+  } catch (e) {
+    console.error(`[mailer] ${etiqueta}`, e)
+    return false
+  }
+}
+
 export type MensajeContacto = {
   nombre: string
   email: string
@@ -94,19 +118,16 @@ export async function enviarAvisoContacto(m: MensajeContacto): Promise<boolean> 
       ${bloque('A tener en cuenta', m.notas)}
     </div>`
 
-  try {
-    await resend.emails.send({
+  return despachar(
+    {
       from: remitente(),
       to,
       replyTo: m.email, // responder va directo a la persona
       subject: `Nueva historia de ${m.nombre}`,
       html,
-    })
-    return true
-  } catch (e) {
-    console.error('[mailer] no se pudo enviar el aviso:', e)
-    return false
-  }
+    },
+    'no se pudo enviar el aviso:',
+  )
 }
 
 /** Lo mínimo del episodio que necesita el aviso de moderación del muro. */
@@ -149,18 +170,15 @@ export async function enviarAvisoMuro(m: MensajeMuro, ep: EpisodioRef): Promise<
       <a href="${panel}" style="display:inline-block;border:1px solid #ff8000;color:#ff8000;padding:10px 18px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase">Moderar en el panel</a>
     </div>`
 
-  try {
-    await resend.emails.send({
+  return despachar(
+    {
       from: remitente(),
       to,
       subject: `Mensaje para ${ep.guest} — esperando moderación`,
       html,
-    })
-    return true
-  } catch (e) {
-    console.error('[mailer] no se pudo avisar del mensaje del muro:', e)
-    return false
-  }
+    },
+    'no se pudo avisar del mensaje del muro:',
+  )
 }
 
 function bloque(titulo: string, texto?: string): string {
