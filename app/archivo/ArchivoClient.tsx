@@ -33,8 +33,33 @@ export function ArchivoClient({
 
   return (
     <>
-      <section className="spotlight-bg pt-32 pb-16">
-        <div className="container-page text-center">
+      <section className="relative overflow-hidden pt-32 pb-16">
+        {/* El velo no es parejo como en Nosotros sino mas cerrado en el
+            centro. El titulo va centrado, pero lo que cuenta esta foto esta
+            en los bordes: el sillon a la izquierda y los estantes con las
+            cajas numeradas por episodio a la derecha, que se encuadran al
+            centro porque ancladas abajo se cortaba la fila de arriba. Un velo
+            parejo lo
+            suficientemente alto para que se lea el titulo borraba justo esas
+            cajas, que son lo unico que dice "archivo" en la imagen. */}
+        <div aria-hidden="true" className="absolute inset-0">
+          <img
+            src="/imagenes/archivo-cabecera.webp"
+            alt=""
+            className="h-full w-full object-cover object-center"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 58% 68% at 50% 45%, rgba(10,10,10,0.9) 0%, rgba(10,10,10,0.7) 55%, rgba(10,10,10,0.3) 100%)',
+            }}
+          />
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ink-900 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-ink-900 to-transparent" />
+        </div>
+
+        <div className="container-page relative flex min-h-[20rem] flex-col justify-center text-center">
           <p className="eyebrow mb-4">Bienvenidx a</p>
           <h1 className="title-display text-5xl leading-none md:text-7xl">
             EL ARCHIVO<br />
