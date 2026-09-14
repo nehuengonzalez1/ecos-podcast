@@ -19,7 +19,31 @@ export function HomeClient({ episodios }: { episodios: Episode[] }) {
 
   return (
     <>
-      <section className="spotlight-bg relative min-h-[92vh] overflow-hidden pt-24">
+      <section className="relative min-h-[92vh] overflow-hidden pt-24">
+        {/* La foto es 3:2 y la portada ocupa casi toda la pantalla. En un
+            telefono -- mucho mas alto que ancho -- object-cover se queda con
+            una franja angosta del medio, y el medio de esta foto esta vacio a
+            proposito: los dos sillones estan contra los bordes opuestos.
+
+            No hay encuadre que los salve a los dos, asi que en pantallas
+            chicas se corre casi al borde izquierdo y se muestra uno
+            entero. Desde sm entran los dos y vuelve al centro. */}
+        <div aria-hidden="true" className="absolute inset-0">
+          <img
+            src="/imagenes/inicio-cabecera.webp"
+            alt=""
+            className="h-full w-full object-cover object-[8%_55%] sm:object-center"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 55% 60% at 50% 45%, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.66) 55%, rgba(10,10,10,0.28) 100%)',
+            }}
+          />
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ink-900 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-ink-900 to-transparent" />
+        </div>
         <div className="container-page relative z-10 flex min-h-[80vh] flex-col items-center justify-center text-center">
           <motion.p
             initial={{ opacity: 0 }}
