@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { Eye, Infinity as Infinito } from 'lucide-react'
 import { isAdmin } from '@/lib/admin'
 import { brand } from '@/lib/config/brand'
-import { productos, categoriasDeTienda, precioTexto, TIENDA_PUBLICA } from '@/lib/tienda'
+import { cargarProductos, categoriasDeTienda, precioTexto, TIENDA_PUBLICA } from '@/lib/tienda'
 import { TiendaGrid } from './TiendaGrid'
 
 export const metadata: Metadata = {
@@ -33,7 +33,8 @@ export default async function TiendaPage() {
    */
   if (!abierta) return <Proximamente />
 
-  const lista = productos().map((p) => ({
+  const [todos, cats] = await Promise.all([cargarProductos(), categoriasDeTienda()])
+  const lista = todos.map((p) => ({
     slug: p.slug,
     nombre: p.nombre,
     categoria: p.categoria,
@@ -67,7 +68,7 @@ export default async function TiendaPage() {
         </p>
 
         <div className="mt-12">
-          <TiendaGrid productos={lista} categorias={categoriasDeTienda()} />
+          <TiendaGrid productos={lista} categorias={cats} />
         </div>
       </div>
     </section>

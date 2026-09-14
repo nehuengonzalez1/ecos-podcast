@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { BarChart3, SlidersHorizontal, Ticket } from 'lucide-react'
+import { BarChart3, SlidersHorizontal, Ticket, ShoppingBag } from 'lucide-react'
 
 /**
  * Las dos mitades del panel.
@@ -16,6 +16,7 @@ const SECCIONES = [
   { href: '/admin', texto: 'Métricas', icono: BarChart3 },
   { href: '/admin/contenido', texto: 'Contenido', icono: SlidersHorizontal },
   { href: '/admin/sorteos', texto: 'Sorteos', icono: Ticket },
+  { href: '/admin/tienda', texto: 'Tienda', icono: ShoppingBag },
 ]
 
 export function NavPanel() {

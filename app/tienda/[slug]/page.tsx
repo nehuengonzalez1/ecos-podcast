@@ -19,7 +19,7 @@ export async function generateMetadata({
   if (!(TIENDA_PUBLICA || (await isAdmin()))) return { title: `Tienda · ${brand.name}` }
 
   const { slug } = await params
-  const p = buscarProducto(slug)
+  const p = await buscarProducto(slug)
   if (!p) return { title: `Tienda · ${brand.name}` }
   return { title: `${p.nombre} · Tienda · ${brand.name}`, description: p.resumen }
 }
@@ -36,7 +36,7 @@ export default async function ProductoPage({ params }: { params: Promise<{ slug:
   if (!(TIENDA_PUBLICA || (await isAdmin()))) notFound()
 
   const { slug } = await params
-  const p = buscarProducto(slug)
+  const p = await buscarProducto(slug)
   if (!p) notFound()
 
   const agotado = p.estado === 'agotado'
