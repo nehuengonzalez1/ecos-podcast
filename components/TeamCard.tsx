@@ -20,7 +20,10 @@ export function TeamCard({ member, index = 0 }: { member: Member; index?: number
           El ancho ya no es fijo sino el de la celda, con un tope para que en
           pantallas muy anchas no se desproporcione. Asi las fotos crecen con
           la grilla en vez de quedarse chicas en el medio. */}
-      <div className="mx-auto aspect-square w-full max-w-[17rem] overflow-hidden bg-ink-700">
+      {/* 5:6, la misma proporcion con la que estan recortadas las fotos. Que
+          coincidan es lo que evita que object-cover vuelva a recortarlas por
+          su cuenta y descoloque a unos respecto de otros. */}
+      <div className="mx-auto aspect-[5/6] w-full max-w-[17rem] overflow-hidden bg-ink-700">
         <img
           src={member.photo}
           alt={member.name}
