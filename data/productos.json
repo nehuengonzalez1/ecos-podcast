@@ -3,9 +3,10 @@
     "slug": "remera-lqlve",
     "nombre": "Remera LQLVE",
     "categoria": "Indumentaria",
-    "resumen": "Algodón peinado, bordado al pecho.",
-    "precio": 28000,
-    "imagen": null,
+    "resumen": "Negra",
+    "precio": 32000,
+    "imagen": "/imagenes/tienda/remera-lqlve.webp",
+    "colores": ["Negro"],
     "descripcion": [
       "La remera de siempre, en negro, con el infinito bordado al pecho.",
       "Algodón peinado 24/1, de los que aguantan lavarse muchas veces."
@@ -15,26 +16,92 @@
     "estado": "disponible"
   },
   {
+    "slug": "buzo-historias",
+    "nombre": "Buzo Historias",
+    "categoria": "Indumentaria",
+    "resumen": "Negro",
+    "precio": 59000,
+    "imagen": "/imagenes/tienda/buzo-historias.webp",
+    "colores": ["Negro"],
+    "descripcion": [
+      "Buzo de frisa pesada con «Historias que quedan» escrito a mano en la espalda.",
+      "El de las grabaciones de invierno."
+    ],
+    "variantes": { "titulo": "Talle", "opciones": ["S", "M", "L", "XL", "XXL"] },
+    "detalles": ["Frisa peinada 400 g", "Interior perchado", "Corte unisex"],
+    "estado": "disponible"
+  },
+  {
     "slug": "gorra-lqlve",
     "nombre": "Gorra LQLVE",
     "categoria": "Indumentaria",
-    "resumen": "Gabardina lavada, cierre regulable.",
-    "precio": 22000,
-    "imagen": null,
+    "resumen": "Negra",
+    "precio": 28000,
+    "imagen": "/imagenes/tienda/gorra-lqlve.webp",
+    "colores": ["Negro"],
     "descripcion": [
-      "Gorra de gabardina lavada, con el logo bordado al frente y el cierre metálico regulable."
+      "Gabardina lavada, logo bordado al frente y cierre metálico regulable."
     ],
     "variantes": null,
     "detalles": ["Talle único regulable", "Gabardina lavada", "Bordado al frente"],
     "estado": "disponible"
   },
   {
+    "slug": "termo-lqlve",
+    "nombre": "Termo LQLVE",
+    "categoria": "Accesorios",
+    "resumen": "Acero Inoxidable 1L",
+    "precio": 42000,
+    "imagen": "/imagenes/tienda/termo-lqlve.webp",
+    "colores": ["Negro", "Gris"],
+    "descripcion": [
+      "Acero inoxidable de doble pared, con el logo grabado.",
+      "Mantiene frío 24 horas y calor 12."
+    ],
+    "variantes": null,
+    "detalles": ["1 litro", "Acero inoxidable", "Frío 24 h · Calor 12 h"],
+    "estado": "disponible"
+  },
+  {
+    "slug": "cuaderno-lqlve",
+    "nombre": "Cuaderno LQLVE",
+    "categoria": "Escritura",
+    "resumen": "Tapa Dura",
+    "precio": 24000,
+    "imagen": "/imagenes/tienda/cuaderno-lqlve.webp",
+    "colores": ["Negro"],
+    "descripcion": [
+      "Tapa dura negra con elástico y hojas lisas color hueso.",
+      "Para lo que no se dice en voz alta."
+    ],
+    "variantes": null,
+    "detalles": ["A5", "192 páginas lisas", "Tapa dura con elástico"],
+    "estado": "disponible"
+  },
+  {
+    "slug": "juego-de-cartas",
+    "nombre": "Juego de Cartas",
+    "categoria": "Juegos",
+    "resumen": "Edición Original",
+    "precio": 36000,
+    "imagen": "/imagenes/tienda/juego-de-cartas.webp",
+    "colores": ["Negro", "Crema"],
+    "descripcion": [
+      "52 preguntas para llevar una charla a donde no suele llegar.",
+      "Las mismas que usamos para preparar cada episodio."
+    ],
+    "variantes": null,
+    "detalles": ["52 cartas", "Caja rígida", "Guía de uso incluida"],
+    "estado": "disponible"
+  },
+  {
     "slug": "taza-lqlve",
     "nombre": "Taza LQLVE",
-    "categoria": "Objetos",
-    "resumen": "Cerámica negra, 350 ml.",
-    "precio": 14000,
-    "imagen": null,
+    "categoria": "Accesorios",
+    "resumen": "Cerámica",
+    "precio": 18000,
+    "imagen": "/imagenes/tienda/taza-lqlve.webp",
+    "colores": ["Negro"],
     "descripcion": [
       "La misma taza que está en la mesa del estudio durante cada grabación.",
       "Cerámica negra mate, apta para lavavajillas."
@@ -44,76 +111,18 @@
     "estado": "disponible"
   },
   {
-    "slug": "botella-lqlve",
-    "nombre": "Botella térmica",
-    "categoria": "Objetos",
-    "resumen": "Acero, 750 ml, frío y calor.",
-    "precio": 34000,
-    "imagen": null,
+    "slug": "bolso-lqlve",
+    "nombre": "Bolso LQLVE",
+    "categoria": "Lifestyle",
+    "resumen": "Canvas",
+    "precio": 26000,
+    "imagen": "/imagenes/tienda/bolso-lqlve.webp",
+    "colores": ["Negro", "Crema"],
     "descripcion": [
-      "Acero inoxidable de doble pared, con la frase de la marca grabada.",
-      "Mantiene frío 24 horas y calor 12."
-    ],
-    "variantes": null,
-    "detalles": ["750 ml", "Acero inoxidable", "Frío 24 h · Calor 12 h"],
-    "estado": "disponible"
-  },
-  {
-    "slug": "tote-lqlve",
-    "nombre": "Tote bag",
-    "categoria": "Objetos",
-    "resumen": "Lona cruda teñida en negro.",
-    "precio": 18000,
-    "imagen": null,
-    "descripcion": [
-      "Lona gruesa teñida en negro, con «Personas reales. Historias que quedan» escrito a mano."
+      "Lona gruesa teñida en negro, con el logo al frente y asas reforzadas."
     ],
     "variantes": null,
     "detalles": ["Lona 12 oz", "38 × 42 cm", "Asas reforzadas"],
     "estado": "disponible"
-  },
-  {
-    "slug": "libreta-lqlve",
-    "nombre": "Libreta LQLVE",
-    "categoria": "Papelería",
-    "resumen": "Tapa dura, hojas lisas.",
-    "precio": 16000,
-    "imagen": null,
-    "descripcion": [
-      "Tapa dura negra con elástico, hojas lisas color hueso.",
-      "Para lo que no se dice en voz alta."
-    ],
-    "variantes": null,
-    "detalles": ["A5", "192 páginas lisas", "Tapa dura con elástico"],
-    "estado": "disponible"
-  },
-  {
-    "slug": "cartas-conversaciones",
-    "nombre": "Conversaciones que importan",
-    "categoria": "Papelería",
-    "resumen": "52 preguntas para una charla de verdad.",
-    "precio": 21000,
-    "imagen": null,
-    "descripcion": [
-      "Un mazo de 52 preguntas para llevar una charla a donde no suele llegar.",
-      "Las mismas que usamos para preparar cada episodio."
-    ],
-    "variantes": null,
-    "detalles": ["52 cartas", "Caja rígida", "Guía de uso incluida"],
-    "estado": "disponible"
-  },
-  {
-    "slug": "vino-lqlve",
-    "nombre": "Vino LQLVE",
-    "categoria": "Objetos",
-    "resumen": "Edición limitada, etiqueta propia.",
-    "precio": 26000,
-    "imagen": null,
-    "descripcion": [
-      "Una edición limitada con etiqueta propia, para las charlas que se estiran."
-    ],
-    "variantes": null,
-    "detalles": ["750 ml", "Edición limitada", "Solo mayores de 18 años"],
-    "estado": "agotado"
   }
 ]

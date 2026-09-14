@@ -8,6 +8,8 @@ import { Nav } from '@/components/Nav'
 import { Footer } from '@/components/Footer'
 import { GrainOverlay } from '@/components/GrainOverlay'
 import { ClerkReadyProvider } from '@/components/ClerkReady'
+import { CarritoProvider } from '@/components/tienda/Carrito'
+import { PanelCarrito } from '@/components/tienda/PanelCarrito'
 import { sitioIndexable } from '@/lib/app-url'
 import './globals.css'
 
@@ -51,9 +53,15 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             para que no puedan quedar en desacuerdo con <ClerkProvider>. */}
         <ClerkReadyProvider ready={CLERK_ACTIVE}>
           <GrainOverlay />
-          <Nav />
-          <main>{children}</main>
-          <Footer />
+          {/* El carrito envuelve todo para que el contador del menu ande en
+              cualquier pagina: quien agrega algo y sigue navegando tiene que
+              poder verlo sin volver a la tienda. */}
+          <CarritoProvider>
+            <Nav />
+            <main>{children}</main>
+            <Footer />
+            <PanelCarrito />
+          </CarritoProvider>
         </ClerkReadyProvider>
       </body>
     </html>

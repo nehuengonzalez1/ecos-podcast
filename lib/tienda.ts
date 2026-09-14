@@ -27,6 +27,8 @@ export type Producto = {
   descripcion: string[]
   /** Talles, colores, lo que haya. Null si el producto es uno solo. */
   variantes: { titulo: string; opciones: string[] } | null
+  /** Para el filtro por color. Vacio si no aplica. */
+  colores?: string[]
   detalles: string[]
   estado: 'disponible' | 'agotado'
 }
@@ -41,6 +43,36 @@ export type Producto = {
 export const TIENDA_PUBLICA = process.env.TIENDA_PUBLICA === '1'
 
 /** Los productos del archivo del proyecto, sin ediciones ni filtros. */
+/**
+ * Los rubros de la barra de arriba, en orden.
+ *
+ * Es una lista fija y no sale de los productos a proposito: la barra tiene
+ * que verse igual siempre, aunque un rubro se quede sin stock. Si saliera de
+ * los productos, vender la ultima remera haria desaparecer Indumentaria.
+ */
+export const RUBROS = [
+  'Indumentaria',
+  'Accesorios',
+  'Escritura',
+  'Juegos',
+  'Lifestyle',
+  'Ediciones Especiales',
+] as const
+
+/** En cuantas cuotas sin interes se ofrece. */
+export const CUOTAS = 3
+
+/**
+ * El valor de cada cuota, redondeado hacia arriba.
+ *
+ * Hacia arriba y no al mas cercano: con el redondeo comun, tres cuotas de
+ * $9.333 suman $27.999 y quedan un peso por debajo del precio publicado.
+ * Cobrar de menos es problema de la tienda; que el numero cierre, no.
+ */
+export function cuotaTexto(pesos: number): string {
+  return precioTexto(Math.ceil(pesos / CUOTAS))
+}
+
 export function productosDelArchivo(): Producto[] {
   return archivo as Producto[]
 }

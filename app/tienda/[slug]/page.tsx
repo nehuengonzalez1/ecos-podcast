@@ -4,7 +4,8 @@ import type { Metadata } from 'next'
 import { ChevronRight, Eye, Infinity as Infinito } from 'lucide-react'
 import { isAdmin } from '@/lib/admin'
 import { brand } from '@/lib/config/brand'
-import { buscarProducto, precioTexto, TIENDA_PUBLICA } from '@/lib/tienda'
+import { buscarProducto, precioTexto, cuotaTexto, CUOTAS, TIENDA_PUBLICA } from '@/lib/tienda'
+import { Comprar } from './Comprar'
 import { ImagenProducto } from '@/components/ProductoCard'
 
 export const dynamic = 'force-dynamic'
@@ -71,7 +72,10 @@ export default async function ProductoPage({ params }: { params: Promise<{ slug:
             <p className="eyebrow">{p.categoria}</p>
             <h1 className="title-display mt-2 text-4xl leading-none md:text-5xl">{p.nombre}</h1>
 
-            <p className="mt-5 text-2xl text-gold">{precioTexto(p.precio)}</p>
+            <p className="mt-5 text-3xl text-cream-50">{precioTexto(p.precio)}</p>
+            <p className="mt-1 text-sm text-cream-400/75">
+              {CUOTAS} cuotas sin interes de {cuotaTexto(p.precio)}
+            </p>
 
             <div className="mt-6 space-y-3">
               {p.descripcion.map((t, i) => (
@@ -81,23 +85,6 @@ export default async function ProductoPage({ params }: { params: Promise<{ slug:
               ))}
             </div>
 
-            {p.variantes && (
-              <div className="mt-8">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-cream-400/70">
-                  {p.variantes.titulo}
-                </p>
-                <div className="mt-3 flex flex-wrap gap-2">
-                  {p.variantes.opciones.map((o) => (
-                    <span
-                      key={o}
-                      className="rounded-sm border border-cream-400/20 px-3 py-1.5 text-xs text-cream-200/80"
-                    >
-                      {o}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            )}
 
             {!!p.detalles.length && (
               <ul className="mt-8 space-y-2">
@@ -116,19 +103,18 @@ export default async function ProductoPage({ params }: { params: Promise<{ slug:
               </ul>
             )}
 
-            {/* Todavía no hay forma de cobrar: el botón dice la verdad en vez
-                de prometer un carrito que no existe. */}
-            <div className="mt-10">
-              <button
-                disabled
-                className="w-full cursor-not-allowed rounded-sm border border-cream-400/20 px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-400/60 sm:w-auto"
-              >
-                {agotado ? 'Sin stock' : 'Compra · próximamente'}
-              </button>
-              <p className="mt-3 text-[11px] text-cream-400/60">
-                Falta conectar el cobro para poder vender.
-              </p>
-            </div>
+            <Comprar
+              slug={p.slug}
+              nombre={p.nombre}
+              precio={p.precio}
+              imagen={p.imagen}
+              variantes={p.variantes}
+              agotado={agotado}
+            />
+
+            <p className="mt-3 text-[11px] text-cream-400/60">
+              Lo que agregues se guarda. Falta conectar el cobro para poder comprar.
+            </p>
 
             <div className="mt-12 flex flex-col items-start gap-1.5 text-cream-400/35">
               <Infinito size={22} strokeWidth={1.25} />

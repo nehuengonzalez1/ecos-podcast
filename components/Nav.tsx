@@ -8,6 +8,7 @@ import { brand } from '@/lib/config/brand'
 import { cn } from '@/lib/utils'
 import { useClerkReady } from './ClerkReady'
 import { NavAuth } from './NavAuth'
+import { BotonCarrito } from './tienda/PanelCarrito'
 
 const links = [
   { to: '/archivo', label: 'El Archivo' },
@@ -46,10 +47,11 @@ export function Nav() {
             alt={brand.fullName}
             className="h-5 w-auto md:h-6"
           />
-          {/* Recien desde xl: entre md y lg no entra sin encimarse con el
-              primer enlace del menu, y el nombre del sitio ya esta en el
-              logo que tiene al lado. */}
-          <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[0.35em] text-gold/70 xl:block">
+          {/* Recien desde 2xl. Con seis secciones mas el carrito, los tres
+              bloques ocupan todo el ancho y el nombre del sitio termina
+              encimandose con el primer enlace. Al lado tiene el logo,
+              que ya lo dice. */}
+          <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[0.35em] text-gold/70 2xl:block">
             {brand.fullName}
           </span>
         </Link>
@@ -76,7 +78,8 @@ export function Nav() {
           })}
         </nav>
 
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex items-center gap-4">
+          <BotonCarrito />
           {clerkListo ? (
             <NavAuth />
           ) : (
@@ -111,8 +114,13 @@ export function Nav() {
                 </Link>
               )
             })}
+            {/* El carrito va fuera de la condición de Clerk: se puede juntar
+                cosas sin haber iniciado sesión. */}
+            <div className="border-t border-cream-400/10 pt-4" onClick={() => setOpen(false)}>
+              <BotonCarrito />
+            </div>
             {clerkListo && (
-              <div className="border-t border-cream-400/10 pt-4" onClick={() => setOpen(false)}>
+              <div onClick={() => setOpen(false)}>
                 <NavAuth variante="movil" />
               </div>
             )}
