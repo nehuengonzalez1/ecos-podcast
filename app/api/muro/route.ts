@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server'
+import { NextResponse, after } from 'next/server'
 import { esEpisodioPublicado, buscarEpisodio, refDeEpisodio } from '@/lib/episodios'
 import { enviarAvisoMuro } from '@/lib/mailer'
 import { nombreDeUsuarioActual } from '@/lib/usuario'
@@ -117,12 +117,21 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: 'no-se-pudo-guardar' }, { status: 503 })
     }
 
-    // El aviso no debe hacer fallar el envío: si Resend está caído el
-    // mensaje ya está guardado y se modera igual desde el panel.
-    enviarAvisoMuro(
-      { nombre: anonimo ? `${nombre} (pidio anonimato)` : nombre, mensaje, etiqueta: ETIQUETAS[tipo] },
-      refDeEpisodio(ep),
-    ).catch(() => {})
+    // El aviso no debe hacer esperar a quien escribio ni hacer fallar el
+    // envio: si Resend tarda o esta caido, el mensaje ya quedo guardado y se
+    // modera igual desde el panel.
+    //
+    // Pero soltar la promesa sin mas no alcanza: apenas se responde, la
+    // funcion se congela y el fetch a Resend se corta a mitad de vuelo. Por
+    // eso los avisos del muro no llegaban nunca, mientras que los de
+    // /api/contact -- que si esperan -- salian bien. `after` corre la tarea
+    // despues de la respuesta y mantiene viva la funcion hasta que termina.
+    after(async () => {
+      await enviarAvisoMuro(
+        { nombre: anonimo ? `${nombre} (pidio anonimato)` : nombre, mensaje, etiqueta: ETIQUETAS[tipo] },
+        refDeEpisodio(ep),
+      )
+    })
 
     return NextResponse.json({
       ok: true,
