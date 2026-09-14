@@ -70,14 +70,16 @@ export default async function TiendaPage() {
           <img
             src="/imagenes/tienda/cabecera.webp"
             alt=""
-            className="h-full w-full object-cover object-right"
+            className="h-full w-full object-cover object-center"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-ink-900 via-ink-900/85 to-ink-900/30" />
           <div className="absolute inset-x-0 top-0 h-24 bg-gradient-to-b from-ink-900 to-transparent" />
           <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-ink-900 to-transparent" />
         </div>
 
-        <div className="container-page relative flex min-h-[19rem] flex-col justify-center pb-10 pt-6">
+        {/* Mas alto que antes: la foto es panoramica y en una franja baja se
+            perdian el foco y la parte de arriba de los productos. */}
+        <div className="container-page relative flex min-h-[26rem] flex-col justify-center pb-12 pt-6">
           {!TIENDA_PUBLICA && (
             <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm border border-gold/40 bg-gold/5 px-3 py-2 text-xs text-cream-200/90">
               <Eye size={14} className="text-gold" />
