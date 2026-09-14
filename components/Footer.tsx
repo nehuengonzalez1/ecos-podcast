@@ -46,6 +46,7 @@ export function Footer() {
             <ul className="space-y-2">
               <li><Link href="/archivo" className="hover:text-gold">El Archivo</Link></li>
               <li><Link href="/sorteos" className="hover:text-gold">Sorteos</Link></li>
+              <li><Link href="/tienda" className="hover:text-gold">Tienda</Link></li>
               <li><Link href="/nosotros" className="hover:text-gold">Nosotros</Link></li>
               <li><Link href="/comunidad" className="hover:text-gold">Comunidad</Link></li>
               <li><Link href="/contacto" className="hover:text-gold">Contá tu historia</Link></li>

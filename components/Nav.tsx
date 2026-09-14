@@ -13,6 +13,7 @@ const links = [
   { to: '/archivo', label: 'El Archivo' },
   { to: '/nosotros', label: 'Nosotros' },
   { to: '/sorteos', label: 'Sorteos' },
+  { to: '/tienda', label: 'Tienda' },
   { to: '/comunidad', label: 'Comunidad' },
   { to: '/contacto', label: 'Contacto' },
 ]
