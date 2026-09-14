@@ -77,7 +77,7 @@
     "titulo": "Vino LQLVE",
     "categoria": "Productos",
     "resumen": "Botella edición limitada.",
-    "imagen": null,
+    "imagen": "/imagenes/sorteos/vino-lqlve.webp",
     "cierra": "2026-09-22T23:59:00-03:00",
     "ganadores": 1,
     "lugar": "Buenos Aires, Argentina",
