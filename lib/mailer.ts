@@ -72,7 +72,18 @@ async function despachar(payload: CreateEmailOptions, etiqueta: string): Promise
   try {
     const { error } = await resend!.emails.send(payload)
     if (error) {
-      console.error(`[mailer] ${etiqueta} Resend rechazo el envio:`, error.name, error.message)
+      // El statusCode es lo que distingue una clave invalida (401) de un
+      // permiso que falta (403), un payload rechazado (422) o una falla del
+      // lado de Resend (5xx). Sin el, todos se leen igual. Va tambien el
+      // remitente, que es la otra mitad de los rechazos, pero no los
+      // destinatarios: son datos personales y no hacen falta para esto.
+      console.error(
+        `[mailer] ${etiqueta} Resend rechazo el envio:`,
+        error.name,
+        `status=${error.statusCode}`,
+        `from=${payload.from}`,
+        error.message,
+      )
       return false
     }
     return true
