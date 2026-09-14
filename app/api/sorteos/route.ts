@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     }
 
     const slug = limpiar(body?.slug, 120)
-    const sorteo = buscarSorteo(slug)
+    const sorteo = await buscarSorteo(slug)
     if (!sorteo) {
       return NextResponse.json({ error: 'sorteo-desconocido' }, { status: 404 })
     }

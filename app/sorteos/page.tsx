@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { Infinity as Infinito } from 'lucide-react'
 import { brand } from '@/lib/config/brand'
-import { sorteos, estadoDe, categoriasDeSorteos } from '@/lib/sorteos'
+import { cargarSorteos, estadoDe, categoriasDeSorteos } from '@/lib/sorteos'
 import { textoRestante } from '@/lib/tiempo'
 import { SorteosLista } from './SorteosLista'
 
@@ -17,8 +17,9 @@ export const metadata: Metadata = {
  */
 export const dynamic = 'force-dynamic'
 
-export default function SorteosPage() {
-  const lista = sorteos().map((s) => ({
+export default async function SorteosPage() {
+  const [todos, cats] = await Promise.all([cargarSorteos(), categoriasDeSorteos()])
+  const lista = todos.map((s) => ({
     slug: s.slug,
     titulo: s.titulo,
     categoria: s.categoria,
@@ -72,7 +73,7 @@ export default function SorteosPage() {
         </div>
       </section>
 
-      <SorteosLista sorteos={lista} categorias={categoriasDeSorteos()} />
+      <SorteosLista sorteos={lista} categorias={cats} />
 
       <div className="pb-16">
         <div className="container-page flex flex-col items-center gap-2 text-cream-400/40">

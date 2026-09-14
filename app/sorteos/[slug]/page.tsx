@@ -30,7 +30,7 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
-  const s = buscarSorteo(slug)
+  const s = await buscarSorteo(slug)
   if (!s) return { title: `Sorteos · ${brand.name}` }
   return { title: `${s.titulo} · Sorteos · ${brand.name}`, description: s.resumen }
 }
@@ -68,7 +68,7 @@ function fechaLarga(iso: string): string {
 
 export default async function SorteoPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const s = buscarSorteo(slug)
+  const s = await buscarSorteo(slug)
   if (!s) notFound()
 
   const estado = estadoDe(s)

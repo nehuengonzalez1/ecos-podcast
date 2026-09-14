@@ -1,28 +1,45 @@
 import { redirect } from 'next/navigation'
 import { isAdmin } from '@/lib/admin'
 import { brand } from '@/lib/config/brand'
-import { sorteos, estadoDe } from '@/lib/sorteos'
+import { cargarSorteos, cargarSorteosParaPanel, estadoDe } from '@/lib/sorteos'
+import {
+  todosLosOverrides,
+  sorteosOcultos,
+  sorteosNuevos,
+  SORTEOS_EDITABLES,
+} from '@/lib/sorteos-contenido'
 import { contarParticipantes, SORTEOS_ACTIVOS } from '@/lib/participaciones'
 import { NavPanel } from '../NavPanel'
 import { SorteosPanel, type FilaSorteo } from '../SorteosPanel'
+import { SorteosEditor, type SorteoEditable } from '../SorteosEditor'
 
 export const metadata = { title: `Sorteos · ${brand.name}` }
 export const dynamic = 'force-dynamic'
 
 /**
- * El panel de sorteos.
+ * El panel de sorteos: operar los que están en marcha y editar el contenido.
  *
- * Acá solo se cuentan los anotados de cada uno. La lista completa se pide al
- * abrir un sorteo: traer los participantes de todos al entrar sería esperar
- * por datos que casi siempre no se miran.
+ * La lista de anotados no se carga acá, solo su cantidad: se pide al abrir un
+ * sorteo, que es cuando se la mira. Traer los participantes de todos al
+ * entrar sería esperar por datos que casi siempre no se van a ver.
  */
 export default async function SorteosAdminPage() {
   if (!(await isAdmin())) redirect('/')
 
-  const lista = sorteos()
-  const conteos = await Promise.all(lista.map((s) => contarParticipantes(s.slug)))
+  // Dos lecturas distintas a propósito. Arriba se opera sobre lo que el sitio
+  // muestra; el editor, en cambio, tiene que ver también los escondidos, que
+  // son justamente los que hay que poder recuperar.
+  const [visibles, todos, overrides, ocultos, nuevos] = await Promise.all([
+    cargarSorteos(),
+    cargarSorteosParaPanel(),
+    todosLosOverrides(),
+    sorteosOcultos(),
+    sorteosNuevos(),
+  ])
 
-  const filas: FilaSorteo[] = lista.map((s, i) => ({
+  const conteos = await Promise.all(visibles.map((s) => contarParticipantes(s.slug)))
+
+  const filas: FilaSorteo[] = visibles.map((s, i) => ({
     slug: s.slug,
     titulo: s.titulo,
     categoria: s.categoria,
@@ -31,7 +48,29 @@ export default async function SorteosAdminPage() {
     anotados: conteos[i],
   }))
 
+  const delPanel = new Set(nuevos.map((s: any) => s.slug))
+  const paraEditar: SorteoEditable[] = todos.map((s) => ({
+    slug: s.slug,
+    titulo: s.titulo,
+    categoria: s.categoria ?? '',
+    resumen: s.resumen ?? '',
+    imagen: s.imagen ?? '',
+    cierra: s.cierra,
+    abre: s.abre ?? '',
+    ganadores: s.ganadores ?? 1,
+    lugar: s.lugar ?? '',
+    descripcion: s.descripcion ?? [],
+    nota: s.nota ?? '',
+    incluye: s.incluye ?? [],
+    condiciones: s.condiciones ?? [],
+    creadoEnPanel: delPanel.has(s.slug),
+  }))
+
   const totalAnotados = conteos.reduce((a, b) => a + b, 0)
+
+  // El token de Blob es de servidor: si el store está creado se decide acá y
+  // baja al editor como un booleano.
+  const blobActivo = !!process.env.BLOB_READ_WRITE_TOKEN
 
   return (
     <section className="pt-32 pb-24 min-h-[80vh]">
@@ -41,19 +80,47 @@ export default async function SorteosAdminPage() {
 
         <NavPanel />
 
-        <p className="mt-6 max-w-2xl text-sm text-cream-200/70">
+        <h2 className="mt-8 text-[11px] uppercase tracking-[0.25em] text-gold">En marcha</h2>
+        <p className="mt-2 max-w-2xl text-sm text-cream-200/70">
           Abrí un sorteo para ver quiénes se anotaron y sortear cuando cierre el plazo. Hay{' '}
           <span className="text-gold">{totalAnotados}</span>{' '}
           {totalAnotados === 1 ? 'participación' : 'participaciones'} en total.
         </p>
-
-        <p className="mt-3 max-w-2xl text-xs leading-relaxed text-cream-400/70">
+        <p className="mt-2 max-w-2xl text-xs leading-relaxed text-cream-400/70">
           El ganador se elige al azar del lado del servidor, sobre la lista completa. Cada tirada
           queda registrada con su fecha: si se sortea de nuevo, el panel lo muestra.
         </p>
 
-        <div className="mt-8">
+        <div className="mt-5">
           <SorteosPanel filas={filas} activo={SORTEOS_ACTIVOS} />
+        </div>
+
+        <h2 className="mt-14 text-[11px] uppercase tracking-[0.25em] text-gold">Contenido</h2>
+        <p className="mt-2 max-w-2xl text-sm text-cream-200/70">
+          Lo que se edita acá se guarda aparte y se le superpone al archivo del proyecto, porque en
+          Vercel los archivos no se pueden reescribir. El punto dorado marca los sorteos con
+          ediciones guardadas.
+        </p>
+        <p className="mt-2 max-w-2xl text-xs leading-relaxed text-cream-400/70">
+          Sacar un sorteo del sitio no borra a los anotados: quien se anotó sigue en la lista, y si
+          lo sacaste por error podés volver a mostrarlo sin perder nada.
+        </p>
+
+        {!blobActivo && (
+          <p className="mt-4 max-w-2xl border border-cream-400/20 px-3 py-2 text-xs text-cream-200/60">
+            El store de archivos no está configurado: los botones de subir están apagados y hay que
+            pegar la URL de las imágenes.
+          </p>
+        )}
+
+        <div className="mt-5">
+          <SorteosEditor
+            sorteos={paraEditar}
+            editados={Object.keys(overrides)}
+            ocultos={ocultos}
+            blobActivo={blobActivo}
+            activo={SORTEOS_EDITABLES}
+          />
         </div>
       </div>
     </section>

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import { isAdmin } from '@/lib/admin'
-import { buscarSorteo, estadoDe } from '@/lib/sorteos'
+import { buscarSorteoParaPanel, estadoDe } from '@/lib/sorteos'
 import {
   participantes,
   sortear,
@@ -26,7 +26,7 @@ export async function GET(req: Request) {
   }
 
   const slug = new URL(req.url).searchParams.get('slug') ?? ''
-  if (!buscarSorteo(slug)) {
+  if (!(await buscarSorteoParaPanel(slug))) {
     return NextResponse.json({ error: 'sorteo-desconocido' }, { status: 404 })
   }
 
@@ -58,7 +58,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json().catch(() => ({}) as any)
     const slug = String(body?.slug ?? '')
-    const sorteo = buscarSorteo(slug)
+    const sorteo = await buscarSorteoParaPanel(slug)
 
     if (!sorteo) {
       return NextResponse.json({ error: 'sorteo-desconocido' }, { status: 404 })
