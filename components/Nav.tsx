@@ -45,12 +45,18 @@ export function Nav() {
             alt={brand.fullName}
             className="h-5 w-auto md:h-6"
           />
-          <span className="hidden text-[10px] uppercase tracking-[0.35em] text-gold/70 md:block">
+          {/* Recien desde xl: entre md y lg no entra sin encimarse con el
+              primer enlace del menu, y el nombre del sitio ya esta en el
+              logo que tiene al lado. */}
+          <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[0.35em] text-gold/70 xl:block">
             {brand.fullName}
           </span>
         </Link>
 
-        <nav className="hidden items-center gap-8 md:flex">
+        {/* El espaciado sube por tramos en vez de ser fijo: con seis
+            secciones -- la tienda todavia falta -- el ancho de golpe no
+            entraba hasta 1150px y el menu terminaba tocando el logo. */}
+        <nav className="hidden items-center gap-4 md:flex lg:gap-5 xl:gap-7">
           {links.map((l) => {
             const active = pathname === l.to || pathname.startsWith(l.to + '/')
             return (
@@ -58,7 +64,7 @@ export function Nav() {
                 key={l.to}
                 href={l.to}
                 className={cn(
-                  'relative text-xs font-medium uppercase tracking-[0.22em] transition',
+                  'relative text-xs font-medium uppercase tracking-[0.16em] transition xl:tracking-[0.22em]',
                   active ? 'text-cream-50' : 'text-cream-200/70 hover:text-cream-50',
                 )}
               >
@@ -105,8 +111,8 @@ export function Nav() {
               )
             })}
             {clerkListo && (
-              <div className="pt-2" onClick={() => setOpen(false)}>
-                <NavAuth />
+              <div className="border-t border-cream-400/10 pt-4" onClick={() => setOpen(false)}>
+                <NavAuth variante="movil" />
               </div>
             )}
           </div>
