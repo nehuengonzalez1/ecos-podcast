@@ -4,7 +4,7 @@
     "titulo": "Merch LQLVE",
     "categoria": "Productos",
     "resumen": "Remera edición especial.",
-    "imagen": null,
+    "imagen": "/imagenes/sorteos/merch-lqlve.webp",
     "cierra": "2026-09-19T23:59:00-03:00",
     "ganadores": 1,
     "lugar": "Buenos Aires, Argentina",
@@ -14,8 +14,14 @@
     ],
     "nota": "Lo que se lleva puesto también cuenta una historia.",
     "incluye": [
-      { "icono": "regalo", "texto": "Una remera de edición especial, en tu talle." },
-      { "icono": "envio", "texto": "Envío sin cargo a cualquier punto del país." }
+      {
+        "icono": "regalo",
+        "texto": "Una remera de edición especial, en tu talle."
+      },
+      {
+        "icono": "envio",
+        "texto": "Envío sin cargo a cualquier punto del país."
+      }
     ],
     "condiciones": [
       "Podés participar una sola vez.",
@@ -41,10 +47,22 @@
     ],
     "nota": "Las mejores historias también se viven fuera de la pantalla.",
     "incluye": [
-      { "icono": "entrada", "texto": "1 lugar para presenciar la grabación de un episodio de LQLVE." },
-      { "icono": "camara", "texto": "Recorrido por el detrás de escena." },
-      { "icono": "cafe", "texto": "Café y charla previa con el equipo." },
-      { "icono": "foto", "texto": "Posibilidad de una foto al finalizar (el día y la dinámica pueden variar)." }
+      {
+        "icono": "entrada",
+        "texto": "1 lugar para presenciar la grabación de un episodio de LQLVE."
+      },
+      {
+        "icono": "camara",
+        "texto": "Recorrido por el detrás de escena."
+      },
+      {
+        "icono": "cafe",
+        "texto": "Café y charla previa con el equipo."
+      },
+      {
+        "icono": "foto",
+        "texto": "Posibilidad de una foto al finalizar (el día y la dinámica pueden variar)."
+      }
     ],
     "condiciones": [
       "Podés participar una sola vez.",
@@ -69,8 +87,14 @@
     ],
     "nota": "Las mejores charlas empiezan con una botella abierta.",
     "incluye": [
-      { "icono": "regalo", "texto": "Una botella de edición limitada con etiqueta LQLVE." },
-      { "icono": "envio", "texto": "Envío sin cargo a cualquier punto del país." }
+      {
+        "icono": "regalo",
+        "texto": "Una botella de edición limitada con etiqueta LQLVE."
+      },
+      {
+        "icono": "envio",
+        "texto": "Envío sin cargo a cualquier punto del país."
+      }
     ],
     "condiciones": [
       "Podés participar una sola vez.",
@@ -96,8 +120,14 @@
     ],
     "nota": "Adentro hay más de lo que se ve.",
     "incluye": [
-      { "icono": "regalo", "texto": "Una caja LQLVE armada a mano." },
-      { "icono": "envio", "texto": "Envío sin cargo a cualquier punto del país." }
+      {
+        "icono": "regalo",
+        "texto": "Una caja LQLVE armada a mano."
+      },
+      {
+        "icono": "envio",
+        "texto": "Envío sin cargo a cualquier punto del país."
+      }
     ],
     "condiciones": [
       "Podés participar una sola vez.",
