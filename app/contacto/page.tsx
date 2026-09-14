@@ -54,8 +54,25 @@ export default function ContactPage() {
   }
 
   return (
-    <>
-      <section className="spotlight-bg pt-32 pb-10">
+    <div className="relative">
+      {/* El fondo es de toda la pagina, no solo de la cabecera. Va fijo para
+          que el estudio se quede quieto mientras el formulario sube, que es
+          lo que da la sensacion de estar sentado ahi adentro.
+
+          El velo es alto -- 78% -- porque detras hay un formulario entero: no
+          alcanza con que el titulo se lea, tienen que leerse las etiquetas de
+          cada campo y el texto que uno escribe. */}
+      <div aria-hidden="true" className="fixed inset-0 z-0">
+        <img
+          src="/imagenes/contacto-fondo.webp"
+          alt=""
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute inset-0 bg-ink-900/78" />
+      </div>
+
+      <div className="relative z-10">
+      <section className="pt-32 pb-10">
         <div className="container-page text-center">
           <h1 className="title-display text-5xl leading-none md:text-6xl">
             Contá tu historia.
@@ -76,7 +93,10 @@ export default function ContactPage() {
 
       <section className="pb-20">
         <div className="container-page">
-          <div className="mx-auto grid max-w-5xl items-start gap-8 lg:grid-cols-[1fr_260px]">
+          {/* Una sola columna centrada. Antes la cita iba en una barra al
+              costado que corria el formulario a la izquierda; centrado queda
+              sobre el hueco oscuro que la foto deja justo en el medio. */}
+          <div className="mx-auto w-full max-w-2xl">
             <form onSubmit={onSubmit} className="card-panel space-y-5">
               <div>
                 <label htmlFor="nombre" className="eyebrow mb-2 block">Nombre completo</label>
@@ -188,7 +208,7 @@ export default function ContactPage() {
               )}
             </form>
 
-            <aside className="card-panel hidden text-center lg:block">
+            <aside className="card-panel mt-8 text-center">
               <div className="font-serif text-4xl leading-none text-gold/60">&ldquo;</div>
               <p className="body-copy mt-3 text-xl italic leading-snug text-cream-100/90">
                 Todas las historias importan.
@@ -220,6 +240,7 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
-    </>
+      </div>
+    </div>
   )
 }
