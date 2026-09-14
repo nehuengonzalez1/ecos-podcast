@@ -45,6 +45,7 @@ export function ModalMensaje({
   const [largo, setLargo] = useState(0)
   const [anonimo, setAnonimo] = useState(false)
   const [estado, setEstado] = useState<Estado>('idle')
+  const [publicado, setPublicado] = useState(true)
   const [error, setError] = useState('')
 
   const panelRef = useRef<HTMLDivElement>(null)
@@ -108,6 +109,10 @@ export function ModalMensaje({
       }
 
       if (json?.mensaje) onPublicado(json.mensaje as MensajePublico)
+      // Casi todos los mensajes salen publicados al instante. Decirle "en
+      // breve va a estar" a alguien que ya lo está viendo en el muro suena a
+      // que algo no funcionó.
+      setPublicado(json?.estado === 'aprobado')
       setEstado('listo')
     } catch {
       setEstado('error')
@@ -158,7 +163,7 @@ export function ModalMensaje({
 
         {estado === 'listo' ? (
           <div className="relative z-10 p-7">
-            <Confirmacion nombrePila={nombrePila} onCerrar={onCerrar} />
+            <Confirmacion nombrePila={nombrePila} publicado={publicado} onCerrar={onCerrar} />
           </div>
         ) : (
           <div className="relative z-10">
@@ -344,15 +349,32 @@ function Opcion({
   )
 }
 
-function Confirmacion({ nombrePila, onCerrar }: { nombrePila: string; onCerrar: () => void }) {
+function Confirmacion({
+  nombrePila,
+  publicado,
+  onCerrar,
+}: {
+  nombrePila: string
+  /** Si ya se ve en el muro o quedo esperando una revision. */
+  publicado: boolean
+  onCerrar: () => void
+}) {
   return (
     <div className="flex min-h-[300px] flex-col items-center justify-center text-center">
       <div className="font-serif text-5xl leading-none text-gold/60">&ldquo;</div>
       <p className="mt-4 font-serif text-2xl leading-snug text-cream-50">Gracias por escribir.</p>
       <div className="divider-line" />
       <p className="body-copy mt-2 max-w-sm text-sm leading-relaxed text-cream-200/70">
-        Lo leemos y en breve va a estar publicado en el muro de {nombrePila}. Gracias por tomarte
-        el momento.
+        {publicado ? (
+          <>
+            Tu mensaje ya está en el muro de {nombrePila}. Gracias por tomarte el momento.
+          </>
+        ) : (
+          <>
+            Lo vamos a leer antes de publicarlo en el muro de {nombrePila}. Gracias por tomarte el
+            momento.
+          </>
+        )}
       </p>
       <button onClick={onCerrar} className="btn-ghost mt-7">
         Volver al episodio

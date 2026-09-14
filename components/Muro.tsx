@@ -2,7 +2,7 @@
 
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, Heart } from 'lucide-react'
+import { ArrowRight, Heart, Trash2 } from 'lucide-react'
 import { type MensajePublico } from '@/lib/muro-publico'
 import { ModalMensaje } from '@/components/ModalMensaje'
 import { nombreParaHablarle } from '@/lib/utils'
@@ -30,6 +30,8 @@ type Muro = {
   apoyar: (id: string) => void
   abrirModal: () => void
   nombrePila: string
+  esAdmin: boolean
+  bajar: (id: string) => void
 }
 
 const MuroContext = createContext<Muro | null>(null)
@@ -44,6 +46,7 @@ export function MuroProvider({
   slug,
   guest,
   nombreUsuario,
+  esAdmin,
   children,
 }: {
   slug: string
@@ -54,6 +57,12 @@ export function MuroProvider({
    * el servidor a partir de la sesión, no este valor.
    */
   nombreUsuario: string | null
+  /**
+   * Si se dibuja el botón para bajar mensajes. Es solo presentación: el
+   * permiso real lo vuelve a verificar el servidor en cada borrado, así que
+   * un valor falseado desde el navegador no consigue nada.
+   */
+  esAdmin: boolean
   children: React.ReactNode
 }) {
   const nombrePila = nombreParaHablarle(guest)
@@ -131,6 +140,35 @@ export function MuroProvider({
     [apoyados],
   )
 
+  /**
+   * Baja un mensaje ya publicado.
+   *
+   * Es la contracara de publicar al instante: el filtro atrapa insultos, no
+   * intenciones, y lo que se le escapa tiene que poder sacarse desde la misma
+   * página donde se lee, sin ir a buscarlo al panel.
+   *
+   * Se saca de la lista recién cuando el servidor confirma. Al revés, un
+   * borrado que falla dejaría el mensaje fuera de la pantalla pero todavía
+   * publicado para todos los demás.
+   */
+  const bajar = useCallback(async (id: string) => {
+    if (!confirm('¿Bajar este mensaje del muro? No se puede deshacer.')) return
+    try {
+      const res = await fetch('/api/admin/muro', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ id, accion: 'rechazar' }),
+      })
+      if (!res.ok) {
+        alert('No se pudo bajar el mensaje. Probá de nuevo.')
+        return
+      }
+      setMensajes((ms) => ms.filter((m) => m.id !== id))
+    } catch {
+      alert('No se pudo bajar el mensaje. Revisá la conexión.')
+    }
+  }, [])
+
   const valor: Muro = {
     mensajes,
     cargando,
@@ -139,6 +177,8 @@ export function MuroProvider({
     apoyar,
     abrirModal: () => setModalAbierto(true),
     nombrePila,
+    esAdmin,
+    bajar,
   }
 
   return (
@@ -188,7 +228,7 @@ export function DejaTuMensaje() {
 
 /** Lo que ya dejaron otros. Va al pie de la página. */
 export function LoQueQuedo() {
-  const { mensajes, cargando, activo, apoyados, apoyar, nombrePila } = useMuro()
+  const { mensajes, cargando, activo, apoyados, apoyar, nombrePila, esAdmin, bajar } = useMuro()
   const [verTodos, setVerTodos] = useState(false)
 
   const visibles = verTodos ? mensajes : mensajes.slice(0, VISIBLES_AL_INICIO)
@@ -230,6 +270,8 @@ export function LoQueQuedo() {
                 orden={i}
                 apoyado={apoyados.has(m.id)}
                 onApoyar={() => apoyar(m.id)}
+                puedeBajar={esAdmin}
+                onBajar={() => bajar(m.id)}
               />
             ))}
           </div>
@@ -244,11 +286,15 @@ function Tarjeta({
   orden,
   apoyado,
   onApoyar,
+  puedeBajar,
+  onBajar,
 }: {
   m: MensajePublico
   orden: number
   apoyado: boolean
   onApoyar: () => void
+  puedeBajar: boolean
+  onBajar: () => void
 }) {
   return (
     <motion.article
@@ -268,17 +314,32 @@ function Tarjeta({
           <p className="mt-0.5 text-[11px] text-cream-400/60">{cuando(m.at)}</p>
         </div>
 
-        <button
-          onClick={onApoyar}
-          disabled={apoyado}
-          aria-label={apoyado ? 'Ya apoyaste este mensaje' : 'Apoyar este mensaje'}
-          className={`flex shrink-0 items-center gap-1.5 text-xs transition ${
-            apoyado ? 'text-gold' : 'text-cream-400/70 hover:text-gold'
-          }`}
-        >
-          <Heart size={13} fill={apoyado ? 'currentColor' : 'none'} />
-          {m.apoyos > 0 && <span>{m.apoyos}</span>}
-        </button>
+        <div className="flex shrink-0 items-center gap-3">
+          {/* Solo lo ve quien administra. Va apagado hasta que se lo apunta,
+              para no convertir cada mensaje en un botón de borrar a la vista. */}
+          {puedeBajar && (
+            <button
+              onClick={onBajar}
+              aria-label="Bajar este mensaje del muro"
+              title="Bajar del muro"
+              className="text-cream-400/30 transition hover:text-red-300"
+            >
+              <Trash2 size={13} />
+            </button>
+          )}
+
+          <button
+            onClick={onApoyar}
+            disabled={apoyado}
+            aria-label={apoyado ? 'Ya apoyaste este mensaje' : 'Apoyar este mensaje'}
+            className={`flex items-center gap-1.5 text-xs transition ${
+              apoyado ? 'text-gold' : 'text-cream-400/70 hover:text-gold'
+            }`}
+          >
+            <Heart size={13} fill={apoyado ? 'currentColor' : 'none'} />
+            {m.apoyos > 0 && <span>{m.apoyos}</span>}
+          </button>
+        </div>
       </div>
     </motion.article>
   )

@@ -1,4 +1,5 @@
 import { kv } from '@/lib/kv'
+import { revisar } from '@/lib/moderacion'
 import { FIRMA_ANONIMA } from '@/lib/muro-publico'
 import type { Mensaje, MensajePublico, TipoMensaje } from '@/lib/muro-publico'
 
@@ -12,8 +13,13 @@ import type { Mensaje, MensajePublico, TipoMensaje } from '@/lib/muro-publico'
  * El precio de esa apertura es que hay que moderar. Los episodios tocan
  * ansiedad, duelo y salud mental, y el muro vive en la página de alguien que
  * se expuso: un mensaje hiriente ahí no es un comentario más, es daño sobre
- * la persona que confió en nosotros. Por eso el default es cola de
- * aprobación y no publicación directa.
+ * la persona que confió en nosotros.
+ *
+ * El equilibrio es publicar al instante y retener solo lo que el filtro de
+ * `lib/moderacion` marca como agresivo. Así el muro se siente vivo -- quien
+ * escribe ve su mensaje ahí mismo -- y la cola del panel queda corta, con lo
+ * que de verdad hay que leer. Lo que el filtro no atrapa (una burla sin malas
+ * palabras, por ejemplo) se baja después desde el panel.
  *
  * Igual que el resto del proyecto, si Redis no está configurado esto no
  * rompe: el muro se muestra en modo "muy pronto" y nadie ve un error.
@@ -47,14 +53,14 @@ const MAX_PENDIENTES = 1000
 export const MURO_ACTIVO = !!kv
 
 /**
- * Publicación directa, sin pasar por el panel.
+ * Freno de mano: todo a la cola, sin filtro.
  *
- * Existe porque la moderación tiene un costo real: el muro de un episodio
- * recién salido se ve vacío hasta que alguien entra a aprobar. Si el volumen
- * crece y la confianza en la comunidad también, se activa con
- * MURO_AUTO_APROBAR=1 y los mensajes salen al aire al instante.
+ * El muro publica al instante y solo retiene lo que el filtro marca. Si
+ * alguna vez llega una ola de mensajes agresivos, MURO_MODERAR_TODO=1 vuelve
+ * al modo anterior -- nada sale sin que una persona lo lea -- sin tener que
+ * tocar el código ni esperar un deploy.
  */
-export const AUTO_APROBAR = process.env.MURO_AUTO_APROBAR === '1'
+export const MODERAR_TODO = process.env.MURO_MODERAR_TODO === '1'
 
 const kMensaje = (id: string) => `muro:msg:${id}`
 const kAprobados = (slug: string) => `muro:ep:${slug}:aprobados`
@@ -103,6 +109,14 @@ export type NuevoMensaje = {
 
 export async function crearMensaje(input: NuevoMensaje): Promise<Mensaje | null> {
   if (!kv) return null
+
+  // El mensaje sale solo salvo que el filtro encuentre algo. Se revisa
+  // también el nombre: un insulto puesto como firma se publica igual que si
+  // estuviera en el cuerpo.
+  const revision = MODERAR_TODO
+    ? { retener: true, motivo: 'Moderación manual activada para todo el muro' }
+    : revisar(input.mensaje, input.nombre)
+
   const m: Mensaje = {
     id: nuevoId(),
     slug: input.slug,
@@ -113,7 +127,8 @@ export async function crearMensaje(input: NuevoMensaje): Promise<Mensaje | null>
     ...(input.email ? { email: input.email } : {}),
     ...(input.anonimo ? { anonimo: true } : {}),
     at: new Date().toISOString(),
-    estado: AUTO_APROBAR ? 'aprobado' : 'pendiente',
+    estado: revision.retener ? 'pendiente' : 'aprobado',
+    ...(revision.motivo ? { motivo: revision.motivo } : {}),
   }
 
   await kv.set(kMensaje(m.id), m)
@@ -136,7 +151,7 @@ export async function crearMensaje(input: NuevoMensaje): Promise<Mensaje | null>
  * sin nombre.
  */
 function aPublico(m: Mensaje, apoyos: number): MensajePublico {
-  const { email: _privado, estado: _interno, anonimo, ...resto } = m
+  const { email: _privado, estado: _interno, motivo: _moderacion, anonimo, ...resto } = m
   return {
     ...resto,
     // El nombre real queda guardado para quien modera; lo que se publica es

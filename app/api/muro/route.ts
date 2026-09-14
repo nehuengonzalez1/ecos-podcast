@@ -12,7 +12,6 @@ import {
   MINIMO_MENSAJE,
   FIRMA_ANONIMA,
   TIPOS,
-  AUTO_APROBAR,
   MURO_ACTIVO,
   type TipoMensaje,
 } from '@/lib/muro'
@@ -128,7 +127,12 @@ export async function POST(req: Request) {
     // despues de la respuesta y mantiene viva la funcion hasta que termina.
     after(async () => {
       await enviarAvisoMuro(
-        { nombre: anonimo ? `${nombre} (pidio anonimato)` : nombre, mensaje, etiqueta: ETIQUETAS[tipo] },
+        {
+          nombre: anonimo ? `${nombre} (pidio anonimato)` : nombre,
+          mensaje,
+          etiqueta: ETIQUETAS[tipo],
+          ...(guardado.motivo ? { motivo: guardado.motivo } : {}),
+        },
         refDeEpisodio(ep),
       )
     })
@@ -136,18 +140,21 @@ export async function POST(req: Request) {
     return NextResponse.json({
       ok: true,
       estado: guardado.estado,
-      // Con auto-aprobación el muro lo muestra al instante, sin recargar.
-      mensaje: AUTO_APROBAR
-        ? {
-            id: guardado.id,
-            slug: guardado.slug,
-            nombre: anonimo ? FIRMA_ANONIMA : guardado.nombre,
-            mensaje: guardado.mensaje,
-            tipo: guardado.tipo,
-            at: guardado.at,
-            apoyos: 0,
-          }
-        : null,
+      // Si salió publicado, el muro lo muestra al instante, sin recargar. Si
+      // quedó retenido no se devuelve nada: aparecer en pantalla y no estar
+      // en el muro para nadie más sería peor que decir que está en camino.
+      mensaje:
+        guardado.estado === 'aprobado'
+          ? {
+              id: guardado.id,
+              slug: guardado.slug,
+              nombre: anonimo ? FIRMA_ANONIMA : guardado.nombre,
+              mensaje: guardado.mensaje,
+              tipo: guardado.tipo,
+              at: guardado.at,
+              apoyos: 0,
+            }
+          : null,
     })
   } catch (e: any) {
     console.error('[muro] error al recibir un mensaje:', e)

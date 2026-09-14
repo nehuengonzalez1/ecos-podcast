@@ -4,7 +4,7 @@ import { kv, KV_ACTIVE, kvSource } from '@/lib/kv'
 import { brand } from '@/lib/config/brand'
 import { cargarSuscriptores, calcularMetricas } from '@/lib/admin-data'
 import { statsPorEpisodio, totalesPorAccion, ACCIONES } from '@/lib/analytics'
-import { mensajesPendientes, AUTO_APROBAR } from '@/lib/muro'
+import { mensajesPendientes, MODERAR_TODO } from '@/lib/muro'
 import { estadoMailer } from '@/lib/mailer'
 import { cargarEpisodios } from '@/lib/episodios'
 import { SuscriptoresTabla } from './SuscriptoresTabla'
@@ -156,14 +156,21 @@ export default async function AdminPage() {
             )}
           </div>
           <p className="mt-2 max-w-2xl text-sm text-cream-200/70">
-            Mensajes que la gente le dejó a cada invitado. Al publicar uno aparece en el muro de
-            ese episodio. No se le reenvía por mail a nadie: el muro es donde vive.
+            Los mensajes se publican solos. Acá solo caen los que el filtro retuvo por insultos,
+            agresiones o enlaces, y cada uno dice por qué. No se le reenvía nada por mail al
+            invitado: el muro es donde vive.
           </p>
 
-          {AUTO_APROBAR && (
-            <p className="mt-3 rounded-sm border border-red-400/50 bg-red-400/5 px-3 py-2 text-xs text-red-300">
-              <code>MURO_AUTO_APROBAR=1</code> está activo: los mensajes se publican solos, sin
-              pasar por acá.
+          <p className="mt-2 max-w-2xl text-xs text-cream-400/60">
+            El filtro lee palabras, no intenciones: una burla escrita sin malas palabras se
+            publica igual. Cualquier mensaje ya publicado se puede bajar desde el muro del
+            episodio.
+          </p>
+
+          {MODERAR_TODO && (
+            <p className="mt-3 rounded-sm border border-gold/40 bg-gold/5 px-3 py-2 text-xs text-cream-200/90">
+              <code>MURO_MODERAR_TODO=1</code> está activo: no se publica nada sin pasar por acá,
+              aunque el filtro no encuentre nada.
             </p>
           )}
 

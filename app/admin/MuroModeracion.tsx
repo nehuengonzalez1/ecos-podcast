@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { Check, X, Loader2 } from 'lucide-react'
+import { Check, X, Loader2, AlertTriangle } from 'lucide-react'
 import { FIRMA_ANONIMA, type Mensaje } from '@/lib/muro-publico'
 
 /**
@@ -105,6 +105,15 @@ export function MuroModeracion({ pendientes }: { pendientes: ItemModeracion[] })
                 {m.at ? new Date(m.at).toLocaleString('es-AR') : ''}
               </div>
             </div>
+
+            {/* Por qué quedó retenido. Cambia cuánto hay que mirarlo: un
+                enlace se resuelve de un vistazo, una amenaza no. */}
+            {m.motivo && (
+              <p className="mt-3 inline-flex items-center gap-1.5 rounded-sm border border-gold/40 bg-gold/5 px-2 py-1 text-[11px] text-gold/90">
+                <AlertTriangle size={12} className="shrink-0" />
+                {m.motivo}
+              </p>
+            )}
 
             <p className="mt-3 whitespace-pre-wrap text-sm text-cream-100/90">{m.mensaje}</p>
 

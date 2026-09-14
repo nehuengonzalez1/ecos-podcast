@@ -52,6 +52,14 @@ export type Mensaje = {
   anonimo?: boolean
   at: string
   estado: 'pendiente' | 'aprobado'
+  /**
+   * Por que el filtro lo retuvo, cuando lo retuvo.
+   *
+   * Es para quien modera: saber si un mensaje quedo esperando por un insulto
+   * o por traer un enlace cambia cuanto hay que leerlo. Privado, como el
+   * email: `aPublico()` lo saca antes de que el mensaje salga al navegador.
+   */
+  motivo?: string
 }
 
 /**
@@ -61,7 +69,9 @@ export type Mensaje = {
  * `nombre` ya viene reemplazado por la firma anónima, así que el navegador no
  * tiene que saber ni decidir nada.
  */
-export type MensajePublico = Omit<Mensaje, 'email' | 'estado' | 'anonimo'> & { apoyos: number }
+export type MensajePublico = Omit<Mensaje, 'email' | 'estado' | 'anonimo' | 'motivo'> & {
+  apoyos: number
+}
 
 /** Normaliza lo que escribió una persona sin alterar lo que quiso decir. */
 export function limpiar(s: unknown, max: number): string {

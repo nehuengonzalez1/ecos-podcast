@@ -5,6 +5,7 @@ import { brand } from '@/lib/config/brand'
 import { EpisodeView } from './EpisodeView'
 import { TrackView } from '@/components/TrackView'
 import { nombreDeUsuarioActual } from '@/lib/usuario'
+import { isAdmin } from '@/lib/admin'
 
 // Rendered on-demand — client PremiumGate + Clerk work in dynamic mode without needing SSG.
 export const dynamic = 'force-dynamic'
@@ -42,7 +43,12 @@ export default async function EpisodePage({
   // Si la persona tiene sesion iniciada, el muro ya sabe como se llama y no
   // se lo vuelve a preguntar. Se resuelve aca, en el servidor, porque la
   // pagina ya es dinamica y asi el dato llega con el primer render.
-  const nombreUsuario = await nombreDeUsuarioActual()
+  //
+  // esAdmin viaja por el mismo camino: el muro publica solo, asi que quien
+  // administra tiene que poder bajar desde la propia pagina lo que el filtro
+  // dejo pasar. Es solo para dibujar el boton -- que el borrado se permita o
+  // no lo decide de nuevo el servidor en /api/admin/muro.
+  const [nombreUsuario, esAdmin] = await Promise.all([nombreDeUsuarioActual(), isAdmin()])
 
   return (
     <>
@@ -52,6 +58,7 @@ export default async function EpisodePage({
         available={availableEpisodes}
         upcoming={upcomingEpisodes}
         nombreUsuario={nombreUsuario}
+        esAdmin={esAdmin}
       />
     </>
   )

@@ -153,10 +153,21 @@ export type MensajeMuro = {
   mensaje: string
   etiqueta: string
   ciudad?: string
+  /**
+   * Por qué el filtro lo retuvo. Sin esto el mensaje ya salió publicado.
+   *
+   * Cambia el tono del aviso entero: uno es "andá a leer esto ahora", el otro
+   * es "esto entró al muro". Mezclarlos haría que el que importa se pierda.
+   */
+  motivo?: string
 }
 
 /**
- * Aviso a moderación: entró un mensaje nuevo y está esperando aprobación.
+ * Aviso de que entró un mensaje al muro.
+ *
+ * Llegan los dos casos, pero bien distinguidos: el retenido pide una acción
+ * y el publicado es solo para enterarse. Si alguna vez el volumen molesta, el
+ * que se puede dejar de mandar es el segundo.
  *
  * Es el único mail que dispara el muro. Los mensajes no se le reenvían a la
  * persona del episodio: viven en la página y se leen ahí.
@@ -165,6 +176,7 @@ export async function enviarAvisoMuro(m: MensajeMuro, ep: EpisodioRef): Promise<
   const to = moderadores()
   if (!resend || to.length === 0) return false
 
+  const retenido = !!m.motivo
   const panel = `${appUrl()}/admin#muro`
   const html = `
     <div style="font-family:system-ui,sans-serif;background:#0a0806;color:#f5e9d3;padding:24px">
@@ -175,17 +187,30 @@ export async function enviarAvisoMuro(m: MensajeMuro, ep: EpisodioRef): Promise<
       <p style="color:#8f8168;font-size:13px;margin:0 0 20px">
         ${escapar(m.etiqueta)}${m.ciudad ? ` · ${escapar(m.ciudad)}` : ''}
       </p>
+      ${
+        retenido
+          ? `<p style="border:1px solid #ff8000;color:#ff8000;font-size:13px;padding:10px 14px;margin:0 0 20px">
+               <strong>Retenido, no está publicado.</strong><br />${escapar(m.motivo!)}
+             </p>`
+          : `<p style="color:#8f8168;font-size:13px;margin:0 0 20px">
+               Ya está publicado en el muro. No hay nada que hacer, salvo que quieras bajarlo.
+             </p>`
+      }
       <div style="border-left:2px solid #ff8000;padding-left:14px;margin-bottom:24px">
         <p style="white-space:pre-wrap;line-height:1.6;margin:0">${escapar(m.mensaje)}</p>
       </div>
-      <a href="${panel}" style="display:inline-block;border:1px solid #ff8000;color:#ff8000;padding:10px 18px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase">Moderar en el panel</a>
+      <a href="${panel}" style="display:inline-block;border:1px solid #ff8000;color:#ff8000;padding:10px 18px;text-decoration:none;font-size:12px;letter-spacing:2px;text-transform:uppercase">${
+        retenido ? 'Revisar en el panel' : 'Ver el panel'
+      }</a>
     </div>`
 
   return despachar(
     {
       from: remitente(),
       to,
-      subject: `Mensaje para ${ep.guest} — esperando moderación`,
+      subject: retenido
+        ? `Retenido: mensaje para ${ep.guest} — hay que revisarlo`
+        : `Mensaje nuevo para ${ep.guest}`,
       html,
     },
     'no se pudo avisar del mensaje del muro:',

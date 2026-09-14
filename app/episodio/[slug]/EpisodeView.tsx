@@ -98,12 +98,15 @@ export function EpisodeView({
   available,
   upcoming,
   nombreUsuario,
+  esAdmin,
 }: {
   ep: any
   available: any[]
   upcoming: any[]
   /** Nombre de quien tiene sesión iniciada, o null si no hay. */
   nombreUsuario: string | null
+  /** Si quien mira puede bajar mensajes del muro. Solo decide qué se dibuja. */
+  esAdmin: boolean
 }) {
   // El siguiente puede estar todavía sin publicar: en ese caso se muestra
   // igual, como próximo, que es parte de lo que sostiene el interés.
@@ -121,7 +124,7 @@ export function EpisodeView({
   const [regaloAbierto, setRegaloAbierto] = useState(false)
 
   return (
-    <MuroProvider slug={ep.slug} guest={ep.guest} nombreUsuario={nombreUsuario}>
+    <MuroProvider slug={ep.slug} guest={ep.guest} nombreUsuario={nombreUsuario} esAdmin={esAdmin}>
       <section className="spotlight-bg pt-20 pb-12">
         <div className="container-page">
           <Link
