@@ -1,8 +1,12 @@
 import { NextResponse } from 'next/server'
 import { buscarSorteo, estadoDe } from '@/lib/sorteos'
 import { limpiar } from '@/lib/muro-publico'
-import { anotar, yaParticipo, SORTEOS_ACTIVOS } from '@/lib/participaciones'
-import { dentroDelLimite } from '@/lib/muro'
+import {
+  anotar,
+  yaParticipo,
+  dentroDelLimite,
+  SORTEOS_ACTIVOS,
+} from '@/lib/participaciones'
 
 export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
