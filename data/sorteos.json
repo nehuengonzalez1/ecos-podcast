@@ -110,7 +110,7 @@
     "titulo": "Caja sorpresa",
     "categoria": "Varios",
     "resumen": "Merch, libros, vinos y más.",
-    "imagen": null,
+    "imagen": "/imagenes/sorteos/caja-sorpresa.webp",
     "cierra": "2026-10-04T23:59:00-03:00",
     "ganadores": 1,
     "lugar": "Buenos Aires, Argentina",
