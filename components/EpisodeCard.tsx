@@ -40,7 +40,18 @@ export function EpisodeCard({ episode, variant = 'archive', index = 0 }: Props) 
     >
       {isComingSoon ? (
         <div className="p-5">
-          <p className="eyebrow text-gold/80">Próximamente</p>
+          {/* En fila, no uno en absoluto encima del otro. "Próximamente"
+              lleva un espaciado de letras muy abierto y, sin nada que lo
+              frene, pasaba por debajo del número de episodio. Puestos como
+              hermanos en una fila, el número lo empuja y no pueden chocar. */}
+          <div className="flex items-start justify-between gap-2">
+            <p className="text-[10px] font-semibold uppercase tracking-[0.2em] text-gold/80">
+              Próximamente
+            </p>
+            <span className="shrink-0 rounded-sm border border-cream-400/15 px-2 py-0.5 text-[10px] uppercase tracking-widest text-cream-200/60">
+              EP. {episode.number}
+            </span>
+          </div>
           <p className="mt-6 font-serif text-lg italic leading-snug text-cream-100">
             &ldquo;{episode.quote}&rdquo;
           </p>
@@ -50,9 +61,6 @@ export function EpisodeCard({ episode, variant = 'archive', index = 0 }: Props) 
           <div className="mt-6 flex items-center gap-2 text-cream-400/40">
             <Lock size={14} />
             <span className="text-[10px] uppercase tracking-widest">Bloqueado</span>
-          </div>
-          <div className="absolute right-3 top-3 rounded-sm border border-cream-400/15 px-2 py-0.5 text-[10px] uppercase tracking-widest text-cream-200/60">
-            EP. {episode.number}
           </div>
         </div>
       ) : (
