@@ -61,8 +61,13 @@ export default function ContactPage() {
 
           El velo es alto -- 78% -- porque detras hay un formulario entero: no
           alcanza con que el titulo se lea, tienen que leerse las etiquetas de
-          cada campo y el texto que uno escribe. */}
-      <div aria-hidden="true" className="fixed inset-0 z-0">
+          cada campo y el texto que uno escribe.
+
+          Va con z-index negativo, no en 0. En 0 quedaba por encima del pie
+          de pagina -- que vive en el layout, fuera de esta pagina -- y el
+          velo se lo comia: el pie seguia ahi pero tapado. Detras de todo, la
+          foto se ve igual y el pie queda por encima. */}
+      <div aria-hidden="true" className="fixed inset-0 -z-10">
         <img
           src="/imagenes/contacto-fondo.webp"
           alt=""
