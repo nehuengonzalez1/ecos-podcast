@@ -47,18 +47,29 @@ export default function CommunityPage() {
         </div>
       </section>
 
-      {/* La otra mitad de la foto: las cartas, la taza y las polaroids. Es
-          justo lo que promete esta seccion, asi que va detras de ella y no
-          arriba. El velo es mas alto que en la cabecera porque aca hay una
-          lista de beneficios y un precio que tienen que leerse. */}
-      <section className="relative overflow-hidden border-y border-cream-400/10 py-20">
-        <div aria-hidden="true" className="absolute inset-0">
+      {/* La otra mitad de la foto -- las cartas, la taza y las polaroids --
+          va como franja al pie y no de fondo de toda la seccion.
+
+          Estirada detras de todo quedaba mal: la escena es panoramica, 3,4 a
+          1, y la seccion es casi cuadrada, asi que object-cover la agrandaba
+          y mostraba solo el 42% del medio, que en esta foto es justo la parte
+          vacia. El resultado era una mancha gris agrandada, no una escena.
+
+          Como franja conserva su proporcion: se ven las cartas a la izquierda
+          y las fotos colgadas a la derecha.
+
+          Y va arriba, no abajo. Abajo la lista de beneficios y la tarjeta de
+          precio le caian encima y tapaban 176 de sus 256 px: quedaba una tira
+          de ochenta pixeles de foto asomando bajo el contenido. Arriba se ve
+          entera y el degradado la funde hacia abajo, donde arranca el texto. */}
+      <section className="relative overflow-hidden border-y border-cream-400/10 bg-ink-800/40 pb-20 pt-[15rem] sm:pt-[17rem]">
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-52 sm:h-60">
           <img
             src="/imagenes/comunidad-cartas.webp"
             alt=""
             className="h-full w-full object-cover object-center"
           />
-          <div className="absolute inset-0 bg-ink-900/82" />
+          <div className="absolute inset-0 bg-gradient-to-b from-ink-900/35 via-ink-900/70 to-ink-900" />
         </div>
 
         <div className="container-page relative">
