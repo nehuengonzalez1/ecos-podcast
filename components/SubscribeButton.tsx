@@ -7,9 +7,14 @@ type Props = {
   price?: number
   className?: string
   label?: string
+  /** Clases del boton. Sin esto queda el .btn-gold de siempre. */
+  clasesBoton?: string
+  /** Dibujo a la izquierda del texto, para que el boton pueda
+      cambiar de aspecto sin tocar la logica de cobro. */
+  icono?: React.ReactNode
 }
 
-export function SubscribeButton({ price, className, label }: Props) {
+export function SubscribeButton({ price, className, label, clasesBoton, icono }: Props) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -30,8 +35,12 @@ export function SubscribeButton({ price, className, label }: Props) {
 
   return (
     <div className={className}>
-      <button onClick={start} disabled={loading} className="btn-gold">
-        {loading ? <Loader2 size={14} className="animate-spin" /> : <Sparkles size={14} />}
+      <button onClick={start} disabled={loading} className={clasesBoton ?? 'btn-gold'}>
+        {loading ? (
+          <Loader2 size={14} className="animate-spin" />
+        ) : (
+          (icono ?? <Sparkles size={14} />)
+        )}
         {label ?? `Suscribirme${price ? ` · $${price.toLocaleString('es-AR')}/mes` : ''}`}
       </button>
       {error && <p className="mt-3 text-xs text-red-400">{error}</p>}

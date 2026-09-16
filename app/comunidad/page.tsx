@@ -4,7 +4,7 @@ import { SectionHeading } from '@/components/SectionHeading'
 import { StatBlock } from '@/components/StatBlock'
 import { SubscribeButton } from '@/components/SubscribeButton'
 import stats from '@/data/stats.json'
-import { Sparkles, Check } from 'lucide-react'
+import { Check, CreditCard, Layers, Play, Star, Unlock } from 'lucide-react'
 
 export default function CommunityPage() {
   const price = Number(process.env.NEXT_PUBLIC_SUBSCRIPTION_PRICE_ARS ?? '1500')
@@ -82,43 +82,114 @@ export default function CommunityPage() {
         </div>
 
         <div className="container-page relative">
-          <SectionHeading
-            eyebrow="Archivo completo"
-            title={<>Sumate al <span className="italic">Archivo</span></>}
-            subtitle={`Por $${price.toLocaleString('es-AR')} al mes accedés al detrás de escena de cada episodio, y bancás que estas historias se sigan contando. Cancelás cuando quieras.`}
-          />
-          <div className="mx-auto mt-10 grid max-w-3xl gap-6 md:grid-cols-2">
-            {/* Esta lista dice únicamente lo que hoy existe en el sitio.
-                Antes prometía cartas, regalos ocultos, audios y playlists:
-                de esos, la carta paso a ser gratuita, los regalos ocultos y
-                los objetos se sacaron de la página, y la playlist nunca
-                existió. Cobrar por cosas que no están es la forma más rápida
-                de que alguien se sienta estafado, así que se enumera lo real
-                y se dice el resto como lo que es: un compromiso, no una
-                función ya entregada. */}
-            <ul className="space-y-3 text-sm text-cream-200/90">
-              {[
-                'El detrás de escena de cada episodio: los cortes que no salieron al aire',
-                'Lo que vayamos sumando al Archivo, incluido',
-                'Bancás que estas historias se sigan contando',
-                'Cancelás cuando quieras, desde tu cuenta, en un click',
-              ].map((f) => (
-                <li key={f} className="flex items-start gap-3">
-                  <Check size={16} className="mt-0.5 shrink-0 text-gold" />
-                  <span>{f}</span>
-                </li>
-              ))}
-            </ul>
-            <div className="flex flex-col justify-center items-center gap-4 border border-gold/40 bg-ink-900/50 p-8 text-center">
-              <div className="flex h-14 w-14 items-center justify-center rounded-full border border-gold/50 text-gold">
-                <Sparkles size={22} />
+          <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+            <div>
+              <p className="eyebrow">Archivo completo</p>
+              <h2 className="title-display mt-3 text-5xl leading-[0.95] md:text-6xl">
+                Sumate al
+                <br />
+                <span className="italic">Archivo</span>
+              </h2>
+
+              <p className="body-copy mt-5 max-w-md text-base leading-relaxed text-cream-200/85">
+                Por ${price.toLocaleString('es-AR')} al mes accedés al detrás de escena de cada
+                episodio, y bancás que estas historias se sigan contando.
+                <br />
+                Cancelás cuando quieras.
+              </p>
+
+              {/* Esta lista dice unicamente lo que hoy existe en el sitio.
+                  Antes prometia cartas, regalos ocultos, audios y playlists:
+                  de esos, la carta paso a ser gratuita, los regalos ocultos y
+                  los objetos se sacaron de la pagina, y la playlist nunca
+                  existio. Cobrar por cosas que no estan es la forma mas rapida
+                  de que alguien se sienta estafado, asi que se enumera lo real
+                  y se dice el resto como lo que es: un compromiso, no una
+                  funcion ya entregada. */}
+              <ul className="mt-8 space-y-4">
+                {[
+                  'El detrás de escena de cada episodio: los cortes que no salieron al aire',
+                  'Lo que vayamos sumando al Archivo, incluido',
+                  'Bancás que estas historias se sigan contando',
+                  'Cancelás cuando quieras, desde tu cuenta, en un click',
+                ].map((t) => (
+                  <li key={t} className="flex items-start gap-3.5">
+                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gold/50 text-gold">
+                      <Check size={13} />
+                    </span>
+                    <span className="body-copy text-sm leading-relaxed text-cream-100/90">{t}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="mt-10 flex items-center gap-4">
+                <span className="h-px w-10 bg-gold/50" />
+                <p className="subtitle-signature text-2xl">Gracias por ser parte</p>
+                <span className="h-px flex-1 bg-gold/50" />
               </div>
-              <div>
-                <div className="font-serif text-4xl text-cream-50">${price.toLocaleString('es-AR')}<span className="text-base text-cream-200/60">/mes</span></div>
-                <div className="mt-1 text-[11px] uppercase tracking-[0.25em] text-cream-400/70">Acceso completo · Cancelación en 1 click</div>
+              <p className="mt-2 text-[10px] uppercase tracking-[0.3em] text-cream-400/70">
+                Historias que siguen vivas
+              </p>
+            </div>
+
+            <div className="relative">
+              {/* La nota va por fuera de la tarjeta y apenas inclinada, como
+                  un papel apoyado encima. En pantallas chicas se endereza: con
+                  la tarjeta angosta, la rotacion se le montaba al borde. */}
+              <p className="mx-auto mb-[-1.25rem] w-fit max-w-[15rem] rotate-0 rounded-sm border border-cream-400/15 bg-ink-800/80 px-5 py-3 text-center font-hand text-lg leading-snug text-cream-200/85 backdrop-blur sm:mr-6 sm:ml-auto sm:rotate-[3deg]">
+                Detrás de cada historia hay mucho más.
+              </p>
+
+              <div className="relative rounded-sm border border-gold/40 bg-ink-900/80 p-7 backdrop-blur-sm sm:p-9">
+                <p className="mx-auto w-fit rounded-full border border-gold/50 px-5 py-1.5 text-[10px] uppercase tracking-[0.3em] text-gold">
+                  Acceso completo
+                </p>
+
+                <p className="mt-6 text-center font-serif text-6xl leading-none text-cream-50">
+                  ${price.toLocaleString('es-AR')}
+                  <span className="text-2xl text-cream-200/60">/mes</span>
+                </p>
+
+                <div className="mt-5 flex items-center gap-4">
+                  <span className="h-px flex-1 bg-cream-400/20" />
+                  <p className="text-[10px] uppercase tracking-[0.2em] text-cream-200/70">
+                    Todo el archivo, siempre con vos
+                  </p>
+                  <span className="h-px flex-1 bg-cream-400/20" />
+                </div>
+
+                <SubscribeButton
+                  className="mt-7"
+                  price={price}
+                  label="Suscribirme con Mercado Pago"
+                  icono={<CreditCard size={16} />}
+                  clasesBoton="flex w-full items-center justify-center gap-3 rounded-sm border border-gold/70 bg-gold/10 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-50 transition hover:bg-gold hover:text-ink-900 disabled:opacity-60"
+                />
+
+                <p className="mt-3 text-center text-[10px] text-cream-400/70">
+                  Cobros vía Mercado Pago · Tarjeta, débito o saldo MP
+                </p>
+
+                {/* Los cuatro de abajo son los mismos beneficios de la lista,
+                    resumidos para poder mirarlos de un vistazo. No agregan
+                    ninguna promesa nueva, por lo mismo que la lista. */}
+                <div className="mt-8 grid grid-cols-2 gap-x-4 gap-y-7 border-t border-cream-400/15 pt-7 sm:grid-cols-4">
+                  {[
+                    { icono: Play, titulo: 'Detrás de escena', texto: 'Los cortes que no salieron al aire.' },
+                    { icono: Layers, titulo: 'Todo el archivo', texto: 'Cada episodio, cuando quieras.' },
+                    { icono: Star, titulo: 'Lo nuevo primero', texto: 'Lo que sumemos, incluido.' },
+                    { icono: Unlock, titulo: 'Sin ataduras', texto: 'Cancelás en un click.' },
+                  ].map(({ icono: Icono, titulo, texto }) => (
+                    <div key={titulo} className="px-1 text-center">
+                      <Icono size={20} strokeWidth={1.4} className="mx-auto text-gold/80" />
+                      <p className="mt-3 text-[10px] font-semibold uppercase leading-tight tracking-[0.12em] text-cream-50">
+                        {titulo}
+                      </p>
+                      <p className="mt-1.5 text-[11px] leading-snug text-cream-400/80">{texto}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
-              <SubscribeButton price={price} label="Suscribirme con Mercado Pago" />
-              <p className="text-[10px] text-cream-400/60">Cobros vía Mercado Pago · Tarjeta, débito o saldo MP</p>
             </div>
           </div>
         </div>
