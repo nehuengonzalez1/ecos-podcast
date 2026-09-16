@@ -134,27 +134,36 @@ export default function CommunityPage() {
               </p>
             </div>
 
-            <div className="relative">
-              {/* Las fotos y la nota asoman por detras del borde de arriba,
-                  apoyadas como papeles sueltos. Van con z-0 y la tarjeta con
-                  z-10 para que el borde de la tarjeta las tape, que es lo que
-                  da la sensacion de que estan debajo y no pegadas encima.
+            <div className="relative mx-auto w-full max-w-md">
+              {/* Las fotos y la nota salen de detras de la esquina de arriba
+                  de la tarjeta, no centradas encima. Ancladas a la esquina se
+                  leen como una sola pieza -- papeles que quedaron debajo --
+                  en vez de tres objetos sueltos flotando aparte.
 
-                  En pantallas chicas se enderezan y se achican: inclinadas
-                  sobre una tarjeta angosta se salian del ancho. */}
-              <div className="relative z-0 mx-auto mb-[-2.5rem] flex w-fit items-end justify-center">
-                <div className="-mr-5 w-24 rotate-[-9deg] rounded-[2px] bg-cream-100 p-1.5 pb-4 shadow-soft sm:w-32">
+                  Van con z-0 y la tarjeta con z-10, y la tarjeta es opaca: con
+                  el fondo semitransparente que tenia antes, las fotos se
+                  transparentaban a traves de ella y ensuciaban el precio.
+
+                  Se esconden en pantallas chicas: sobre una tarjeta angosta no
+                  hay esquina libre donde apoyarlas sin taparle el borde. */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-14 right-3 z-0 hidden items-start sm:flex"
+              >
+                <div className="w-28 -rotate-[7deg] rounded-[2px] bg-cream-100 p-1.5 pb-5 shadow-polaroid">
                   <img src="/imagenes/comunidad/polaroid-1.webp" alt="" className="aspect-[4/3] w-full object-cover" />
                 </div>
-                <div className="-mr-4 w-24 rotate-[4deg] rounded-[2px] bg-cream-100 p-1.5 pb-4 shadow-soft sm:w-32">
+                <div className="-ml-5 mt-2 w-28 rotate-[4deg] rounded-[2px] bg-cream-100 p-1.5 pb-5 shadow-polaroid">
                   <img src="/imagenes/comunidad/polaroid-2.webp" alt="" className="aspect-[4/3] w-full object-cover" />
                 </div>
-                <p className="w-32 rotate-[7deg] rounded-[2px] bg-cream-200 px-3 py-3 text-center font-hand text-[13px] leading-tight text-ink-800 shadow-soft sm:w-40 sm:text-base">
-                  Detrás de cada historia hay mucho más.
-                </p>
+                <div className="-ml-4 w-44 rotate-[6deg] rounded-[2px] bg-cream-200 px-5 py-4 shadow-polaroid">
+                  <p className="font-hand text-xl leading-tight text-ink-800">
+                    Detrás de cada historia hay mucho más.
+                  </p>
+                </div>
               </div>
 
-              <div className="relative z-10 mx-auto max-w-md rounded-3xl border border-gold/40 bg-ink-900/85 p-6 backdrop-blur-sm sm:p-7">
+              <div className="relative z-10 rounded-3xl border border-gold/40 bg-ink-900 p-6 shadow-soft sm:p-7">
                 <p className="mx-auto w-fit rounded-full border border-gold/50 px-5 py-1.5 text-[10px] uppercase tracking-[0.3em] text-gold">
                   Acceso completo
                 </p>
