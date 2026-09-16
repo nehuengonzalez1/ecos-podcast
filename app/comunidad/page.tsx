@@ -40,36 +40,45 @@ export default function CommunityPage() {
         </div>
       </section>
 
-      <section className="py-16">
-        <div className="container-page space-y-16">
+      {/* Las cartas, la taza y las polaroids van aca y no colgadas en el
+          medio de la pagina. Esta franja es ancha y baja, casi la misma
+          proporcion que la foto, asi que entra sin deformarse -- que es lo
+          que fallaba cuando la puse detras de la suscripcion, que es alta. */}
+      <section className="relative overflow-hidden py-16">
+        <div aria-hidden="true" className="absolute inset-0">
+          <img
+            src="/imagenes/comunidad-cartas.webp"
+            alt=""
+            className="h-full w-full object-cover object-[20%_center] sm:object-center"
+          />
+          <div className="absolute inset-0 bg-ink-900/72" />
+          <div className="absolute inset-x-0 top-0 h-20 bg-gradient-to-b from-ink-900 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-20 bg-gradient-to-t from-ink-900 to-transparent" />
+        </div>
+        <div className="container-page relative space-y-16">
           <StatBlock stats={stats.primary} />
           <StatBlock stats={stats.secondary} />
         </div>
       </section>
 
-      {/* La otra mitad de la foto -- las cartas, la taza y las polaroids --
-          va como franja al pie y no de fondo de toda la seccion.
+      {/* Los estantes con las cajas por episodio: es literalmente lo que
+          ofrece esta seccion, asi que dice mas que una foto cualquiera.
 
-          Estirada detras de todo quedaba mal: la escena es panoramica, 3,4 a
-          1, y la seccion es casi cuadrada, asi que object-cover la agrandaba
-          y mostraba solo el 42% del medio, que en esta foto es justo la parte
-          vacia. El resultado era una mancha gris agrandada, no una escena.
+          Velo alto: aca hay una lista de beneficios y un precio que tienen
+          que leerse, no solo un titulo.
 
-          Como franja conserva su proporcion: se ven las cartas a la izquierda
-          y las fotos colgadas a la derecha.
-
-          Y va arriba, no abajo. Abajo la lista de beneficios y la tarjeta de
-          precio le caian encima y tapaban 176 de sus 256 px: quedaba una tira
-          de ochenta pixeles de foto asomando bajo el contenido. Arriba se ve
-          entera y el degradado la funde hacia abajo, donde arranca el texto. */}
-      <section className="relative overflow-hidden border-y border-cream-400/10 bg-ink-800/40 pb-20 pt-[15rem] sm:pt-[17rem]">
-        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 h-52 sm:h-60">
+          En telefono la seccion se vuelve alta y angosta contra una foto
+          panoramica, asi que el recorte se queda con el centro, que en esta
+          escena esta vacio. Ahi se encuadra sobre las cajas de la derecha,
+          que son lo que la seccion promete. */}
+      <section className="relative overflow-hidden border-y border-cream-400/10 py-20">
+        <div aria-hidden="true" className="absolute inset-0">
           <img
-            src="/imagenes/comunidad-cartas.webp"
+            src="/imagenes/archivo-cabecera.webp"
             alt=""
-            className="h-full w-full object-cover object-center"
+            className="h-full w-full object-cover object-[88%_center] sm:object-center"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-ink-900/35 via-ink-900/70 to-ink-900" />
+          <div className="absolute inset-0 bg-ink-900/84" />
         </div>
 
         <div className="container-page relative">
