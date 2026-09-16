@@ -78,20 +78,22 @@ export default function CommunityPage() {
             alt=""
             className="h-full w-full object-cover object-[88%_center] sm:object-center"
           />
-          <div className="absolute inset-0 bg-ink-900/84" />
+          {/* Mas oscuro que en las otras secciones: aca lo que tiene que
+              leerse es la oferta, y la foto solo aporta clima. */}
+          <div className="absolute inset-0 bg-ink-900/90" />
         </div>
 
         <div className="container-page relative">
           <div className="grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
             <div>
               <p className="eyebrow">Archivo completo</p>
-              <h2 className="title-display mt-3 text-5xl leading-[0.95] md:text-6xl">
+              <h2 className="title-display mt-3 text-6xl leading-[0.95] md:text-7xl">
                 Sumate al
                 <br />
                 <span className="italic">Archivo</span>
               </h2>
 
-              <p className="body-copy mt-5 max-w-md text-base leading-relaxed text-cream-200/85">
+              <p className="body-copy mt-6 max-w-lg text-lg leading-relaxed text-cream-200/85">
                 Por ${price.toLocaleString('es-AR')} al mes accedés al detrás de escena de cada
                 episodio, y bancás que estas historias se sigan contando.
                 <br />
@@ -114,17 +116,17 @@ export default function CommunityPage() {
                   'Cancelás cuando quieras, desde tu cuenta, en un click',
                 ].map((t) => (
                   <li key={t} className="flex items-start gap-3.5">
-                    <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-gold/50 text-gold">
-                      <Check size={13} />
+                    <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full border border-gold/50 text-gold">
+                      <Check size={15} />
                     </span>
-                    <span className="body-copy text-sm leading-relaxed text-cream-100/90">{t}</span>
+                    <span className="body-copy text-base leading-relaxed text-cream-100/90">{t}</span>
                   </li>
                 ))}
               </ul>
 
               <div className="mt-10 flex items-center gap-4">
                 <span className="h-px w-10 bg-gold/50" />
-                <p className="subtitle-signature text-2xl">Gracias por ser parte</p>
+                <p className="subtitle-signature text-3xl">Gracias por ser parte</p>
                 <span className="h-px flex-1 bg-gold/50" />
               </div>
               <p className="mt-2 text-[10px] uppercase tracking-[0.3em] text-cream-400/70">
@@ -133,21 +135,36 @@ export default function CommunityPage() {
             </div>
 
             <div className="relative">
-              {/* La nota va por fuera de la tarjeta y apenas inclinada, como
-                  un papel apoyado encima. En pantallas chicas se endereza: con
-                  la tarjeta angosta, la rotacion se le montaba al borde. */}
-              <p className="mx-auto mb-[-1.25rem] w-fit max-w-[15rem] rotate-0 rounded-sm border border-cream-400/15 bg-ink-800/80 px-5 py-3 text-center font-hand text-lg leading-snug text-cream-200/85 backdrop-blur sm:mr-6 sm:ml-auto sm:rotate-[3deg]">
-                Detrás de cada historia hay mucho más.
-              </p>
+              {/* Las fotos y la nota asoman por detras del borde de arriba,
+                  apoyadas como papeles sueltos. Van con z-0 y la tarjeta con
+                  z-10 para que el borde de la tarjeta las tape, que es lo que
+                  da la sensacion de que estan debajo y no pegadas encima.
 
-              <div className="relative rounded-sm border border-gold/40 bg-ink-900/80 p-7 backdrop-blur-sm sm:p-9">
+                  En pantallas chicas se enderezan y se achican: inclinadas
+                  sobre una tarjeta angosta se salian del ancho. */}
+              <div className="relative z-0 mx-auto mb-[-2.5rem] flex w-fit items-end justify-center">
+                <div className="-mr-5 w-24 rotate-[-9deg] rounded-[2px] bg-cream-100 p-1.5 pb-4 shadow-soft sm:w-32">
+                  <img src="/imagenes/comunidad/polaroid-1.webp" alt="" className="aspect-[4/3] w-full object-cover" />
+                </div>
+                <div className="-mr-4 w-24 rotate-[4deg] rounded-[2px] bg-cream-100 p-1.5 pb-4 shadow-soft sm:w-32">
+                  <img src="/imagenes/comunidad/polaroid-2.webp" alt="" className="aspect-[4/3] w-full object-cover" />
+                </div>
+                <p className="w-32 rotate-[7deg] rounded-[2px] bg-cream-200 px-3 py-3 text-center font-hand text-[13px] leading-tight text-ink-800 shadow-soft sm:w-40 sm:text-base">
+                  Detrás de cada historia hay mucho más.
+                </p>
+              </div>
+
+              <div className="relative z-10 mx-auto max-w-md rounded-3xl border border-gold/40 bg-ink-900/85 p-6 backdrop-blur-sm sm:p-7">
                 <p className="mx-auto w-fit rounded-full border border-gold/50 px-5 py-1.5 text-[10px] uppercase tracking-[0.3em] text-gold">
                   Acceso completo
                 </p>
 
-                <p className="mt-6 text-center font-serif text-6xl leading-none text-cream-50">
+                {/* La tipografia de los titulos y no la serif del cuerpo: la
+                    serif desentonaba contra el resto de la tarjeta, que es
+                    toda mayuscula y geometrica. */}
+                <p className="mt-5 text-center font-display text-5xl font-bold leading-none text-cream-50 sm:text-6xl">
                   ${price.toLocaleString('es-AR')}
-                  <span className="text-2xl text-cream-200/60">/mes</span>
+                  <span className="text-xl font-normal text-cream-200/60">/mes</span>
                 </p>
 
                 <div className="mt-5 flex items-center gap-4">
