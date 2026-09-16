@@ -144,19 +144,23 @@ export default function CommunityPage() {
                   el fondo semitransparente que tenia antes, las fotos se
                   transparentaban a traves de ella y ensuciaban el precio.
 
+                  Asoman 96 px, que es casi todo el aire que hay entre la
+                  tarjeta y el borde de la seccion: mas arriba las recortaria el
+                  overflow-hidden de la seccion.
+
                   Se esconden en pantallas chicas: sobre una tarjeta angosta no
                   hay esquina libre donde apoyarlas sin taparle el borde. */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -top-14 right-3 z-0 hidden items-start sm:flex"
+                className="pointer-events-none absolute -top-24 right-2 z-0 hidden items-start sm:flex"
               >
-                <div className="w-28 -rotate-[7deg] rounded-[2px] bg-cream-100 p-1.5 pb-5 shadow-polaroid">
+                <div className="w-36 -rotate-[7deg] rounded-[2px] bg-cream-100 p-2 pb-6 shadow-polaroid">
                   <img src="/imagenes/comunidad/polaroid-1.webp" alt="" className="aspect-[4/3] w-full object-cover" />
                 </div>
-                <div className="-ml-5 mt-2 w-28 rotate-[4deg] rounded-[2px] bg-cream-100 p-1.5 pb-5 shadow-polaroid">
+                <div className="-ml-5 mt-3 w-36 rotate-[4deg] rounded-[2px] bg-cream-100 p-2 pb-6 shadow-polaroid">
                   <img src="/imagenes/comunidad/polaroid-2.webp" alt="" className="aspect-[4/3] w-full object-cover" />
                 </div>
-                <div className="-ml-4 w-44 rotate-[6deg] rounded-[2px] bg-cream-200 px-5 py-4 shadow-polaroid">
+                <div className="-ml-4 mt-1 w-44 rotate-[6deg] rounded-[2px] bg-cream-200 px-5 py-5 shadow-polaroid">
                   <p className="font-hand text-xl leading-tight text-ink-800">
                     Detrás de cada historia hay mucho más.
                   </p>
