@@ -44,14 +44,23 @@ export function Nav() {
             218 px desde 2xl -- 206 de texto mas la separacion -- y no quedaba
             aire: medido a 1905, entre el logo y el primer enlace habia 27 px.
             El logo ya dice el nombre, y el texto sigue en el alt. */}
-        <Link href="/" className="group flex items-center">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/logo-lqlve.png"
-            alt={brand.fullName}
-            className="h-5 w-auto md:h-6"
-          />
-        </Link>
+        {/* Las dos columnas de los costados llevan flex-1 para que midan
+            siempre lo mismo, y asi el menu del medio cae en el centro real
+            de la pantalla. Con justify-between solo, el menu se corria hacia
+            el lado del bloque mas angosto: el logo mide 85 px y el carrito
+            con el avatar 177, y eso lo dejaba 46 px a la izquierda.
+            El Link va adentro y no lleva flex-1 el mismo, para que el area
+            que se puede clickear sea el logo y no toda la franja. */}
+        <div className="flex flex-1 items-center">
+          <Link href="/" className="group flex items-center">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/logo-lqlve.png"
+              alt={brand.fullName}
+              className="h-5 w-auto md:h-6"
+            />
+          </Link>
+        </div>
 
         {/* El espaciado sube por tramos en vez de ser fijo: con seis
             secciones -- la tienda todavia falta -- el ancho de golpe no
@@ -75,7 +84,7 @@ export function Nav() {
           })}
         </nav>
 
-        <div className="hidden md:flex items-center gap-4">
+        <div className="hidden flex-1 items-center justify-end gap-4 md:flex">
           <BotonCarrito />
           {clerkListo ? (
             <NavAuth />
