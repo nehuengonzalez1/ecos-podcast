@@ -40,20 +40,17 @@ export function Nav() {
       )}
     >
       <div className="container-page flex h-16 items-center justify-between md:h-20">
-        <Link href="/" className="group flex items-center gap-3">
+        {/* Solo el logo. El nombre escrito al lado ensanchaba este bloque
+            218 px desde 2xl -- 206 de texto mas la separacion -- y no quedaba
+            aire: medido a 1905, entre el logo y el primer enlace habia 27 px.
+            El logo ya dice el nombre, y el texto sigue en el alt. */}
+        <Link href="/" className="group flex items-center">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
             src="/logo-lqlve.png"
             alt={brand.fullName}
             className="h-5 w-auto md:h-6"
           />
-          {/* Recien desde 2xl. Con seis secciones mas el carrito, los tres
-              bloques ocupan todo el ancho y el nombre del sitio termina
-              encimandose con el primer enlace. Al lado tiene el logo,
-              que ya lo dice. */}
-          <span className="hidden whitespace-nowrap text-[10px] uppercase tracking-[0.35em] text-gold/70 2xl:block">
-            {brand.fullName}
-          </span>
         </Link>
 
         {/* El espaciado sube por tramos en vez de ser fijo: con seis
