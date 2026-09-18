@@ -172,10 +172,11 @@ export default function CommunityPage() {
                   Acceso completo
                 </p>
 
-                {/* La tipografia de los titulos y no la serif del cuerpo: la
-                    serif desentonaba contra el resto de la tarjeta, que es
-                    toda mayuscula y geometrica. */}
-                <p className="mt-5 text-center font-display text-5xl font-bold leading-none text-cream-50 sm:text-6xl">
+                {/* Inter, la misma de los rotulos de la tarjeta. Los digitos
+                    ya salian de Inter por 'LQLVE Cifras', asi que con la de
+                    titulos el "/mes" se quedaba solo en Now y el precio
+                    mostraba dos tipografias pegadas. */}
+                <p className="mt-5 text-center font-sans text-5xl font-bold leading-none text-cream-50 sm:text-6xl">
                   ${price.toLocaleString('es-AR')}
                   <span className="text-xl font-normal text-cream-200/60">/mes</span>
                 </p>

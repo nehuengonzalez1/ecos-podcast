@@ -132,7 +132,7 @@ export function CuentaClient({
           </ul>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <div className="font-serif text-3xl text-cream-50">${price.toLocaleString('es-AR')}<span className="text-sm text-cream-200/60">/mes</span></div>
+              <div className="font-sans text-3xl text-cream-50">${price.toLocaleString('es-AR')}<span className="text-sm text-cream-200/60">/mes</span></div>
               <div className="text-[10px] uppercase tracking-widest text-cream-400/60">Pesos argentinos · vía Mercado Pago</div>
             </div>
             <SubscribeButton price={price} label="Suscribirme con Mercado Pago" />

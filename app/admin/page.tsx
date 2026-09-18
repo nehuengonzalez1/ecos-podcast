@@ -291,7 +291,7 @@ function StatBox({
 }) {
   return (
     <div className={`border p-6 text-center ${accent ? 'border-gold/60 bg-gold/5' : 'border-cream-400/10 bg-ink-800/60'}`}>
-      <div className="font-serif text-4xl text-cream-50">{value}</div>
+      <div className="font-sans text-4xl text-cream-50">{value}</div>
       <div className="mt-1 text-[10px] uppercase tracking-widest text-cream-400/70">{label}</div>
       {hint && <div className="mt-1 text-[10px] text-cream-400/50">{hint}</div>}
     </div>
