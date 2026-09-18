@@ -23,6 +23,23 @@
   font-display: swap;
 }
 
+/* Los numeros, siempre en la misma tipografia.
+   El sitio mezcla cuatro fuentes y cada una dibuja los digitos a su manera:
+   un precio en serif y una estadistica en Now no parecian del mismo sitio.
+   Este archivo es Inter recortada a los digitos y a $ y % -- nada mas --, y
+   el unicode-range hace que el navegador la use solo para esos caracteres.
+   Puesta primera en los stacks de tailwind.config.ts, cada cifra sale en
+   Inter (la de la tienda, que es la que queremos) y las letras siguen en la
+   fuente que le toca a cada bloque, aun dentro de un mismo parrafo. */
+@font-face {
+  font-family: 'LQLVE Cifras';
+  src: url('/fonts/Inter-Numeros.woff2') format('woff2');
+  font-weight: 300 700;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+24-25, U+30-39;
+}
+
 @layer base {
   html {
     scroll-behavior: smooth;
@@ -38,7 +55,7 @@
     color: #0a0a0a;
   }
   h1, h2, h3, h4, h5, h6 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: 'LQLVE Cifras', 'Cormorant Garamond', serif;
     font-weight: 500;
     letter-spacing: 0.01em;
   }

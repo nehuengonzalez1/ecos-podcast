@@ -29,14 +29,19 @@ export default {
         },
         muted: '#3d2f1e',
       },
+      // '"LQLVE Cifras"' va primera en todos los stacks salvo el sans, que
+      // ya es Inter. No es una fuente completa: solo tiene los digitos (ver
+      // el @font-face en globals.css), asi que el navegador la usa para las
+      // cifras y cae en la siguiente de la lista para todo lo demas. Es lo
+      // que mantiene los numeros iguales en todo el sitio.
       fontFamily: {
-        serif: ['"Cormorant Garamond"', 'serif'],
+        serif: ['"LQLVE Cifras"', '"Cormorant Garamond"', 'serif'],
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        hand: ['Caveat', 'cursive'],
+        hand: ['"LQLVE Cifras"', 'Caveat', 'cursive'],
         // Títulos.
-        display: ['Now', '"Cormorant Garamond"', 'serif'],
+        display: ['"LQLVE Cifras"', 'Now', '"Cormorant Garamond"', 'serif'],
         // Subtítulos.
-        signature: ['"Brother Signature"', 'cursive'],
+        signature: ['"LQLVE Cifras"', '"Brother Signature"', 'cursive'],
       },
       backgroundImage: {
         'kraft':
