@@ -20,7 +20,7 @@ export function StatBlock({ stats, className }: { stats: Stat[]; className?: str
           {/* Inter, la misma del rotulo de abajo. Con la serif, en "+2.5M"
               los digitos salian de Inter -- por 'LQLVE Cifras' -- y la M de
               Cormorant: dos tipografias dentro de la misma palabra. */}
-          <div className="font-sans text-4xl text-cream-50 md:text-5xl">{s.value}</div>
+          <div className="font-sans text-4xl font-light text-cream-50 md:text-5xl">{s.value}</div>
           <div className="mt-2 text-[10px] uppercase tracking-[0.3em] text-gold/80">{s.label}</div>
         </motion.div>
       ))}
