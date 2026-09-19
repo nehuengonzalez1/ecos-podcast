@@ -146,16 +146,23 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
               alt="Una pila de polaroids del estudio apoyada sobre un cuaderno de LQLVE"
               className="w-full lg:absolute lg:inset-0 lg:h-full lg:object-cover"
             />
-            {/* Solo el canto interior lleva degradado: los otros tres ya
-                tocan el borde de la seccion. El de abajo queda para telefono,
-                donde la foto se apoya sobre el texto. */}
+            {/* El canto interior se funde con la columna del texto, y los de
+                arriba y abajo con la seccion vecina: ahora que las fotos
+                sangran, dos que quedan una debajo de la otra se cortan en una
+                linea recta. El degradado es mas corto en telefono, donde la
+                foto entra con su alto natural: medido a 375, mide 290, y los
+                96 px de escritorio arriba y abajo le taparian dos tercios. */}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-gradient-to-l from-ink-900 to-transparent lg:block"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ink-900 to-transparent lg:hidden"
+              className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-ink-900 to-transparent lg:h-24"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-ink-900 to-transparent lg:h-24"
             />
           </div>
 
@@ -237,16 +244,23 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
               alt="Caja, taza, gorra y buzo de LQLVE sobre un baúl, con dos polaroids"
               className="w-full lg:absolute lg:inset-0 lg:h-full lg:object-cover"
             />
-            {/* Solo el canto interior lleva degradado: los otros tres ya
-                tocan el borde de la seccion. El de abajo queda para telefono,
-                donde la foto se apoya sobre el texto. */}
+            {/* El canto interior se funde con la columna del texto, y los de
+                arriba y abajo con la seccion vecina: ahora que las fotos
+                sangran, dos que quedan una debajo de la otra se cortan en una
+                linea recta. El degradado es mas corto en telefono, donde la
+                foto entra con su alto natural: medido a 375, mide 290, y los
+                96 px de escritorio arriba y abajo le taparian dos tercios. */}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-ink-900 to-transparent lg:block"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ink-900 to-transparent lg:hidden"
+              className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-ink-900 to-transparent lg:h-24"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-ink-900 to-transparent lg:h-24"
             />
           </div>
         </div>
@@ -297,16 +311,23 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
               alt="Taza, gorra, remera y cuaderno de LQLVE sobre un baúl, con dos polaroids"
               className="w-full lg:absolute lg:inset-0 lg:h-full lg:object-cover"
             />
-            {/* Solo el canto interior lleva degradado: los otros tres ya
-                tocan el borde de la seccion. El de abajo queda para telefono,
-                donde la foto se apoya sobre el texto. */}
+            {/* El canto interior se funde con la columna del texto, y los de
+                arriba y abajo con la seccion vecina: ahora que las fotos
+                sangran, dos que quedan una debajo de la otra se cortan en una
+                linea recta. El degradado es mas corto en telefono, donde la
+                foto entra con su alto natural: medido a 375, mide 290, y los
+                96 px de escritorio arriba y abajo le taparian dos tercios. */}
             <div
               aria-hidden="true"
               className="pointer-events-none absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-ink-900 to-transparent lg:block"
             />
             <div
               aria-hidden="true"
-              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ink-900 to-transparent lg:hidden"
+              className="pointer-events-none absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-ink-900 to-transparent lg:h-24"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-ink-900 to-transparent lg:h-24"
             />
           </div>
         </div>
@@ -334,6 +355,10 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
             className="h-full w-full object-cover"
           />
           <div className="absolute inset-0 bg-ink-900/25" />
+          {/* Se funde con las secciones de arriba y de abajo. Aca la escena
+              cubre el ancho completo, asi que el degradado tambien. */}
+          <div className="absolute inset-x-0 top-0 h-10 bg-gradient-to-b from-ink-900 to-transparent lg:h-24" />
+          <div className="absolute inset-x-0 bottom-0 h-10 bg-gradient-to-t from-ink-900 to-transparent lg:h-24" />
         </div>
 
         <div className="container-page relative">
