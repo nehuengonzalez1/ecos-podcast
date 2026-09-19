@@ -1,5 +1,7 @@
 import { redirect } from 'next/navigation'
+import { Eye, EyeOff } from 'lucide-react'
 import { isAdmin } from '@/lib/admin'
+import { SORTEOS_PUBLICOS } from '@/lib/env'
 import { brand } from '@/lib/config/brand'
 import { cargarSorteos, cargarSorteosParaPanel, estadoDe } from '@/lib/sorteos'
 import {
@@ -79,6 +81,29 @@ export default async function SorteosAdminPage() {
         <h1 className="title-display text-5xl">Sorteos</h1>
 
         <NavPanel />
+
+        {/* Saber si los sorteos estan abiertos o no cambia por completo lo que
+            significa editar aca, asi que se dice antes que nada. */}
+        <div
+          className={`mt-6 inline-flex items-center gap-2 rounded-sm border px-3 py-2 text-xs ${
+            SORTEOS_PUBLICOS
+              ? 'border-gold/40 bg-gold/5 text-cream-200/90'
+              : 'border-cream-400/25 text-cream-200/75'
+          }`}
+        >
+          {SORTEOS_PUBLICOS ? (
+            <>
+              <Eye size={14} className="text-gold" />
+              Los sorteos estan abiertos: todo lo que edites aca lo ve cualquiera.
+            </>
+          ) : (
+            <>
+              <EyeOff size={14} />
+              Los sorteos estan cerrados: solo vos los ves. Para abrirlos, poné{' '}
+              <code>SORTEOS_PUBLICOS=1</code> en Vercel.
+            </>
+          )}
+        </div>
 
         <h2 className="mt-8 text-[11px] uppercase tracking-[0.25em] text-gold">En marcha</h2>
         <p className="mt-2 max-w-2xl text-sm text-cream-200/70">

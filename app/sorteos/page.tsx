@@ -1,6 +1,9 @@
 import type { Metadata } from 'next'
-import { Infinity as Infinito } from 'lucide-react'
+import Link from 'next/link'
+import { Eye, Infinity as Infinito } from 'lucide-react'
 import { brand } from '@/lib/config/brand'
+import { isAdmin } from '@/lib/admin'
+import { SORTEOS_PUBLICOS } from '@/lib/env'
 import { cargarSorteos, estadoDe, categoriasDeSorteos } from '@/lib/sorteos'
 import { textoRestante } from '@/lib/tiempo'
 import { SorteosLista } from './SorteosLista'
@@ -18,6 +21,13 @@ export const metadata: Metadata = {
 export const dynamic = 'force-dynamic'
 
 export default async function SorteosPage() {
+  /**
+   * La decision se toma en el servidor y los sorteos ni se cargan cuando no
+   * corresponde: si la pagina se armara entera y se escondiera del lado del
+   * navegador, los premios y las fechas viajarian igual en el HTML.
+   */
+  if (!(SORTEOS_PUBLICOS || (await isAdmin()))) return <Proximamente />
+
   const [todos, cats] = await Promise.all([cargarSorteos(), categoriasDeSorteos()])
   const lista = todos.map((s) => ({
     slug: s.slug,
@@ -60,6 +70,13 @@ export default async function SorteosPage() {
 
         <div className="container-page relative flex min-h-[22rem] flex-col justify-center pb-14 lg:min-h-[26rem]">
           <div className="max-w-xl">
+            {!SORTEOS_PUBLICOS && (
+              <div className="mb-6 inline-flex w-fit items-center gap-2 rounded-sm border border-gold/40 bg-gold/5 px-3 py-2 text-xs text-cream-200/90">
+                <Eye size={14} className="text-gold" />
+                Esto lo ves solo vos. Para el resto, los sorteos dicen «próximamente».
+              </div>
+            )}
+
             <p className="eyebrow mb-4">Más que objetos, experiencias</p>
             <h1 className="title-display text-6xl leading-none md:text-8xl">SORTEOS</h1>
             <p className="subtitle-signature mt-5 text-3xl md:text-4xl">
@@ -82,5 +99,39 @@ export default async function SorteosPage() {
         </div>
       </div>
     </>
+  )
+}
+
+/** Lo que ve cualquiera mientras SORTEOS_PUBLICOS no este en 1. */
+function Proximamente() {
+  return (
+    <section className="flex min-h-[70vh] items-center pt-28 pb-24">
+      <div className="container-page text-center">
+        <p className="eyebrow mb-4">Sorteos {brand.name}</p>
+        <h1 className="title-display text-6xl leading-none md:text-7xl">SORTEOS</h1>
+        <p className="subtitle-signature mt-5 text-3xl md:text-4xl">Muy pronto.</p>
+
+        <div className="divider-line" />
+
+        <p className="body-copy mx-auto mt-6 max-w-md text-base leading-relaxed text-cream-200/75">
+          Estamos preparando los primeros sorteos de {brand.name}, desde objetos hasta
+          experiencias. Todavía no, pero falta poco.
+        </p>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-3">
+          <Link href="/comunidad" className="btn-gold">
+            Enterate primero
+          </Link>
+          <Link href="/archivo" className="btn-ghost">
+            Ir al archivo
+          </Link>
+        </div>
+
+        <div className="mt-16 flex flex-col items-center gap-2 text-cream-400/35">
+          <Infinito size={26} strokeWidth={1.25} />
+          <p className="text-[9px] uppercase tracking-[0.35em]">{brand.fullName}</p>
+        </div>
+      </div>
+    </section>
   )
 }

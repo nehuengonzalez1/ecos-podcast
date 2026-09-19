@@ -1,4 +1,6 @@
 import { NextResponse } from 'next/server'
+import { isAdmin } from '@/lib/admin'
+import { SORTEOS_PUBLICOS } from '@/lib/env'
 import { buscarSorteo, estadoDe } from '@/lib/sorteos'
 import { limpiar } from '@/lib/muro-publico'
 import {
@@ -30,6 +32,13 @@ function emailValido(s: string): boolean {
  * aceptar esa participación sería dejar entrar a alguien fuera de plazo.
  */
 export async function POST(req: Request) {
+  // El mismo candado que la pantalla. Esconder el formulario no alcanza:
+  // quien supiera la direccion podia anotarse igual a un sorteo que todavia
+  // no es publico.
+  if (!(SORTEOS_PUBLICOS || (await isAdmin()))) {
+    return NextResponse.json({ error: 'not-open' }, { status: 403 })
+  }
+
   try {
     const body = await req.json().catch(() => ({}) as any)
 

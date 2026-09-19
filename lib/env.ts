@@ -29,3 +29,12 @@ export const MP_ACTIVE = !!process.env.MP_ACCESS_TOKEN
  * volver a desplegar.
  */
 export const SUSCRIPCION_PUBLICA = process.env.SUSCRIPCION_PUBLICA === '1'
+
+/**
+ * Los sorteos, igual: cerrados hasta que haya alguno para publicar de
+ * verdad. Quien administra los sigue viendo y puede cargarlos desde el
+ * panel; el resto ve una pantalla de "muy pronto".
+ *
+ * Se abren poniendo SORTEOS_PUBLICOS=1 en Vercel.
+ */
+export const SORTEOS_PUBLICOS = process.env.SORTEOS_PUBLICOS === '1'

@@ -16,6 +16,8 @@ import {
   Users,
 } from 'lucide-react'
 import { brand } from '@/lib/config/brand'
+import { isAdmin } from '@/lib/admin'
+import { SORTEOS_PUBLICOS } from '@/lib/env'
 import { buscarSorteo, estadoDe, type EstadoSorteo } from '@/lib/sorteos'
 import { CuentaRegresiva } from '@/components/CuentaRegresiva'
 import { textoRestante } from '@/lib/tiempo'
@@ -30,6 +32,9 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>
 }): Promise<Metadata> {
   const { slug } = await params
+  // Tambien aca: el titulo se ve en la pestaña y en lo que comparte un
+  // buscador, asi que no puede delatar un sorteo que todavia no es publico.
+  if (!(SORTEOS_PUBLICOS || (await isAdmin()))) return { title: `Sorteos · ${brand.name}` }
   const s = await buscarSorteo(slug)
   if (!s) return { title: `Sorteos · ${brand.name}` }
   return { title: `${s.titulo} · Sorteos · ${brand.name}`, description: s.resumen }
@@ -67,6 +72,11 @@ function fechaLarga(iso: string): string {
 }
 
 export default async function SorteoPage({ params }: { params: Promise<{ slug: string }> }) {
+  // Se pregunta de nuevo y no se confia en que la lista ya lo hizo: quien
+  // tenga la direccion de un sorteo puede entrar directo sin pasar por ella,
+  // y entonces ese control no habria corrido nunca.
+  if (!(SORTEOS_PUBLICOS || (await isAdmin()))) notFound()
+
   const { slug } = await params
   const s = await buscarSorteo(slug)
   if (!s) notFound()
