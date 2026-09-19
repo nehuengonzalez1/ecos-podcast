@@ -2,8 +2,8 @@
 
 import { SectionHeading } from '@/components/SectionHeading'
 import { StatBlock } from '@/components/StatBlock'
+import type { Estadistica } from '@/lib/estadisticas'
 import { SubscribeButton } from '@/components/SubscribeButton'
-import stats from '@/data/stats.json'
 import { Check, Clock, CreditCard, Eye, Layers, Play, Star, Unlock } from 'lucide-react'
 
 /**
@@ -19,10 +19,12 @@ export function ComunidadClient({
   abierta,
   price,
   avisoSoloVos,
+  stats,
 }: {
   abierta: boolean
   price: number | null
   avisoSoloVos: boolean
+  stats: { primary: Estadistica[]; secondary: Estadistica[] }
 }) {
   const precioTexto = price === null ? '$-' : `$${price.toLocaleString('es-AR')}`
 
