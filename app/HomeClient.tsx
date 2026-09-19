@@ -316,16 +316,16 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
       {/* El py es mas alto que el de las otras: la referencia es una franja
           de 3,06 a 1 y con el py-16 de las demas esta quedaba en 3,47. */}
       <section className="relative overflow-hidden py-20 md:py-28">
-        {/* El fondo no es negro: en la referencia hay pared, el marco de
-            madera y el halo de la lampara tambien detras del texto.
+        {/* La escena entera, de un canto al otro. Reemplaza lo que habia
+            antes -- una textura reconstruida y dos tiras recortadas en los
+            costados -- porque ahora existe la imagen sin el texto encima y no
+            hay nada que reconstruir.
 
-            No se puede usar la referencia entera porque trae el titulo y el
-            boton quemados justo en el medio, y desenfocarla deja un borron
-            blanco donde estaba el titulo -- probado. Esta textura sale de la
-            franja de arriba de esa misma imagen, que no tiene texto encima,
-            estirada a lo alto: conserva la variacion de izquierda a derecha,
-            que es la que se nota, y difumina la vertical, que en una pared
-            desenfocada no se nota. */}
+            El velo es bajo, 25%, y no el 60% de antes: medida la imagen, la
+            franja donde cae el texto tiene una luminancia media de 7 sobre
+            255, o sea que ya es casi negra sola. Un velo alto no la haria mas
+            legible y si apagaria la lampara de la izquierda y las polaroids
+            de la derecha, que son lo que da la escena. */}
         <div aria-hidden="true" className="absolute inset-0">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
@@ -333,32 +333,7 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
             alt=""
             className="h-full w-full object-cover"
           />
-          <div className="absolute inset-0 bg-ink-900/60" />
-        </div>
-
-        {/* Las dos tiras de los costados son decoracion. En la referencia la
-            foto esta partida en los dos bordes con el texto en el medio, asi
-            que salieron dos recortes en vez de uno.
-
-            Desde 2xl y no xl: medido a 1265, el texto arrancaba en 176 y la
-            tira de la izquierda llegaba hasta 190, o sea que se le montaba
-            encima. Debajo de eso no hay ancho para las dos tiras y el
-            contenido, y la textura del fondo ya evita que quede negro plano. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 hidden w-[15%] 2xl:block"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/imagenes/home/contanos-izq.webp" alt="" className="h-full w-full object-cover" />
-          <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-l from-ink-900 to-transparent" />
-        </div>
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[15%] 2xl:block"
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/imagenes/home/contanos-der.webp" alt="" className="h-full w-full object-cover" />
-          <div className="absolute inset-y-0 left-0 w-24 bg-gradient-to-r from-ink-900 to-transparent" />
+          <div className="absolute inset-0 bg-ink-900/25" />
         </div>
 
         <div className="container-page relative">
@@ -397,13 +372,17 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
                   la derecha quedan 117 px y el sello mide 128.
 
                   Cuelga del boton y no de la grilla ni de un porcentaje del
-                  ancho. Asi lo acompaña a cualquier tamaño de pantalla: si el
-                  boton no llega a la tira, el sello tampoco. Las dos veces
-                  anteriores que se anclo a otra cosa, termino cruzandose con
-                  algo al mover cualquier otra pieza. */}
+                  ancho, asi lo acompaña a cualquier tamaño de pantalla. Las
+                  dos veces anteriores que se anclo a otra cosa, termino
+                  cruzandose con algo al mover cualquier otra pieza.
+
+                  Del borde izquierdo del boton y no del derecho: medida la
+                  luminancia del fondo justo debajo, a la derecha caia sobre
+                  las polaroids -- media 39 sobre 255 -- y a la izquierda cae
+                  sobre la pared, media 9, igual que el titulo. */}
               <div
                 aria-hidden="true"
-                className="pointer-events-none absolute -top-32 right-0 hidden opacity-50 lg:block"
+                className="pointer-events-none absolute -top-32 left-0 hidden opacity-50 lg:block"
               >
                 <Stamp />
               </div>
