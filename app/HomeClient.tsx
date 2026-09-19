@@ -124,32 +124,41 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
 
       {/* ── El archivo ──────────────────────────────────────────────────
           Ya no es la primera de la pagina, asi que no necesita despejar la
-          barra de navegacion: de eso se encarga el pt-24 de la portada, que
-          ahora va arriba. Vuelve al mismo padding que Sorteos y Tienda. */}
-      <section className="relative overflow-hidden py-16 md:py-20">
-        <div className="container-page">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
-            {/* La foto conserva su proporcion: no lleva object-cover ni alto
-                fijo, asi que no se recorta a ningun ancho. El degradado del
-                borde interior disimula el corte contra el fondo de la
-                pagina, que es de un negro apenas distinto al de la escena. */}
-            <div className="relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/imagenes/home/archivo.webp"
-                alt="Una pila de polaroids del estudio apoyada sobre un cuaderno de LQLVE"
-                className="w-full"
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-gradient-to-l from-ink-900 to-transparent lg:block"
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ink-900 to-transparent"
-              />
-            </div>
+          barra de navegacion: de eso se encarga el pt-24 de la portada. El
+          aire de arriba y abajo lo pone ahora la columna del texto, porque
+          la seccion no puede llevar padding sin separar la foto del borde. */}
+      <section className="relative overflow-hidden">
+        {/* El min-h va en la grilla y no en la seccion: en la seccion, la
+            grilla no se estiraba hasta el y quedaba un hueco negro abajo de
+            la foto -- medido, 14 px en el archivo y 44 en sorteos. */}
+        <div className="grid lg:min-h-[39vw] lg:grid-cols-2 lg:items-stretch">
+          {/* La foto sangra hasta el canto de la pantalla: la grilla ya no
+              vive adentro de container-page, asi que esta columna llega al
+              borde. Desde lg se estira al alto de la fila con object-cover, y
+              el min-h de la seccion -- 39vw -- esta calculado para que media
+              pantalla quede casi en la proporcion de la foto y el recorte sea
+              minimo. En telefono va con su alto natural, sin recorte. */}
+          <div className="relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/imagenes/home/archivo.webp"
+              alt="Una pila de polaroids del estudio apoyada sobre un cuaderno de LQLVE"
+              className="w-full lg:absolute lg:inset-0 lg:h-full lg:object-cover"
+            />
+            {/* Solo el canto interior lleva degradado: los otros tres ya
+                tocan el borde de la seccion. El de abajo queda para telefono,
+                donde la foto se apoya sobre el texto. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 right-0 hidden w-24 bg-gradient-to-l from-ink-900 to-transparent lg:block"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ink-900 to-transparent lg:hidden"
+            />
+          </div>
 
+          <div className="flex flex-col justify-center px-5 py-12 sm:px-8 lg:py-16 lg:pl-12 lg:pr-[max(3rem,calc((100vw-80rem)/2+3rem))]">
             <div className="relative">
               <p className="eyebrow mb-4">Un lugar</p>
               {/* h2 y no h1: el h1 de la pagina es el de la portada. */}
@@ -163,7 +172,7 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
                 Bienvenida al archivo de {brand.name}. Cada polaroid, cada carta, cada objeto acá es
                 real. Y sigue creciendo con vos.
               </p>
-              <Link href="/archivo" className="btn-gold mt-8">
+              <Link href="/archivo" className="btn-gold mt-8 rounded-xl">
                 {brand.cta.exploreArchive} <ArrowRight size={16} />
               </Link>
               <Firma className="mt-10" />
@@ -182,9 +191,12 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
       </section>
 
       {/* ── Sorteos ───────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-16 md:py-20">
-        <div className="container-page">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <section className="relative overflow-hidden">
+        {/* El min-h va en la grilla y no en la seccion: en la seccion, la
+            grilla no se estiraba hasta el y quedaba un hueco negro abajo de
+            la foto -- medido, 14 px en el archivo y 44 en sorteos. */}
+        <div className="grid lg:min-h-[39vw] lg:grid-cols-2 lg:items-stretch">
+          <div className="flex flex-col justify-center px-5 py-12 sm:px-8 lg:py-16 lg:pr-12 lg:pl-[max(3rem,calc((100vw-80rem)/2+3rem))]">
             <div>
               <p className="eyebrow mb-4">Sorteos</p>
               <h2 className="title-display text-4xl leading-[1.05] sm:text-5xl">
@@ -194,7 +206,7 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
                 Participá de nuestros sorteos y llevate productos, experiencias y mucho más. Porque
                 ser parte también tiene recompensas.
               </p>
-              <Link href="/sorteos" className="btn-gold mt-8">
+              <Link href="/sorteos" className="btn-gold mt-8 rounded-xl">
                 <Gift size={16} /> Ver sorteos <ArrowRight size={16} />
               </Link>
 
@@ -209,30 +221,43 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
             {/* La foto va segunda en el codigo y por lo tanto abajo en
                 telefono: lo primero que tiene que leerse es de que se trata,
                 no el bodegon. */}
-            <div className="relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/imagenes/home/sorteos.webp"
-                alt="Caja, taza, gorra y buzo de LQLVE sobre un baúl, con dos polaroids"
-                className="w-full"
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-ink-900 to-transparent lg:block"
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ink-900 to-transparent"
-              />
-            </div>
+          </div>
+
+          {/* La foto sangra hasta el canto de la pantalla: la grilla ya no
+              vive adentro de container-page, asi que esta columna llega al
+              borde. Desde lg se estira al alto de la fila con object-cover, y
+              el min-h de la seccion -- 39vw -- esta calculado para que media
+              pantalla quede casi en la proporcion de la foto y el recorte sea
+              minimo. En telefono va con su alto natural, sin recorte. */}
+          <div className="relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/imagenes/home/sorteos.webp"
+              alt="Caja, taza, gorra y buzo de LQLVE sobre un baúl, con dos polaroids"
+              className="w-full lg:absolute lg:inset-0 lg:h-full lg:object-cover"
+            />
+            {/* Solo el canto interior lleva degradado: los otros tres ya
+                tocan el borde de la seccion. El de abajo queda para telefono,
+                donde la foto se apoya sobre el texto. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-ink-900 to-transparent lg:block"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ink-900 to-transparent lg:hidden"
+            />
           </div>
         </div>
       </section>
 
       {/* ── La tienda ─────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden py-16 md:py-20">
-        <div className="container-page">
-          <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
+      <section className="relative overflow-hidden">
+        {/* El min-h va en la grilla y no en la seccion: en la seccion, la
+            grilla no se estiraba hasta el y quedaba un hueco negro abajo de
+            la foto -- medido, 14 px en el archivo y 44 en sorteos. */}
+        <div className="grid lg:min-h-[39vw] lg:grid-cols-2 lg:items-stretch">
+          <div className="flex flex-col justify-center px-5 py-12 sm:px-8 lg:py-16 lg:pr-12 lg:pl-[max(3rem,calc((100vw-80rem)/2+3rem))]">
             <div>
               <p className="eyebrow mb-4">Nuestra tienda</p>
               <h2 className="title-display text-4xl leading-[1.05] sm:text-5xl">
@@ -244,7 +269,7 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
                 Productos pensados para quienes creen en el poder de las historias. Objetos que te
                 acompañan, te inspiran y te conectan.
               </p>
-              <Link href="/tienda" className="btn-gold mt-8">
+              <Link href="/tienda" className="btn-gold mt-8 rounded-xl">
                 <ShoppingBag size={16} /> Ir a la tienda <ArrowRight size={16} />
               </Link>
 
@@ -256,22 +281,32 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
               <Firma className="mt-10" />
             </div>
 
-            <div className="relative">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src="/imagenes/home/tienda.webp"
-                alt="Taza, gorra, remera y cuaderno de LQLVE sobre un baúl, con dos polaroids"
-                className="w-full"
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-ink-900 to-transparent lg:block"
-              />
-              <div
-                aria-hidden="true"
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ink-900 to-transparent"
-              />
-            </div>
+          </div>
+
+          {/* La foto sangra hasta el canto de la pantalla: la grilla ya no
+              vive adentro de container-page, asi que esta columna llega al
+              borde. Desde lg se estira al alto de la fila con object-cover, y
+              el min-h de la seccion -- 39vw -- esta calculado para que media
+              pantalla quede casi en la proporcion de la foto y el recorte sea
+              minimo. En telefono va con su alto natural, sin recorte. */}
+          <div className="relative">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src="/imagenes/home/tienda.webp"
+              alt="Taza, gorra, remera y cuaderno de LQLVE sobre un baúl, con dos polaroids"
+              className="w-full lg:absolute lg:inset-0 lg:h-full lg:object-cover"
+            />
+            {/* Solo el canto interior lleva degradado: los otros tres ya
+                tocan el borde de la seccion. El de abajo queda para telefono,
+                donde la foto se apoya sobre el texto. */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-y-0 left-0 hidden w-24 bg-gradient-to-r from-ink-900 to-transparent lg:block"
+            />
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-gradient-to-t from-ink-900 to-transparent lg:hidden"
+            />
           </div>
         </div>
       </section>
@@ -321,7 +356,7 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
               Nos encantaría escucharte. Contanos lo que te pasó, lo que aprendiste, o simplemente
               lo que necesitás decir.
             </p>
-            <Link href="/contacto" className="btn-gold mt-8">
+            <Link href="/contacto" className="btn-gold mt-8 rounded-xl">
               Contanos <ArrowRight size={16} />
             </Link>
             <Firma className="mt-10 justify-center" />
