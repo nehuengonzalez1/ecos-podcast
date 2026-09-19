@@ -316,13 +316,37 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
       {/* El py es mas alto que el de las otras: la referencia es una franja
           de 3,06 a 1 y con el py-16 de las demas esta quedaba en 3,47. */}
       <section className="relative overflow-hidden py-20 md:py-28">
+        {/* El fondo no es negro: en la referencia hay pared, el marco de
+            madera y el halo de la lampara tambien detras del texto.
+
+            No se puede usar la referencia entera porque trae el titulo y el
+            boton quemados justo en el medio, y desenfocarla deja un borron
+            blanco donde estaba el titulo -- probado. Esta textura sale de la
+            franja de arriba de esa misma imagen, que no tiene texto encima,
+            estirada a lo alto: conserva la variacion de izquierda a derecha,
+            que es la que se nota, y difumina la vertical, que en una pared
+            desenfocada no se nota. */}
+        <div aria-hidden="true" className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/imagenes/home/contanos-fondo.webp"
+            alt=""
+            className="h-full w-full object-cover"
+          />
+          <div className="absolute inset-0 bg-ink-900/60" />
+        </div>
+
         {/* Las dos tiras de los costados son decoracion. En la referencia la
             foto esta partida en los dos bordes con el texto en el medio, asi
-            que salieron dos recortes en vez de uno. Desde xl: mas abajo el
-            texto llegaria hasta ellas y se le montarian encima. */}
+            que salieron dos recortes en vez de uno.
+
+            Desde 2xl y no xl: medido a 1265, el texto arrancaba en 176 y la
+            tira de la izquierda llegaba hasta 190, o sea que se le montaba
+            encima. Debajo de eso no hay ancho para las dos tiras y el
+            contenido, y la textura del fondo ya evita que quede negro plano. */}
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 hidden w-[15%] xl:block"
+          className="pointer-events-none absolute inset-y-0 left-0 hidden w-[15%] 2xl:block"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/imagenes/home/contanos-izq.webp" alt="" className="h-full w-full object-cover" />
@@ -330,7 +354,7 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
         </div>
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[15%] xl:block"
+          className="pointer-events-none absolute inset-y-0 right-0 hidden w-[15%] 2xl:block"
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/imagenes/home/contanos-der.webp" alt="" className="h-full w-full object-cover" />
@@ -345,11 +369,13 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
               comia todo el sobrante: el boton se iba contra el borde y
               quedaban 410 px de vacio entre el final del titulo y el.
 
-              El sello pasa a ser una celda mas y no un absolute anclado a un
-              porcentaje del ancho. Asi la grilla garantiza que no pueda
-              cruzarse con el boton, que es lo que pasaba cada vez que algo se
-              movia de lugar. La tercera columna es 1fr y absorbe el resto. */}
-          <div className="grid items-center gap-10 lg:grid-cols-[auto_auto_minmax(0,1fr)] lg:gap-12">
+              La tercera columna no tiene hijo a proposito: es 1fr y esta solo
+              para comerse el sobrante. Sin ella, las dos auto se reparten el
+              espacio libre y el boton se vuelve a ir contra el borde. */}
+          {/* El pl corre el contenido a la derecha, como en la referencia, y
+              de paso lo despega de la tira de la izquierda: sin el, el texto
+              arrancaba en 120 y la tira llega hasta 214. */}
+          <div className="grid items-center gap-10 lg:grid-cols-[auto_auto_minmax(0,1fr)] lg:gap-12 lg:pl-20 xl:pl-32">
             <div>
               <p className="eyebrow mb-4 flex items-center gap-2.5">
                 <Mail size={16} /> Contá tu historia
@@ -365,18 +391,32 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
               <Firma className="mt-8 max-w-lg" />
             </div>
 
-            {/* El resplandor esta en la referencia y .btn-gold no lo trae: es
-                lo que despega al boton del fondo negro ahora que quedo lejos
-                del texto, en el medio de la franja. */}
-            <Link
-              href="/contacto"
-              className="btn-gold justify-self-start rounded-xl px-10 py-4 shadow-[0_0_45px_-10px_rgba(255,128,0,0.65)] lg:px-12"
-            >
-              Contanos <ArrowRight size={16} />
-            </Link>
+            <div className="relative justify-self-start">
+              {/* El sello va arriba del boton, no al lado: es donde esta en la
+                  referencia, y al lado no entra -- entre el boton y la tira de
+                  la derecha quedan 117 px y el sello mide 128.
 
-            <div aria-hidden="true" className="hidden opacity-50 lg:block">
-              <Stamp />
+                  Cuelga del boton y no de la grilla ni de un porcentaje del
+                  ancho. Asi lo acompaña a cualquier tamaño de pantalla: si el
+                  boton no llega a la tira, el sello tampoco. Las dos veces
+                  anteriores que se anclo a otra cosa, termino cruzandose con
+                  algo al mover cualquier otra pieza. */}
+              <div
+                aria-hidden="true"
+                className="pointer-events-none absolute -top-32 right-0 hidden opacity-50 lg:block"
+              >
+                <Stamp />
+              </div>
+
+              {/* El resplandor esta en la referencia y .btn-gold no lo trae:
+                  es lo que despega al boton del fondo ahora que quedo en el
+                  medio de la franja. */}
+              <Link
+                href="/contacto"
+                className="btn-gold rounded-xl px-10 py-4 shadow-[0_0_45px_-10px_rgba(255,128,0,0.65)] lg:px-12"
+              >
+                Contanos <ArrowRight size={16} />
+              </Link>
             </div>
           </div>
         </div>
