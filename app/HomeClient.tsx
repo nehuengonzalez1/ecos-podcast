@@ -99,12 +99,13 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
             transition={{ delay: 1, duration: 0.8 }}
             className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
           >
-            {/* Ambos con el mismo ancho, padding y tamaño de texto. Las
-                utilidades pisan a .btn-ghost, que por defecto es más chico. */}
-            <Link href="/archivo" className="btn-gold w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
+            {/* Ambos con el mismo ancho, padding, tamaño de texto y radio.
+                Las utilidades pisan a .btn-gold y .btn-ghost, que por defecto
+                son más chicos y de esquina casi recta. */}
+            <Link href="/archivo" className="btn-gold w-full justify-center whitespace-nowrap rounded-xl px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
               {brand.cta.exploreArchive} <ArrowRight size={16} />
             </Link>
-            <Link href="/contacto" className="btn-ghost w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
+            <Link href="/contacto" className="btn-ghost w-full justify-center whitespace-nowrap rounded-xl px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
               {brand.cta.tellStory}
             </Link>
           </motion.div>
@@ -312,6 +313,8 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
       </section>
 
       {/* ── Contá tu historia ─────────────────────────────────────────── */}
+      {/* El py es mas alto que el de las otras: la referencia es una franja
+          de 3,06 a 1 y con el py-16 de las demas esta quedaba en 3,47. */}
       <section className="relative overflow-hidden py-20 md:py-28">
         {/* Las dos tiras de los costados son decoracion. En la referencia la
             foto esta partida en los dos bordes con el texto en el medio, asi
@@ -335,31 +338,47 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
         </div>
 
         <div className="container-page relative">
-          <div className="relative mx-auto max-w-3xl text-center">
-            {/* Anclado a este bloque y no al contenedor: el bloque mide 768
-                fijos y va centrado, asi que nunca alcanza a las tiras de los
-                costados, que son un 15% del ancho de la pantalla. */}
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute -right-6 -top-24 hidden opacity-50 lg:block"
-            >
-              <Stamp />
+          {/* El sello va a un 20% del ancho del contenedor y no a una
+              distancia fija: las tiras de los costados son un 15% de la
+              pantalla, asi que cualquier distancia fija se les montaba encima
+              a algun ancho. El 26 y no el 20 porque a 20 se cruzaba con el
+              boton -- 14 px de ancho y 30 de alto --: la franja es corta y no
+              da el alto para apilarlos como en la referencia. */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute right-[26%] top-0 hidden opacity-50 lg:block"
+          >
+            <Stamp />
+          </div>
+
+          {/* El texto alineado a la izquierda y el boton al costado, no
+              debajo, como en la referencia. La segunda columna es auto: el
+              boton ocupa lo que mide y el texto se queda con el resto. */}
+          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-14">
+            <div>
+              <p className="eyebrow mb-4 flex items-center gap-2.5">
+                <Mail size={16} /> Contá tu historia
+              </p>
+              <h2 className="title-display text-3xl leading-[1.1] sm:text-4xl md:text-5xl">
+                ¿Y si la próxima<br />
+                historia <span className="italic text-gold-light">es la tuya?</span>
+              </h2>
+              <p className="body-copy mt-6 max-w-xl text-base leading-relaxed text-cream-200/80">
+                Nos encantaría escucharte. Contanos lo que te pasó, lo que aprendiste, o simplemente
+                lo que necesitás decir.
+              </p>
+              <Firma className="mt-8 max-w-lg" />
             </div>
-            <p className="eyebrow mb-4 flex items-center justify-center gap-2.5">
-              <Mail size={16} /> Contá tu historia
-            </p>
-            <h2 className="title-display text-3xl leading-[1.1] sm:text-4xl md:text-5xl">
-              ¿Y si la próxima historia{' '}
-              <span className="italic text-gold-light">es la tuya?</span>
-            </h2>
-            <p className="body-copy mx-auto mt-6 max-w-xl text-base leading-relaxed text-cream-200/80">
-              Nos encantaría escucharte. Contanos lo que te pasó, lo que aprendiste, o simplemente
-              lo que necesitás decir.
-            </p>
-            <Link href="/contacto" className="btn-gold mt-8 rounded-xl">
+
+            {/* El resplandor esta en la referencia y .btn-gold no lo trae: es
+                lo que despega al boton del fondo negro ahora que quedo lejos
+                del texto, en el medio de la franja. */}
+            <Link
+              href="/contacto"
+              className="btn-gold justify-self-start rounded-xl px-10 py-4 shadow-[0_0_45px_-10px_rgba(255,128,0,0.65)] lg:px-12"
+            >
               Contanos <ArrowRight size={16} />
             </Link>
-            <Firma className="mt-10 justify-center" />
           </div>
         </div>
       </section>
