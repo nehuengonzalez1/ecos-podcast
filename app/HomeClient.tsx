@@ -37,9 +37,12 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
                   <Mail size={20} />
                   <span className="eyebrow">Contá tu historia</span>
                 </div>
-                <h3 className="title-display mt-4 text-3xl md:text-4xl">
+                {/* h1 de la pagina. El que habia estaba en la apertura que se
+                    saco, y una pagina sin h1 no tiene encabezado principal.
+                    Solo cambia la etiqueta: el tamano lo fijan las clases. */}
+                <h1 className="title-display mt-4 text-3xl md:text-4xl">
                   ¿Y si la próxima historia es la tuya?
-                </h3>
+                </h1>
                 <p className="body-copy mt-4 max-w-lg text-base text-cream-200/80">
                   Nos encantaría escucharte. Contanos lo que te pasó, lo que aprendiste, o simplemente lo que necesitás decir.
                 </p>
@@ -60,9 +63,13 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
           <div className="relative mx-auto max-w-5xl overflow-hidden bg-ink-800/50 p-10 md:p-16">
             <div className="grid gap-12 md:grid-cols-2 md:items-center">
               <div className="flex justify-center">
+                {/* Foto propia y no un picsum, que era una imagen al azar de
+                    un banco traida desde otro servidor: no cargaba siempre y
+                    dejaba el marco en blanco. Esta es 800x1000, o sea el 4:5
+                    exacto que pide el componente, asi que no se recorta. */}
                 <Polaroid
-                  src="https://picsum.photos/seed/inv-polaroid/800/1000"
-                  alt="Estudio"
+                  src="/imagenes/estudio-polaroid.webp"
+                  alt="El estudio de LQLVE"
                   caption="Bienvenida"
                   seed={7}
                   size="lg"
@@ -70,10 +77,10 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
               </div>
               <div>
                 <p className="eyebrow mb-4">Un lugar</p>
-                <h3 className="title-display text-3xl leading-tight md:text-4xl">
+                <h2 className="title-display text-3xl leading-tight md:text-4xl">
                   Donde las historias<br />
                   <span className="hand-underline">se quedan.</span>
-                </h3>
+                </h2>
                 <p className="mt-6 text-sm text-cream-200/80">
                   Bienvenida al archivo de {brand.name}. Cada polaroid, cada carta, cada objeto acá es real. Y sigue creciendo con vos.
                 </p>
