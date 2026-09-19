@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import { SubscribeButton } from '@/components/SubscribeButton'
-import { Check, Loader2, XCircle, Sparkles, RefreshCw } from 'lucide-react'
+import { Check, Clock, Eye, Loader2, XCircle, Sparkles, RefreshCw } from 'lucide-react'
 
 type Status = {
   active: boolean
@@ -15,12 +15,16 @@ export function CuentaClient({
   initialActive,
   initialLastEvent,
   price,
+  suscripcionAbierta,
+  avisoSoloVos,
   mpReturn,
   upgradePrompt,
 }: {
   initialActive: boolean
   initialLastEvent: string | null
-  price: number
+  price: number | null
+  suscripcionAbierta: boolean
+  avisoSoloVos: boolean
   mpReturn: boolean
   upgradePrompt: boolean
 }) {
@@ -115,6 +119,12 @@ export function CuentaClient({
         </div>
       ) : (
         <div className={`card-panel ${upgradePrompt ? 'border-gold/60 shadow-soft' : ''}`}>
+          {avisoSoloVos && (
+            <div className="mb-5 inline-flex w-fit items-center gap-2 rounded-sm border border-gold/40 bg-gold/5 px-3 py-2 text-xs text-cream-200/90">
+              <Eye size={14} className="text-gold" />
+              Esto lo ves solo vos. Para el resto dice «proximamente».
+            </div>
+          )}
           <div className="flex items-center gap-3">
             <div className="flex h-12 w-12 items-center justify-center rounded-full border border-gold/50 text-gold">
               <Sparkles size={22} />
@@ -132,10 +142,20 @@ export function CuentaClient({
           </ul>
           <div className="mt-6 flex flex-wrap items-center justify-between gap-4">
             <div>
-              <div className="font-sans text-3xl text-cream-50">${price.toLocaleString('es-AR')}<span className="text-sm text-cream-200/60">/mes</span></div>
+              <div className="font-sans text-3xl text-cream-50">
+                {price === null ? '$-' : `$${price.toLocaleString('es-AR')}`}
+                <span className="text-sm text-cream-200/60">/mes</span>
+              </div>
               <div className="text-[10px] uppercase tracking-widest text-cream-400/60">Pesos argentinos · vía Mercado Pago</div>
             </div>
-            <SubscribeButton price={price} label="Suscribirme con Mercado Pago" />
+            {suscripcionAbierta ? (
+              <SubscribeButton price={price ?? undefined} label="Suscribirme con Mercado Pago" />
+            ) : (
+              /* Un parrafo y no un boton: no lleva a ningun lado. */
+              <p className="inline-flex items-center gap-2 rounded-sm border border-cream-400/25 bg-cream-400/5 px-5 py-2.5 text-xs font-medium uppercase tracking-[0.2em] text-cream-200/70">
+                <Clock size={14} /> Próximamente
+              </p>
+            )}
           </div>
           {status.lastEvent && status.lastEvent !== 'created' && (
             <p className="mt-4 text-[11px] text-cream-400/60">Último evento: <span className="text-cream-200/80">{status.lastEvent}</span></p>

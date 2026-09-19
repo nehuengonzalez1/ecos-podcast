@@ -18,3 +18,14 @@ export const CLERK_ACTIVE =
   !process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY.startsWith('pk_test_ZmFrZS')
 
 export const MP_ACTIVE = !!process.env.MP_ACCESS_TOKEN
+
+/**
+ * La suscripcion se muestra cerrada hasta que este lista para cobrar, igual
+ * que la tienda con TIENDA_PUBLICA. Mientras esta en false, el precio se
+ * reemplaza por un guion y el boton dice "proximamente" y no hace nada;
+ * quien administra la sigue viendo entera.
+ *
+ * Se abre poniendo SUSCRIPCION_PUBLICA=1 en Vercel, sin tocar codigo ni
+ * volver a desplegar.
+ */
+export const SUSCRIPCION_PUBLICA = process.env.SUSCRIPCION_PUBLICA === '1'

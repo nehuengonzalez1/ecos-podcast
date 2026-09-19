@@ -2,12 +2,20 @@ import { NextResponse } from 'next/server'
 import { auth, currentUser } from '@clerk/nextjs/server'
 import { createPreapproval } from '@/lib/mp'
 import { setSubscription, getSubscription } from '@/lib/subscriptions'
-import { CLERK_ACTIVE } from '@/lib/env'
+import { CLERK_ACTIVE, SUSCRIPCION_PUBLICA } from '@/lib/env'
+import { isAdmin } from '@/lib/admin'
 
 export const runtime = 'nodejs'
 
 export async function POST() {
   if (!CLERK_ACTIVE) return NextResponse.json({ error: 'not-configured' }, { status: 503 })
+
+  // El mismo candado que la pantalla. Esconder el boton no alcanza: sin
+  // esto, cualquiera que supiera la direccion podia hacer el POST igual y
+  // arrancar una suscripcion que todavia no queremos cobrar.
+  if (!(SUSCRIPCION_PUBLICA || (await isAdmin()))) {
+    return NextResponse.json({ error: 'not-open' }, { status: 403 })
+  }
 
   const { userId } = await auth()
   if (!userId) return NextResponse.json({ error: 'unauthenticated' }, { status: 401 })

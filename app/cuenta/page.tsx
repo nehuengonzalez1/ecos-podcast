@@ -5,7 +5,7 @@ import { auth, currentUser } from '@clerk/nextjs/server'
 import { getSubscription } from '@/lib/subscriptions'
 import { isAdmin } from '@/lib/admin'
 import { brand } from '@/lib/config/brand'
-import { CLERK_ACTIVE } from '@/lib/env'
+import { CLERK_ACTIVE, SUSCRIPCION_PUBLICA } from '@/lib/env'
 import { CuentaClient } from './CuentaClient'
 
 export const metadata = { title: `Mi cuenta · ${brand.name}` }
@@ -45,7 +45,13 @@ export default async function CuentaPage({
   const sub = await getSubscription(userId)
   const admin = await isAdmin()
   const params = await searchParams
-  const price = Number(process.env.NEXT_PUBLIC_SUBSCRIPTION_PRICE_ARS ?? '1500')
+  // Misma regla que en Comunidad y que en la tienda: abierta para quien
+  // administra, cerrada para el resto hasta que SUSCRIPCION_PUBLICA=1. El
+  // precio se lee aca y solo se manda cuando corresponde.
+  const suscripcionAbierta = SUSCRIPCION_PUBLICA || admin
+  const price = suscripcionAbierta
+    ? Number(process.env.NEXT_PUBLIC_SUBSCRIPTION_PRICE_ARS ?? '1500')
+    : null
 
   return (
     <section className="spotlight-bg pt-32 pb-24 min-h-[80vh]">
@@ -67,6 +73,8 @@ export default async function CuentaPage({
             initialActive={sub.active}
             initialLastEvent={sub.lastEvent ?? null}
             price={price}
+            suscripcionAbierta={suscripcionAbierta}
+            avisoSoloVos={suscripcionAbierta && !SUSCRIPCION_PUBLICA}
             mpReturn={params.mp === 'return'}
             upgradePrompt={params.upgrade === '1'}
           />
