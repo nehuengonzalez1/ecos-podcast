@@ -1,8 +1,8 @@
 'use client'
 
 import Link from 'next/link'
-import { motion } from 'framer-motion'
-import { ArrowRight, ChevronDown, Mail } from 'lucide-react'
+import { ArrowRight, BookOpen, Mail, Mic, Users } from 'lucide-react'
+import type { LucideIcon } from 'lucide-react'
 import { brand } from '@/lib/config/brand'
 import { SectionHeading } from '@/components/SectionHeading'
 import { EpisodeCard, type Episode } from '@/components/EpisodeCard'
@@ -19,110 +19,115 @@ export function HomeClient({ episodios }: { episodios: Episode[] }) {
 
   return (
     <>
-      <section className="relative min-h-[92vh] overflow-hidden pt-24">
-        {/* La foto es 3:2 y la portada ocupa casi toda la pantalla. En un
-            telefono -- mucho mas alto que ancho -- object-cover se queda con
-            una franja angosta del medio, y el medio de esta foto esta vacio a
-            proposito: los dos sillones estan contra los bordes opuestos.
+      {/* La apertura de la home.
 
-            No hay encuadre que los salve a los dos, asi que en pantallas
-            chicas se corre casi al borde izquierdo y se muestra uno
-            entero. Desde sm entran los dos y vuelve al centro. */}
+          Antes habia una portada a pantalla casi completa con la foto del
+          estudio y el titulo de marca, y recien despues venia el bloque de la
+          comunidad. Ahora la comunidad ES la apertura: no se duplica, se
+          movio y se redibujo segun la referencia.
+
+          El fondo es la foto del sillon y los estantes con las cajas por
+          episodio. Se eligio midiendo, no a ojo. La seccion es de 2,53 a 1 en
+          escritorio y esta foto es 2,34, la mas parecida; y sobre todo es la
+          unica cuyo centro conserva todo el contraste de la escena al
+          recortarse. Las de las cartas y la cabecera de comunidad son mas
+          panoramicas -- 3,44 y 3,70 -- pero tienen el centro vacio: medido,
+          entre el 25 y el 75 por ciento del ancho el contraste cae de 12 a 3,
+          asi que object-cover las dejaba en una mancha oscura. */}
+      <section className="relative overflow-hidden">
         <div aria-hidden="true" className="absolute inset-0">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/imagenes/inicio-cabecera.webp"
+            src="/imagenes/archivo-cabecera.webp"
             alt=""
-            className="h-full w-full object-cover object-[8%_55%] sm:object-center"
+            className="h-full w-full object-cover"
           />
+          {/* Velo radial y no parejo. Encima hay un titular, una bajada y tres
+              tarjetas con textos chicos, asi que el centro tiene que ir bien
+              tapado; pero con el 85% plano que tenia antes la foto no se veia
+              en ningun lado y daba igual poner una. Abierto en los bordes, que
+              es donde el contenido no llega, la escena aparece. */}
           <div
             className="absolute inset-0"
             style={{
               background:
-                'radial-gradient(ellipse 55% 60% at 50% 45%, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.66) 55%, rgba(10,10,10,0.28) 100%)',
+                'radial-gradient(ellipse 70% 80% at 50% 50%, rgba(10,10,10,0.93) 0%, rgba(10,10,10,0.84) 55%, rgba(10,10,10,0.55) 100%)',
             }}
           />
-          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ink-900 to-transparent" />
-          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-ink-900 to-transparent" />
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-ink-900 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-ink-900 to-transparent" />
         </div>
-        <div className="container-page relative z-10 flex min-h-[80vh] flex-col items-center justify-center text-center">
-          <motion.p
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 1 }}
-            className="eyebrow mb-6"
-          >
-            {brand.fullName}
-          </motion.p>
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
-            className="title-display max-w-4xl text-5xl leading-[1.05] sm:text-6xl md:text-7xl"
-          >
-            Hay historias<br />
-            que cambian vidas
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-            className="subtitle-signature mt-6 max-w-xl text-3xl sm:text-4xl"
-          >
-            Algunas todavía no fueron contadas.
-          </motion.p>
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 0.8 }}
-            className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
-          >
-            {/* Ambos con el mismo ancho, padding y tamaño de texto. Las
-                utilidades pisan a .btn-ghost, que por defecto es más chico. */}
-            <Link href="/archivo" className="btn-gold w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
-              {brand.cta.exploreArchive} <ArrowRight size={16} />
-            </Link>
-            <Link href="/contacto" className="btn-ghost w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
-              {brand.cta.tellStory}
-            </Link>
-          </motion.div>
 
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1.5, duration: 1 }}
-            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-cream-400/60"
-          >
-            <span className="text-[10px] uppercase tracking-[0.4em]">Scroll</span>
-            <ChevronDown size={18} className="animate-float-slow" />
-          </motion.div>
-        </div>
-        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink-900 to-transparent" />
-      </section>
+        {/* El nombre del sitio vuelve como manuscrita, ahora que salio de la
+            barra de navegacion. Desde xl: mas abajo no hay margen libre a la
+            derecha y se montaria sobre las tarjetas. */}
+        <p
+          aria-hidden="true"
+          className="absolute right-8 top-28 z-10 hidden -rotate-6 text-right font-hand text-3xl leading-tight text-cream-100/75 xl:block"
+        >
+          Lo que<br />la vida<br />esconde
+          <span className="mt-2 ml-auto block h-px w-20 bg-gold/70" />
+        </p>
 
-      <section className="border-y border-cream-400/10 bg-ink-800/60 py-20">
-        <div className="container-page grid gap-10 md:grid-cols-2 md:items-center">
-          <div className="text-center md:text-left">
-            <p className="eyebrow mb-3">La comunidad</p>
-            <h2 className="title-display text-3xl leading-tight md:text-4xl">
-              Más de<br />
-              <span className="text-gold">1.000.000</span><br />
-              <span>de personas ya escucharon una historia.</span>
-            </h2>
-            <p className="body-copy mt-4 max-w-md text-base text-cream-200/70">
-              Y seguimos creciendo. Cada episodio deja una huella, un pensamiento, un momento que se queda.
-            </p>
-            <div className="mt-6 flex items-center gap-2 justify-center md:justify-start">
-              {latest.slice(0, 4).map((e) => (
-                <img key={e.id} src={e.photo!} alt="" className="h-10 w-10 rounded-full border border-cream-400/20 object-cover" />
-              ))}
-              <div className="h-10 w-10 rounded-full border border-cream-400/20 bg-ink-700 flex items-center justify-center text-[10px] text-cream-200/70">+9</div>
+        <div className="container-page relative z-10 pb-20 pt-32 md:pb-24 md:pt-36">
+          <div className="grid gap-12 lg:grid-cols-2 lg:items-center lg:gap-16">
+            <div>
+              <p className="eyebrow mb-4">La comunidad</p>
+              <h1 className="title-display text-4xl leading-[1.05] sm:text-5xl lg:text-6xl">
+                Más de<br />
+                <span className="text-gold">1.000.000</span><br />
+                de personas ya<br />
+                escucharon una historia.
+              </h1>
+              <p className="body-copy mt-6 max-w-md text-base leading-relaxed text-cream-200/75">
+                Y seguimos creciendo. Cada episodio deja una huella, un pensamiento, un momento que se queda.
+              </p>
+
+              <div className="mt-9 flex flex-wrap items-center gap-5">
+                <div className="flex items-center gap-2">
+                  {latest.slice(0, 4).map((e) => (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      key={e.id}
+                      src={e.photo!}
+                      alt=""
+                      className="h-11 w-11 rounded-full border border-cream-400/20 object-cover"
+                    />
+                  ))}
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full border border-cream-400/20 bg-ink-800 text-[11px] text-cream-200/70">
+                    +9
+                  </div>
+                </div>
+                <span aria-hidden="true" className="hidden h-12 w-px bg-cream-400/20 sm:block" />
+                <p className="font-hand text-2xl leading-tight text-cream-100/90">
+                  Historias<br />que nos unen.
+                  <span aria-hidden="true" className="mt-2 block h-px w-28 bg-gold/70" />
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-3 gap-3">
-            <StatCard title="Historias" text="Conocé a quienes se animaron a contar." to="/archivo" />
-            <StatCard title="Archivo" text="Explorá cada episodio, cartas, regalos y más." to="/archivo" />
-            <StatCard title="Comunidad" text="Vení también vos a ser parte de esta historia." to="/comunidad" />
+            {/* Una columna en telefono. A tres, cada tarjeta quedaba en unos
+                cien pixeles y el circulo del icono no entraba con su texto. */}
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-3 sm:gap-4">
+              <TarjetaComunidad
+                icono={Mic}
+                titulo="Historias"
+                texto="Conocé a quienes se animaron a contar."
+                to="/archivo"
+              />
+              <TarjetaComunidad
+                icono={BookOpen}
+                titulo="Archivo"
+                texto="Explorá cada episodio, cartas, regalos y más."
+                to="/archivo"
+              />
+              <TarjetaComunidad
+                icono={Users}
+                titulo="Comunidad"
+                texto="Vení también vos a ser parte de esta historia."
+                to="/comunidad"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -266,19 +271,35 @@ export function HomeClient({ episodios }: { episodios: Episode[] }) {
   )
 }
 
-function StatCard({ title, text, to }: { title: string; text: string; to: string }) {
+function TarjetaComunidad({
+  icono: Icono,
+  titulo,
+  texto,
+  to,
+}: {
+  icono: LucideIcon
+  titulo: string
+  texto: string
+  to: string
+}) {
   return (
     <Link
       href={to}
-      className="group flex flex-col justify-between border border-cream-400/10 bg-ink-800/70 p-4 transition hover:border-gold/50"
+      className="group flex flex-col items-center rounded-2xl border border-cream-400/10 bg-ink-900/60 p-5 text-center backdrop-blur-sm transition hover:border-gold/50"
     >
-      <div>
-        <div className="eyebrow text-gold/90">{title}</div>
-        <p className="mt-3 text-xs text-cream-200/70">{text}</p>
-      </div>
-      <div className="mt-4 flex items-center gap-1 text-[10px] uppercase tracking-[0.25em] text-cream-100/70 group-hover:text-gold">
-        Ver más <ArrowRight size={12} />
-      </div>
+      <span className="flex h-14 w-14 items-center justify-center rounded-full border border-gold/50 text-gold">
+        <Icono size={24} strokeWidth={1.5} />
+      </span>
+      <span className="eyebrow mt-5 text-gold/90">{titulo}</span>
+      <p className="mt-3 text-xs leading-relaxed text-cream-200/75">{texto}</p>
+      {/* mt-auto empuja el enlace al piso: sin esto, con bajadas de distinto
+          largo los "Ver mas" de las tres tarjetas quedan a distinta altura. */}
+      <span className="mt-auto flex flex-col items-center gap-1.5 pt-6 text-[10px] uppercase tracking-[0.25em] text-cream-100/75 group-hover:text-gold">
+        <span className="flex items-center gap-1.5">
+          Ver más <ArrowRight size={12} />
+        </span>
+        <span aria-hidden="true" className="h-px w-16 bg-gold/60" />
+      </span>
     </Link>
   )
 }
