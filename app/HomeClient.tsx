@@ -338,23 +338,18 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
         </div>
 
         <div className="container-page relative">
-          {/* El sello va a un 20% del ancho del contenedor y no a una
-              distancia fija: las tiras de los costados son un 15% de la
-              pantalla, asi que cualquier distancia fija se les montaba encima
-              a algun ancho. El 26 y no el 20 porque a 20 se cruzaba con el
-              boton -- 14 px de ancho y 30 de alto --: la franja es corta y no
-              da el alto para apilarlos como en la referencia. */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute right-[26%] top-0 hidden opacity-50 lg:block"
-          >
-            <Stamp />
-          </div>
+          {/* Tres columnas: texto, boton y sello.
 
-          {/* El texto alineado a la izquierda y el boton al costado, no
-              debajo, como en la referencia. La segunda columna es auto: el
-              boton ocupa lo que mide y el texto se queda con el resto. */}
-          <div className="grid items-center gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:gap-14">
+              Las dos primeras son auto, asi que cada una ocupa lo que mide y
+              el boton queda pegado al texto. Antes la primera era 1fr y se
+              comia todo el sobrante: el boton se iba contra el borde y
+              quedaban 410 px de vacio entre el final del titulo y el.
+
+              El sello pasa a ser una celda mas y no un absolute anclado a un
+              porcentaje del ancho. Asi la grilla garantiza que no pueda
+              cruzarse con el boton, que es lo que pasaba cada vez que algo se
+              movia de lugar. La tercera columna es 1fr y absorbe el resto. */}
+          <div className="grid items-center gap-10 lg:grid-cols-[auto_auto_minmax(0,1fr)] lg:gap-12">
             <div>
               <p className="eyebrow mb-4 flex items-center gap-2.5">
                 <Mail size={16} /> Contá tu historia
@@ -379,6 +374,10 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
             >
               Contanos <ArrowRight size={16} />
             </Link>
+
+            <div aria-hidden="true" className="hidden opacity-50 lg:block">
+              <Stamp />
+            </div>
           </div>
         </div>
       </section>
