@@ -1,8 +1,10 @@
 'use client'
 
 import Link from 'next/link'
+import { motion } from 'framer-motion'
 import {
   ArrowRight,
+  ChevronDown,
   Gift,
   Heart,
   Mail,
@@ -18,7 +20,10 @@ import { type Episode } from '@/components/EpisodeCard'
 import { Stamp } from '@/components/Stamp'
 
 /**
- * Las cuatro secciones de la home, armadas desde las referencias.
+ * La portada y las cuatro secciones de la home.
+ *
+ * La portada es la de siempre. Las otras cuatro salieron de las
+ * referencias.
  *
  * En las referencias el texto venia quemado dentro de la imagen. Aca se
  * separa: de cada una se recorto solo la parte fotografica -- las polaroids,
@@ -33,10 +38,95 @@ import { Stamp } from '@/components/Stamp'
 export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) {
   return (
     <>
-      {/* ── El archivo ─────────────────────────────────────────────────
-          Primera de la pagina, asi que el pt de arriba despeja la barra de
-          navegacion, que es fija y mide 80 px. */}
-      <section className="relative overflow-hidden pb-20 pt-28 md:pb-24 md:pt-32">
+      {/* ── La portada ────────────────────────────────────────────────
+          Vuelve tal cual estaba. Se habia ido junto con la seccion de la
+          comunidad que la habia reemplazado, pero esa se saco despues y la
+          portada nunca tuvo que irse con ella. */}
+      <section className="relative min-h-[92vh] overflow-hidden pt-24">
+        {/* La foto es 3:2 y la portada ocupa casi toda la pantalla. En un
+            telefono -- mucho mas alto que ancho -- object-cover se queda con
+            una franja angosta del medio, y el medio de esta foto esta vacio a
+            proposito: los dos sillones estan contra los bordes opuestos.
+
+            No hay encuadre que los salve a los dos, asi que en pantallas
+            chicas se corre casi al borde izquierdo y se muestra uno
+            entero. Desde sm entran los dos y vuelve al centro. */}
+        <div aria-hidden="true" className="absolute inset-0">
+          <img
+            src="/imagenes/inicio-cabecera.webp"
+            alt=""
+            className="h-full w-full object-cover object-[8%_55%] sm:object-center"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 55% 60% at 50% 45%, rgba(10,10,10,0.88) 0%, rgba(10,10,10,0.66) 55%, rgba(10,10,10,0.28) 100%)',
+            }}
+          />
+          <div className="absolute inset-x-0 top-0 h-28 bg-gradient-to-b from-ink-900 to-transparent" />
+          <div className="absolute inset-x-0 bottom-0 h-28 bg-gradient-to-t from-ink-900 to-transparent" />
+        </div>
+        <div className="container-page relative z-10 flex min-h-[80vh] flex-col items-center justify-center text-center">
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.3, duration: 1 }}
+            className="eyebrow mb-6"
+          >
+            {brand.fullName}
+          </motion.p>
+          <motion.h1
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.4, duration: 1, ease: [0.2, 0.8, 0.2, 1] }}
+            className="title-display max-w-4xl text-5xl leading-[1.05] sm:text-6xl md:text-7xl"
+          >
+            Hay historias<br />
+            que cambian vidas
+          </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+            className="subtitle-signature mt-6 max-w-xl text-3xl sm:text-4xl"
+          >
+            Algunas todavía no fueron contadas.
+          </motion.p>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1, duration: 0.8 }}
+            className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
+          >
+            {/* Ambos con el mismo ancho, padding y tamaño de texto. Las
+                utilidades pisan a .btn-ghost, que por defecto es más chico. */}
+            <Link href="/archivo" className="btn-gold w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
+              {brand.cta.exploreArchive} <ArrowRight size={16} />
+            </Link>
+            <Link href="/contacto" className="btn-ghost w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
+              {brand.cta.tellStory}
+            </Link>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 1.5, duration: 1 }}
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-cream-400/60"
+          >
+            <span className="text-[10px] uppercase tracking-[0.4em]">Scroll</span>
+            <ChevronDown size={18} className="animate-float-slow" />
+          </motion.div>
+        </div>
+        <div className="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-ink-900 to-transparent" />
+      </section>
+
+      {/* ── El archivo ──────────────────────────────────────────────────
+          Ya no es la primera de la pagina, asi que no necesita despejar la
+          barra de navegacion: de eso se encarga el pt-24 de la portada, que
+          ahora va arriba. Vuelve al mismo padding que Sorteos y Tienda. */}
+      <section className="relative overflow-hidden py-16 md:py-20">
         <div className="container-page">
           <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
             {/* La foto conserva su proporcion: no lleva object-cover ni alto
@@ -62,12 +152,13 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
 
             <div className="relative">
               <p className="eyebrow mb-4">Un lugar</p>
-              <h1 className="title-display text-4xl leading-[1.05] sm:text-5xl lg:text-6xl">
+              {/* h2 y no h1: el h1 de la pagina es el de la portada. */}
+              <h2 className="title-display text-4xl leading-[1.05] sm:text-5xl lg:text-6xl">
                 Donde las{' '}
                 <span className="hand-underline italic">historias</span>
                 <br />
                 se quedan.
-              </h1>
+              </h2>
               <p className="body-copy mt-6 max-w-md text-base leading-relaxed text-cream-200/80">
                 Bienvenida al archivo de {brand.name}. Cada polaroid, cada carta, cada objeto acá es
                 real. Y sigue creciendo con vos.
