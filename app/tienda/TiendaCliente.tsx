@@ -13,7 +13,6 @@ import {
   Shirt,
   ShoppingCart,
 } from 'lucide-react'
-import { useCarrito } from '@/components/tienda/Carrito'
 
 export type ProductoVista = {
   slug: string
@@ -68,7 +67,6 @@ export function TiendaCliente({
   colores: string[]
   precioMaximo: number
 }) {
-  const { agregar } = useCarrito()
 
   const [rubro, setRubro] = useState('Todos')
   const [busqueda, setBusqueda] = useState('')
@@ -375,34 +373,28 @@ export function TiendaCliente({
                         3 cuotas de {p.cuotaTexto}
                       </p>
 
-                      {/* Un producto con talles no se puede agregar desde acá:
-                          habría que elegir uno por él, y el talle elegido a
-                          dedo es justo lo que después se cambia o se devuelve.
-                          Se manda a la ficha, que es donde se elige. */}
-                      {p.talles.length ? (
+                      {/* Todas las tarjetas llevan el mismo boton y todas
+                          abren la ficha. Antes las que tenian talle decian
+                          "elegir talle" y las que no agregaban al carrito ahi
+                          mismo: dos botones distintos al lado del otro.
+
+                          Ahora la eleccion -- talle, color, lo que el producto
+                          tenga -- se hace siempre en la ficha, que es donde
+                          estan todas las opciones. Elegir un talle por la
+                          persona es justo lo que despues se cambia o se
+                          devuelve. */}
+                      {p.agotado ? (
+                        <p className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-cream-400/15 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-cream-400/60">
+                          Sin stock
+                        </p>
+                      ) : (
                         <Link
                           href={`/tienda/${p.slug}`}
                           className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-cream-400/20 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-cream-100 transition hover:border-gold hover:text-gold"
                         >
                           <ShoppingCart size={12} />
-                          Elegir talle
+                          Comprar
                         </Link>
-                      ) : (
-                        <button
-                          onClick={() =>
-                            agregar({
-                              slug: p.slug,
-                              nombre: p.nombre,
-                              precio: p.precio,
-                              imagen: p.imagen,
-                            })
-                          }
-                          disabled={p.agotado}
-                          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-cream-400/20 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-cream-100 transition hover:border-gold hover:text-gold disabled:cursor-not-allowed disabled:opacity-40"
-                        >
-                          <ShoppingCart size={12} />
-                          Agregar al carrito
-                        </button>
                       )}
                     </div>
                   </article>

@@ -109,6 +109,7 @@ export default async function ProductoPage({ params }: { params: Promise<{ slug:
               precio={p.precio}
               imagen={p.imagen}
               variantes={p.variantes}
+              colores={p.colores ?? []}
               agotado={agotado}
             />
 

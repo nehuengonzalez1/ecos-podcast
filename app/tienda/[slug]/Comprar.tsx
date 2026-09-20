@@ -4,11 +4,19 @@ import { useState } from 'react'
 import { ShoppingCart } from 'lucide-react'
 import { useCarrito } from '@/components/tienda/Carrito'
 
+type Grupo = { titulo: string; opciones: string[] }
+
 /**
- * Elegir la variante y agregar al carrito.
+ * Elegir las opciones del producto y agregarlo al carrito.
  *
- * Con talles, no se agrega nada hasta elegir uno: mandar un talle por omisión
- * es exactamente lo que después termina en un cambio o una devolución.
+ * Los grupos son genéricos y no solo el talle: hoy son el talle y el color,
+ * y si mañana un producto trae otro eje se suma acá sin tocar el resto. Un
+ * grupo con una sola opción no se pregunta, porque no hay nada que elegir:
+ * todas las remeras son negras y preguntarlo sería ruido.
+ *
+ * No se agrega nada hasta elegir todas las opciones que correspondan: mandar
+ * un talle o un color por omisión es exactamente lo que después termina en un
+ * cambio o una devolución.
  */
 export function Comprar({
   slug,
@@ -16,47 +24,54 @@ export function Comprar({
   precio,
   imagen,
   variantes,
+  colores = [],
   agotado,
 }: {
   slug: string
   nombre: string
   precio: number
   imagen: string | null
-  variantes: { titulo: string; opciones: string[] } | null
+  variantes: Grupo | null
+  colores?: string[]
   agotado: boolean
 }) {
   const { agregar } = useCarrito()
-  const [elegida, setElegida] = useState<string | null>(null)
-  const [falta, setFalta] = useState(false)
+  const [elegidas, setElegidas] = useState<Record<string, string>>({})
+  const [faltan, setFaltan] = useState<string[]>([])
 
-  const hayQueElegir = !!variantes?.opciones.length
+  const grupos: Grupo[] = [
+    ...(variantes?.opciones.length ? [variantes] : []),
+    ...(colores.length > 1 ? [{ titulo: 'Color', opciones: colores }] : []),
+  ]
 
   const alAgregar = () => {
-    if (hayQueElegir && !elegida) {
-      setFalta(true)
+    const sinElegir = grupos.filter((g) => !elegidas[g.titulo]).map((g) => g.titulo)
+    if (sinElegir.length) {
+      setFaltan(sinElegir)
       return
     }
-    agregar({ slug, nombre, precio, imagen, ...(elegida ? { variante: elegida } : {}) })
+    // La variante viaja como un solo texto porque es lo que el carrito usa
+    // para separar líneas: la misma remera en S y en L son dos líneas.
+    const variante = grupos.map((g) => elegidas[g.titulo]).join(' · ')
+    agregar({ slug, nombre, precio, imagen, ...(variante ? { variante } : {}) })
   }
 
   return (
     <div className="mt-8">
-      {variantes && !!variantes.opciones.length && (
-        <div>
-          <p className="text-[10px] uppercase tracking-[0.2em] text-cream-400/70">
-            {variantes.titulo}
-          </p>
+      {grupos.map((g) => (
+        <div key={g.titulo} className="mt-5 first:mt-0">
+          <p className="text-[10px] uppercase tracking-[0.2em] text-cream-400/70">{g.titulo}</p>
           <div className="mt-3 flex flex-wrap gap-2">
-            {variantes.opciones.map((o) => (
+            {g.opciones.map((o) => (
               <button
                 key={o}
                 onClick={() => {
-                  setElegida(o)
-                  setFalta(false)
+                  setElegidas((prev) => ({ ...prev, [g.titulo]: o }))
+                  setFaltan((prev) => prev.filter((x) => x !== g.titulo))
                 }}
-                aria-pressed={elegida === o}
+                aria-pressed={elegidas[g.titulo] === o}
                 className={`h-10 min-w-[2.75rem] rounded-xl border px-3 text-xs transition ${
-                  elegida === o
+                  elegidas[g.titulo] === o
                     ? 'border-gold bg-gold/10 text-gold'
                     : 'border-cream-400/20 text-cream-200/80 hover:border-gold/50'
                 }`}
@@ -65,13 +80,13 @@ export function Comprar({
               </button>
             ))}
           </div>
-          {falta && (
+          {faltan.includes(g.titulo) && (
             <p role="alert" className="mt-2 text-xs text-red-300">
-              Elegí un {variantes.titulo.toLowerCase()} antes de agregar.
+              Elegí un {g.titulo.toLowerCase()} antes de agregar.
             </p>
           )}
         </div>
-      )}
+      ))}
 
       <button
         onClick={alAgregar}
