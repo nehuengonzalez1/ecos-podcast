@@ -78,14 +78,14 @@ export function SorteoCard({ s, index = 0 }: { s: SorteoTarjeta; index?: number 
           {abierto ? (
             <Link
               href={`/sorteos/${s.slug}`}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-sm border border-gold/70 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold transition hover:bg-gold hover:text-ink-900"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-gold/70 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-gold transition hover:bg-gold hover:text-ink-900"
             >
               Participar <ArrowRight size={13} />
             </Link>
           ) : (
             <Link
               href={`/sorteos/${s.slug}`}
-              className="mt-4 flex w-full items-center justify-center gap-2 rounded-sm border border-cream-400/20 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-200/60 transition hover:border-cream-400/40 hover:text-cream-100"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-cream-400/20 px-4 py-2.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-200/60 transition hover:border-cream-400/40 hover:text-cream-100"
             >
               {/* Un sorteo cerrado no dice "ver el resultado": el ganador se
                   contacta en privado y no se publica, asi que el boton estaria

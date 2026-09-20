@@ -231,7 +231,7 @@ export function SorteosPanel({ filas, activo }: { filas: FilaSorteo[]; activo: b
                               ? 'Todavía no se anotó nadie'
                               : undefined
                         }
-                        className="inline-flex items-center gap-1.5 rounded-sm bg-cream-50 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-35"
+                        className="inline-flex items-center gap-1.5 rounded-xl bg-cream-50 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-35"
                       >
                         {sorteando === f.slug ? (
                           <>
@@ -247,7 +247,7 @@ export function SorteosPanel({ filas, activo }: { filas: FilaSorteo[]; activo: b
                       {!!d?.participantes.length && (
                         <button
                           onClick={() => bajarCsv(f, d.participantes)}
-                          className="inline-flex items-center gap-1.5 rounded-sm border border-cream-400/25 px-3.5 py-2 text-[10px] uppercase tracking-[0.15em] text-cream-200/80 transition hover:border-gold/50 hover:text-gold"
+                          className="inline-flex items-center gap-1.5 rounded-xl border border-cream-400/25 px-3.5 py-2 text-[10px] uppercase tracking-[0.15em] text-cream-200/80 transition hover:border-gold/50 hover:text-gold"
                         >
                           <Download size={12} /> Bajar CSV
                         </button>

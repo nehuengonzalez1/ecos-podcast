@@ -55,7 +55,7 @@ export function Comprar({
                   setFalta(false)
                 }}
                 aria-pressed={elegida === o}
-                className={`h-10 min-w-[2.75rem] rounded-sm border px-3 text-xs transition ${
+                className={`h-10 min-w-[2.75rem] rounded-xl border px-3 text-xs transition ${
                   elegida === o
                     ? 'border-gold bg-gold/10 text-gold'
                     : 'border-cream-400/20 text-cream-200/80 hover:border-gold/50'
@@ -76,7 +76,7 @@ export function Comprar({
       <button
         onClick={alAgregar}
         disabled={agotado}
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-sm bg-cream-50 px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:bg-ink-700 disabled:text-cream-400/60 sm:w-auto sm:px-10"
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-xl bg-cream-50 px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:bg-ink-700 disabled:text-cream-400/60 sm:w-auto sm:px-10"
       >
         <ShoppingCart size={14} />
         {agotado ? 'Sin stock' : 'Agregar al carrito'}

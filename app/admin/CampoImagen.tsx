@@ -79,7 +79,7 @@ export function CampoImagen({
               onClick={() => archivoRef.current?.click()}
               disabled={!blobActivo || subiendo}
               title={blobActivo ? undefined : 'Falta crear el store de Blob en Vercel'}
-              className="inline-flex items-center gap-1.5 rounded-sm border border-cream-400/25 px-3 py-1.5 text-[10px] uppercase tracking-widest text-cream-100 transition hover:border-gold hover:text-gold disabled:cursor-not-allowed disabled:opacity-35"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-cream-400/25 px-3 py-1.5 text-[10px] uppercase tracking-widest text-cream-100 transition hover:border-gold hover:text-gold disabled:cursor-not-allowed disabled:opacity-35"
             >
               <Upload size={12} /> {subiendo ? 'Subiendo…' : 'Subir'}
             </button>
@@ -88,7 +88,7 @@ export function CampoImagen({
               <button
                 type="button"
                 onClick={() => onCambio('')}
-                className="inline-flex items-center gap-1.5 rounded-sm border border-cream-400/20 px-3 py-1.5 text-[10px] uppercase tracking-widest text-cream-200/60 transition hover:border-red-400/50 hover:text-red-300"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-cream-400/20 px-3 py-1.5 text-[10px] uppercase tracking-widest text-cream-200/60 transition hover:border-red-400/50 hover:text-red-300"
               >
                 <X size={12} /> Quitar
               </button>

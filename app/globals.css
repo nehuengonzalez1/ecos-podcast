@@ -66,10 +66,10 @@
     @apply mx-auto w-full max-w-7xl px-5 sm:px-8 lg:px-12;
   }
   .btn-gold {
-    @apply inline-flex items-center gap-2 rounded-sm border border-gold/70 bg-gold/10 px-6 py-3 text-sm font-medium uppercase tracking-[0.18em] text-cream-50 transition hover:bg-gold hover:text-ink-900;
+    @apply inline-flex items-center gap-2 rounded-xl border border-gold/70 bg-gold/10 px-6 py-3 text-sm font-medium uppercase tracking-[0.18em] text-cream-50 transition hover:bg-gold hover:text-ink-900;
   }
   .btn-ghost {
-    @apply inline-flex items-center gap-2 rounded-sm border border-cream-400/30 px-5 py-2.5 text-xs font-medium uppercase tracking-[0.2em] text-cream-100/80 transition hover:border-gold hover:text-gold;
+    @apply inline-flex items-center gap-2 rounded-xl border border-cream-400/30 px-5 py-2.5 text-xs font-medium uppercase tracking-[0.2em] text-cream-100/80 transition hover:border-gold hover:text-gold;
   }
   .eyebrow {
     @apply text-[10px] font-semibold uppercase tracking-[0.35em] text-gold;

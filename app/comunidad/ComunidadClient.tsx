@@ -220,12 +220,12 @@ export function ComunidadClient({
                     price={price ?? undefined}
                     label="Suscribirme con Mercado Pago"
                     icono={<CreditCard size={16} />}
-                    clasesBoton="flex w-full items-center justify-center gap-3 rounded-sm border border-gold/70 bg-gold/10 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-50 transition hover:bg-gold hover:text-ink-900 disabled:opacity-60"
+                    clasesBoton="flex w-full items-center justify-center gap-3 rounded-xl border border-gold/70 bg-gold/10 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-50 transition hover:bg-gold hover:text-ink-900 disabled:opacity-60"
                   />
                 ) : (
                   /* Un parrafo y no un boton: no lleva a ningun lado, asi que
                      tampoco tiene que poder recibir el foco ni el click. */
-                  <p className="mt-7 flex w-full items-center justify-center gap-3 rounded-sm border border-cream-400/25 bg-cream-400/5 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-200/70">
+                  <p className="mt-7 flex w-full items-center justify-center gap-3 rounded-xl border border-cream-400/25 bg-cream-400/5 px-6 py-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-200/70">
                     <Clock size={16} /> Próximamente
                   </p>
                 )}

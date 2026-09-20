@@ -121,7 +121,7 @@ export function MuroModeracion({ pendientes }: { pendientes: ItemModeracion[] })
               <button
                 onClick={() => moderar(m, 'aprobar')}
                 disabled={ocupado}
-                className="inline-flex items-center gap-2 rounded-sm border border-gold/70 bg-gold/10 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-cream-50 transition hover:bg-gold hover:text-ink-900 disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl border border-gold/70 bg-gold/10 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-cream-50 transition hover:bg-gold hover:text-ink-900 disabled:opacity-50"
               >
                 {ocupado ? <Loader2 size={13} className="animate-spin" /> : <Check size={13} />}
                 Publicar
@@ -129,7 +129,7 @@ export function MuroModeracion({ pendientes }: { pendientes: ItemModeracion[] })
               <button
                 onClick={() => moderar(m, 'rechazar')}
                 disabled={ocupado}
-                className="inline-flex items-center gap-2 rounded-sm border border-cream-400/25 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-cream-200/70 transition hover:border-red-400/60 hover:text-red-300 disabled:opacity-50"
+                className="inline-flex items-center gap-2 rounded-xl border border-cream-400/25 px-4 py-2 text-[11px] uppercase tracking-[0.18em] text-cream-200/70 transition hover:border-red-400/60 hover:text-red-300 disabled:opacity-50"
               >
                 <X size={13} /> Descartar
               </button>

@@ -209,7 +209,7 @@ export function SorteosEditor({
         <button
           onClick={crear}
           disabled={nuevoTitulo.trim().length < 2 || creando}
-          className="inline-flex items-center gap-1.5 rounded-sm bg-cream-50 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-35"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-cream-50 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-35"
         >
           {creando ? <Loader2 size={12} className="animate-spin" /> : <Plus size={12} />}
           Crear
@@ -419,7 +419,7 @@ export function SorteosEditor({
                     <button
                       onClick={guardar}
                       disabled={guardando}
-                      className="inline-flex items-center gap-1.5 rounded-sm bg-cream-50 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:opacity-40"
+                      className="inline-flex items-center gap-1.5 rounded-xl bg-cream-50 px-4 py-2 text-[10px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:opacity-40"
                     >
                       {guardando ? (
                         <Loader2 size={12} className="animate-spin" />
@@ -450,7 +450,7 @@ export function SorteosEditor({
                     {oculto ? (
                       <button
                         onClick={() => accion(s.slug, 'mostrar')}
-                        className="ml-auto inline-flex items-center gap-1.5 rounded-sm border border-gold/50 px-3 py-2 text-[10px] uppercase tracking-[0.15em] text-gold transition hover:bg-gold/10"
+                        className="ml-auto inline-flex items-center gap-1.5 rounded-xl border border-gold/50 px-3 py-2 text-[10px] uppercase tracking-[0.15em] text-gold transition hover:bg-gold/10"
                       >
                         Volver a mostrar
                       </button>

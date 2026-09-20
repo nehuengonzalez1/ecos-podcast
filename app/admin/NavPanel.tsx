@@ -32,7 +32,7 @@ export function NavPanel() {
           <Link
             key={href}
             href={href}
-            className={`inline-flex items-center gap-2 rounded-sm border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.15em] transition ${
+            className={`inline-flex items-center gap-2 rounded-xl border px-4 py-2 text-[11px] font-semibold uppercase tracking-[0.15em] transition ${
               activa
                 ? 'border-gold/60 bg-gold/10 text-gold'
                 : 'border-cream-400/20 text-cream-200/70 hover:border-gold/40 hover:text-gold'

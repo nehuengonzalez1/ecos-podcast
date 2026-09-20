@@ -216,7 +216,7 @@ export function TiendaCliente({
                       <button
                         key={t}
                         onClick={() => alternar(talle, t, setTalle)}
-                        className={`h-8 min-w-[2.25rem] rounded-sm border px-2 text-[11px] transition ${
+                        className={`h-8 min-w-[2.25rem] rounded-xl border px-2 text-[11px] transition ${
                           talle.includes(t)
                             ? 'border-gold bg-gold/10 text-gold'
                             : 'border-cream-400/20 text-cream-200/80 hover:border-gold/50'
@@ -382,7 +382,7 @@ export function TiendaCliente({
                       {p.talles.length ? (
                         <Link
                           href={`/tienda/${p.slug}`}
-                          className="mt-4 flex w-full items-center justify-center gap-2 rounded-sm border border-cream-400/20 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-cream-100 transition hover:border-gold hover:text-gold"
+                          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-cream-400/20 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-cream-100 transition hover:border-gold hover:text-gold"
                         >
                           <ShoppingCart size={12} />
                           Elegir talle
@@ -398,7 +398,7 @@ export function TiendaCliente({
                             })
                           }
                           disabled={p.agotado}
-                          className="mt-4 flex w-full items-center justify-center gap-2 rounded-sm border border-cream-400/20 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-cream-100 transition hover:border-gold hover:text-gold disabled:cursor-not-allowed disabled:opacity-40"
+                          className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl border border-cream-400/20 px-4 py-2.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-cream-100 transition hover:border-gold hover:text-gold disabled:cursor-not-allowed disabled:opacity-40"
                         >
                           <ShoppingCart size={12} />
                           Agregar al carrito

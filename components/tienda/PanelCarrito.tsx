@@ -114,7 +114,7 @@ export function PanelCarrito() {
                           <button
                             onClick={() => cambiarCantidad(clave, it.cantidad - 1)}
                             aria-label="Uno menos"
-                            className="flex h-6 w-6 items-center justify-center rounded-sm border border-cream-400/20 text-cream-200/80 transition hover:border-gold/50 hover:text-gold"
+                            className="flex h-6 w-6 items-center justify-center rounded-xl border border-cream-400/20 text-cream-200/80 transition hover:border-gold/50 hover:text-gold"
                           >
                             <Minus size={11} />
                           </button>
@@ -124,7 +124,7 @@ export function PanelCarrito() {
                           <button
                             onClick={() => cambiarCantidad(clave, it.cantidad + 1)}
                             aria-label="Uno más"
-                            className="flex h-6 w-6 items-center justify-center rounded-sm border border-cream-400/20 text-cream-200/80 transition hover:border-gold/50 hover:text-gold"
+                            className="flex h-6 w-6 items-center justify-center rounded-xl border border-cream-400/20 text-cream-200/80 transition hover:border-gold/50 hover:text-gold"
                           >
                             <Plus size={11} />
                           </button>
@@ -162,7 +162,7 @@ export function PanelCarrito() {
                   de llevar a un checkout que no existe. */}
               <button
                 disabled
-                className="mt-4 w-full cursor-not-allowed rounded-sm border border-cream-400/20 px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-400/60"
+                className="mt-4 w-full cursor-not-allowed rounded-xl border border-cream-400/20 px-6 py-3 text-[11px] font-semibold uppercase tracking-[0.18em] text-cream-400/60"
               >
                 Finalizar compra · próximamente
               </button>

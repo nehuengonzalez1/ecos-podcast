@@ -211,7 +211,7 @@ export function DejaTuMensaje() {
       <button
         onClick={abrirModal}
         disabled={!activo}
-        className="mt-4 flex w-full items-center justify-center gap-2 rounded-sm bg-cream-50 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
+        className="mt-4 flex w-full items-center justify-center gap-2 rounded-xl bg-cream-50 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.12em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-40"
       >
         Dejar un mensaje <ArrowRight size={14} />
       </button>

@@ -278,7 +278,7 @@ export function ModalMensaje({
                   <button
                     type="submit"
                     disabled={estado === 'enviando'}
-                    className="flex w-full items-center justify-center gap-2 rounded-sm bg-cream-50 px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:opacity-60"
+                    className="flex w-full items-center justify-center gap-2 rounded-xl bg-cream-50 px-5 py-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:opacity-60"
                   >
                     {estado === 'enviando' ? (
                       <>

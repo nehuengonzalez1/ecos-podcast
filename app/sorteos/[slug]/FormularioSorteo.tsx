@@ -180,7 +180,7 @@ export function FormularioSorteo({
         <button
           type="submit"
           disabled={estado === 'enviando'}
-          className="flex w-full items-center justify-center gap-2 rounded-sm bg-cream-50 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-cream-50 px-4 py-3 text-[11px] font-semibold uppercase tracking-[0.15em] text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-50"
         >
           {estado === 'enviando' ? (
             <>

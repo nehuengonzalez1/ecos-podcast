@@ -81,7 +81,7 @@ export function ArchivoClient({
               <button
                 key={c}
                 onClick={() => setCat(c)}
-                className={`rounded-sm border px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] transition ${
+                className={`rounded-xl border px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] transition ${
                   cat === c
                     ? 'border-gold bg-gold/10 text-gold'
                     : 'border-cream-400/15 text-cream-200/70 hover:border-gold/50 hover:text-cream-50'

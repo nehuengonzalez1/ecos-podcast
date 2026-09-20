@@ -89,7 +89,7 @@ export function CategoriasEditor({
           <button
             onClick={guardar}
             disabled={!tocado || guardando || !activo}
-            className="inline-flex items-center gap-1.5 rounded-sm bg-cream-50 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-35"
+            className="inline-flex items-center gap-1.5 rounded-xl bg-cream-50 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-35"
           >
             <Check size={12} /> {guardando ? 'Guardando…' : 'Guardar'}
           </button>

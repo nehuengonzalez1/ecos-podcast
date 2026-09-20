@@ -53,7 +53,7 @@ export function SuscriptoresTabla({ subs }: { subs: Suscriptor[] }) {
     <button
       key={v}
       onClick={() => setFiltro(v)}
-      className={`rounded-sm border px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] transition ${
+      className={`rounded-xl border px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] transition ${
         filtro === v
           ? 'border-gold bg-gold/10 text-gold'
           : 'border-cream-400/15 text-cream-200/70 hover:border-gold/50 hover:text-cream-50'
@@ -75,7 +75,7 @@ export function SuscriptoresTabla({ subs }: { subs: Suscriptor[] }) {
         <div className="flex items-center gap-2">
           <button
             onClick={() => setOrden(orden === 'antiguedad' ? 'reciente' : orden === 'reciente' ? 'nombre' : 'antiguedad')}
-            className="inline-flex items-center gap-1.5 rounded-sm border border-cream-400/15 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-cream-200/70 transition hover:border-gold/50 hover:text-cream-50"
+            className="inline-flex items-center gap-1.5 rounded-xl border border-cream-400/15 px-3 py-1.5 text-[10px] uppercase tracking-[0.2em] text-cream-200/70 transition hover:border-gold/50 hover:text-cream-50"
             title="Cambiar orden"
           >
             <ArrowUpDown size={12} />

@@ -28,7 +28,7 @@ export function TiendaGrid({
             <button
               key={c || 'todas'}
               onClick={() => setCategoria(c)}
-              className={`rounded-sm border px-3.5 py-1.5 text-[10px] uppercase tracking-[0.18em] transition ${
+              className={`rounded-xl border px-3.5 py-1.5 text-[10px] uppercase tracking-[0.18em] transition ${
                 activa
                   ? 'border-gold/60 bg-gold/10 text-gold'
                   : 'border-cream-400/20 text-cream-200/70 hover:border-gold/40 hover:text-gold'

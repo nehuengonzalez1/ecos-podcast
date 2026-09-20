@@ -152,7 +152,7 @@ export function CuentaClient({
               <SubscribeButton price={price ?? undefined} label="Suscribirme con Mercado Pago" />
             ) : (
               /* Un parrafo y no un boton: no lleva a ningun lado. */
-              <p className="inline-flex items-center gap-2 rounded-sm border border-cream-400/25 bg-cream-400/5 px-5 py-2.5 text-xs font-medium uppercase tracking-[0.2em] text-cream-200/70">
+              <p className="inline-flex items-center gap-2 rounded-xl border border-cream-400/25 bg-cream-400/5 px-5 py-2.5 text-xs font-medium uppercase tracking-[0.2em] text-cream-200/70">
                 <Clock size={14} /> Próximamente
               </p>
             )}

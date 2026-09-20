@@ -243,7 +243,7 @@ export function EpisodiosEditor({
         <button
           onClick={crear}
           disabled={guardando || !baseActiva}
-          className="mb-3 flex w-full items-center justify-center gap-2 rounded-sm border border-gold/50 bg-gold/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-gold transition hover:bg-gold/20 disabled:cursor-not-allowed disabled:opacity-40"
+          className="mb-3 flex w-full items-center justify-center gap-2 rounded-xl border border-gold/50 bg-gold/10 px-3 py-2 text-[10px] font-semibold uppercase tracking-widest text-gold transition hover:bg-gold/20 disabled:cursor-not-allowed disabled:opacity-40"
         >
           <Plus size={13} /> Nuevo episodio
         </button>
@@ -306,7 +306,7 @@ export function EpisodiosEditor({
               <button
                 onClick={mostrar}
                 disabled={guardando}
-                className="inline-flex items-center gap-1.5 rounded-sm border border-gold/50 bg-gold/10 px-3 py-1.5 text-[10px] uppercase tracking-widest text-gold transition hover:bg-gold/20 disabled:opacity-40"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-gold/50 bg-gold/10 px-3 py-1.5 text-[10px] uppercase tracking-widest text-gold transition hover:bg-gold/20 disabled:opacity-40"
               >
                 <Eye size={12} /> Volver a mostrar
               </button>
@@ -314,7 +314,7 @@ export function EpisodiosEditor({
               <button
                 onClick={borrar}
                 disabled={guardando}
-                className="inline-flex items-center gap-1.5 rounded-sm border border-cream-400/20 px-3 py-1.5 text-[10px] uppercase tracking-widest text-cream-200/60 transition hover:border-red-400/50 hover:text-red-300 disabled:opacity-40"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-cream-400/20 px-3 py-1.5 text-[10px] uppercase tracking-widest text-cream-200/60 transition hover:border-red-400/50 hover:text-red-300 disabled:opacity-40"
               >
                 <Trash2 size={12} /> {epBase.creadoEnPanel ? 'Borrar' : 'Sacar del sitio'}
               </button>
@@ -323,7 +323,7 @@ export function EpisodiosEditor({
               <button
                 onClick={restaurar}
                 disabled={guardando}
-                className="inline-flex items-center gap-1.5 rounded-sm border border-cream-400/20 px-3 py-1.5 text-[10px] uppercase tracking-widest text-cream-200/60 transition hover:border-red-400/50 hover:text-red-300 disabled:opacity-40"
+                className="inline-flex items-center gap-1.5 rounded-xl border border-cream-400/20 px-3 py-1.5 text-[10px] uppercase tracking-widest text-cream-200/60 transition hover:border-red-400/50 hover:text-red-300 disabled:opacity-40"
               >
                 <RotateCcw size={12} /> Volver al original
               </button>
@@ -331,7 +331,7 @@ export function EpisodiosEditor({
             <button
               onClick={guardar}
               disabled={!borrador || guardando || !baseActiva}
-              className="inline-flex items-center gap-1.5 rounded-sm bg-cream-50 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-35"
+              className="inline-flex items-center gap-1.5 rounded-xl bg-cream-50 px-4 py-1.5 text-[10px] font-semibold uppercase tracking-widest text-ink-900 transition hover:bg-white disabled:cursor-not-allowed disabled:opacity-35"
             >
               <Check size={12} /> {guardando ? 'Guardando…' : 'Guardar'}
             </button>

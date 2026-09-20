@@ -99,13 +99,13 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
             transition={{ delay: 1, duration: 0.8 }}
             className="mt-10 flex flex-col items-center gap-4 sm:flex-row"
           >
-            {/* Ambos con el mismo ancho, padding, tamaño de texto y radio.
-                Las utilidades pisan a .btn-gold y .btn-ghost, que por defecto
-                son más chicos y de esquina casi recta. */}
-            <Link href="/archivo" className="btn-gold w-full justify-center whitespace-nowrap rounded-xl px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
+            {/* Ambos con el mismo ancho, padding y tamaño de texto. Las
+                utilidades pisan a .btn-gold y .btn-ghost, que por defecto son
+                más chicos. El redondeo ya lo traen las dos clases base. */}
+            <Link href="/archivo" className="btn-gold w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
               {brand.cta.exploreArchive} <ArrowRight size={16} />
             </Link>
-            <Link href="/contacto" className="btn-ghost w-full justify-center whitespace-nowrap rounded-xl px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
+            <Link href="/contacto" className="btn-ghost w-full justify-center whitespace-nowrap px-6 py-3 text-sm tracking-[0.18em] sm:w-72">
               {brand.cta.tellStory}
             </Link>
           </motion.div>
@@ -180,7 +180,7 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
                 Bienvenida al archivo de {brand.name}. Cada polaroid, cada carta, cada objeto acá es
                 real. Y sigue creciendo con vos.
               </p>
-              <Link href="/archivo" className="btn-gold mt-8 rounded-xl">
+              <Link href="/archivo" className="btn-gold mt-8">
                 {brand.cta.exploreArchive} <ArrowRight size={16} />
               </Link>
               <Firma className="mt-10" />
@@ -214,7 +214,7 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
                 Participá de nuestros sorteos y llevate productos, experiencias y mucho más. Porque
                 ser parte también tiene recompensas.
               </p>
-              <Link href="/sorteos" className="btn-gold mt-8 rounded-xl">
+              <Link href="/sorteos" className="btn-gold mt-8">
                 <Gift size={16} /> Ver sorteos <ArrowRight size={16} />
               </Link>
 
@@ -284,7 +284,7 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
                 Productos pensados para quienes creen en el poder de las historias. Objetos que te
                 acompañan, te inspiran y te conectan.
               </p>
-              <Link href="/tienda" className="btn-gold mt-8 rounded-xl">
+              <Link href="/tienda" className="btn-gold mt-8">
                 <ShoppingBag size={16} /> Ir a la tienda <ArrowRight size={16} />
               </Link>
 
@@ -417,7 +417,7 @@ export function HomeClient({ episodios: _episodios }: { episodios: Episode[] }) 
                   medio de la franja. */}
               <Link
                 href="/contacto"
-                className="btn-gold rounded-xl px-10 py-4 shadow-[0_0_45px_-10px_rgba(255,128,0,0.65)] lg:px-12"
+                className="btn-gold px-10 py-4 shadow-[0_0_45px_-10px_rgba(255,128,0,0.65)] lg:px-12"
               >
                 Contanos <ArrowRight size={16} />
               </Link>
